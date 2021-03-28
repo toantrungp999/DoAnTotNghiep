@@ -34,4 +34,10 @@ const timeDifferenceForDate = date => {
   return timeDifference(now, updated)
 }
 
-export { timeDifference, timeDifferenceForDate }
+const formatDate = d => [
+  d.getDate().toString().padStart(2, '0'),
+  (d.getMonth() + 1).toString().padStart(2, '0'),
+  d.getFullYear()
+].join('-');
+
+export {formatDate, timeDifference, timeDifferenceForDate }

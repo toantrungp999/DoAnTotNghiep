@@ -23,6 +23,12 @@ target 'TLCN_FashionStore' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
+  pod 'react-native-camera', :path => '../node_modules/react-native-camera'
+
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'TLCN_FashionStoreTests' do
     inherit! :complete
     # Pods for testing

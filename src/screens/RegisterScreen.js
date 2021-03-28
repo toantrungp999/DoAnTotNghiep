@@ -15,21 +15,27 @@ import { theme } from '../core/theme';
 import { registerRequest } from './../../actions/userActions';
 import { fetchCitiesRequest, fetchDistrictsRequest } from '../../actions/locationActions';
 import { isValidLength, isPhoneNumber, isEmail, isValidDate } from '../../extentions/ArrayEx';
+import { formatDate } from '../../utils/datetime';
 
 class RegisterScreen extends Component {
 
-  state = {
-    name: { value: '', error: '' },
-    email: { value: '', error: '' },
-    phoneNumber: { value: '', error: '' },
-    password: { value: '', error: '' },
-    rePassword: { value: '', error: '' },
-    birthday: { value: '1-1-2000', error: '' },
-    male: { value: true, error: '' },
-    cityId: { value: 1, error: '' },
-    districtId: { value: -1, error: '' },
-    wardId: { value: -1, error: '' },
-    streetOrBuilding: { value: -1, error: '' },
+  constructor(props) {
+    let date = new Date();
+    date.setFullYear(date.getFullYear() - 20);
+    super(props);
+    this.state = {
+      name: { value: '', error: '' },
+      email: { value: '', error: '' },
+      phoneNumber: { value: '', error: '' },
+      password: { value: '', error: '' },
+      rePassword: { value: '', error: '' },
+      birthday: { value: date, error: '' },
+      male: { value: true, error: '' },
+      cityId: { value: 1, error: '' },
+      districtId: { value: -1, error: '' },
+      wardId: { value: -1, error: '' },
+      streetOrBuilding: { value: -1, error: '' },
+    }
   }
 
   componentDidMount() {
@@ -112,7 +118,7 @@ class RegisterScreen extends Component {
     }
     if (city && district && ward) {
       const data = {
-        email: email.value, password: password.value, name: name.value, phoneNumber: phoneNumber.value, birthday: birthday.value, male: male.value,
+        email: email.value, password: password.value, name: name.value, phoneNumber: phoneNumber.value, birthday: formatDate(birthday.value), male: male.value,
         address: {
           city,
           district,
@@ -215,11 +221,12 @@ class RegisterScreen extends Component {
             <View style={styles.col_35}><Text style={{ textAlign: 'center' }}>Ngày sinh:</Text></View>
             <View style={{ width: "65%" }}>
               <DateInput
-                returnKeyType="next"
-                value={this.state.birthday.value}
-                onDateChange={(date) => this.onChange('birthday', { value: date, error: '' })}
+                // returnKeyType="next"
+                date={this.state.birthday.value}
+                onChange={(date) => this.onChange('birthday', { value: date, error: '' })}
                 error={!!this.state.birthday.error}
-                errorText={this.state.birthday.error} />
+                errorText={this.state.birthday.error}
+              />
             </View>
           </View>
           <View style={styles.row}>

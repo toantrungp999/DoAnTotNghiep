@@ -20,11 +20,11 @@ class PersonalSreen extends Component {
                 screenOptions={{
                     headerShown: false,
                 }}>
-                {userInfo ? null : <Stack.Screen name="LoginScreen" component={LoginScreen} />}
-                {userInfo ? null : <Stack.Screen name="RegisterScreen" component={RegisterScreen} />}
-                {userInfo ? null : <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />}
-                {userInfo ? <Stack.Screen name="SettingScreen" component={SettingScreen} /> : null}
-                {userInfo ? <Stack.Screen name="ProfileScreen" component={ProfileScreen} /> : null}
+                {!userInfo && <Stack.Screen name="LoginScreen" component={LoginScreen} />}
+                {!userInfo && <Stack.Screen name="RegisterScreen" component={RegisterScreen} />}
+                {!userInfo && <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />}
+                {userInfo && <Stack.Screen name="SettingScreen" component={SettingScreen} />}
+                {userInfo && <Stack.Screen name="ProfileScreen" component={ProfileScreen} />}
             </Stack.Navigator>
         );
     }

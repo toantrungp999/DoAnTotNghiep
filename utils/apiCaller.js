@@ -35,9 +35,9 @@ function callApi(endpoint, metthod = 'GET', body, accessToken = null) {
     });
 }
 
-function callApiToken(dispatch, endpoint, method = 'GET', body = null) {
-    const accessToken = GetItemFromStorage('x-access-token');
-    const refreshToken = GetItemFromStorage('refreshToken');
+async function callApiToken(dispatch, endpoint, method = 'GET', body = null) {
+    const accessToken = await GetItemFromStorage('x-access-token');
+    const refreshToken = await GetItemFromStorage('refreshToken');
     if (!accessToken) {
         if (!refreshToken) {
             dispatch(logoutRequest());

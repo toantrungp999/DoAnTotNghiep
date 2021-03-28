@@ -1,43 +1,60 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, ScrollView, Image, Modal } from 'react-native';
 import { Text, RadioButton } from 'react-native-paper';
 import Background from '../components/Background';
-import Logo from '../components/Logo';
 import Header from '../components/Header';
 import Button from '../components/Button';
 import TextInput from '../components/TextInput';
-// import DateInput from '../components/DateInput';
+import DateInput from '../components/DateInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../core/theme';
 import { isValidLength, isValidDate } from '../../extentions/ArrayEx';
 import {
     fetchProfileRequest,
     updateProfileRequest,
+    updateAvatarRequest,
     clearInform
 } from '../../actions/userActions';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import * as ImagePicker from "react-native-image-picker"
 
 class ProfileScreen extends Component {
 
     constructor(props) {
         super(props);
+        let date = new Date();
+        date.setFullYear(date.getFullYear() - 20);
         this.state = {
             name: '',
             email: '',
             male: true,
-            data: '',
-            birthday: '1-1-2000',
+            data: {},
+            birthday: date,
             updateImage: false,
             isEditing: false,
             errors: {
                 name: '',
                 birthday: ''
             },
+            isVisible: false
         };
     }
 
     componentDidMount() {
-        this.props.fetchProfile();
+        const { userProfile } = this.props.userProfileReducer;
+        if (!userProfile || JSON.stringify(userProfile) === '{}') {
+            this.props.fetchProfile();
+        }
+        else
+            this.setState({
+                name: userProfile.name,
+                email: userProfile.email,
+                birthday: userProfile.birthday || this.state.birthday,
+                male: (userProfile.male === true || userProfile.male === false) ? userProfile.male : true,
+                image: userProfile.image,
+                oldImage: userProfile.image,
+            });
     }
 
     checkValidate = (name, value) => {
@@ -54,8 +71,12 @@ class ProfileScreen extends Component {
         this.setState({ errors });
     }
 
-    onSubmit = () => {
+    onUpdatePrifle = () => {
+        console.log(this.state);
+    }
 
+    onUpdateAvatar = () => {
+        console.log(this.state);
     }
 
     componentDidUpdate(prevProps) {
@@ -64,7 +85,8 @@ class ProfileScreen extends Component {
             if (userProfile && !this.state.name)
                 this.setState({
                     name: userProfile.name,
-                    birthday: userProfile.birthday || '1-1-2000',
+                    email: userProfile.email,
+                    birthday: userProfile.birthday || this.state.birthday,
                     male: (userProfile.male === true || userProfile.male === false) ? userProfile.male : true,
                     image: userProfile.image,
                     oldImage: userProfile.image,
@@ -79,14 +101,91 @@ class ProfileScreen extends Component {
         });
     };
 
+    onShowModal = () => {
+        this.setState({ isVisible: !this.state.isVisible });
+    }
+
+    launchCamera = () => {
+        let options = {
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        ImagePicker.launchCamera(options, (response) => {
+            if (response.didCancel)
+                console.log('User cancelled image picker');
+            else if (response.error)
+                console.log('ImagePicker Error: ', response.error);
+            else if (response.customButton)
+                console.log('User tapped custom button: ', response.customButton);
+            else {
+                const image = response.uri;
+                this.setState({ data: response, image });
+                this.props.updateAvatar(data);
+            }
+        });
+
+    }
+
+    launchImageLibrary = () => {
+        let options = {
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        ImagePicker.launchImageLibrary(options, (response) => {
+            console.log(response);
+            if (response.didCancel)
+                console.log('User cancelled image picker');
+            else if (response.error)
+                console.log('ImagePicker Error: ', response.error);
+            else if (response.customButton)
+                console.log('User tapped custom button: ', response.customButton);
+            else {
+                const image = response.uri
+                console.log(image);
+                this.setState({ data: response, image });
+                this.props.updateAvatar(response);
+            }
+        });
+    }
+
     render() {
         const { message, loading } = this.props.userProfileReducer;
         return (
             <ScrollView style={{ width: '100%' }}>
-                <Background>
+                <Background style={styles.containerMain}>
                     <BackButton goBack={this.props.navigation.goBack} />
-                    <Logo />
                     <Header>Thông tin tài khoản</Header>
+                    {
+                        this.state.image &&
+                        <TouchableOpacity onPress={this.onShowModal}>
+                            <Image source={{ uri: this.state.image }} style={styles.image} />
+                        </TouchableOpacity>
+                    }
+                    <Modal transparent={true}
+                        visible={this.state.isVisible}
+                        onRequestClose={this.onCloseModel}>
+                        <View style={styles.bottomView}>
+                            <View>
+                                <TouchableOpacity style={styles.rowModal} onPress={this.launchCamera}>
+                                    <MaterialIcons name="photo-camera" size={20} />
+                                    <Text style={styles.textRowModal}>Chụp ảnh mới</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.rowModal} onPress={this.launchImageLibrary}>
+                                    <MaterialIcons name="photo" size={20} />
+                                    <Text style={styles.textRowModal}>Chọn ảnh từ thiết bị</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.rowModal} onPress={this.onShowModal}>
+                                    <MaterialIcons name="cancel" size={20} />
+                                    <Text style={styles.textRowModal}>Hủy bỏ</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
                     <TextInput
                         label="Tên"
                         returnKeyType="next"
@@ -108,12 +207,11 @@ class ProfileScreen extends Component {
                     <View style={styles.row}>
                         <View style={styles.col_35}><Text style={{ textAlign: 'center' }}>Ngày sinh:</Text></View>
                         <View style={{ width: "65%" }}>
-                            {/* <DateInput
-                                returnKeyType="next"
-                                value={this.state.birthday}
-                                onDateChange={(date) => this.onChange('birthday', date)}
+                            <DateInput
+                                date={this.state.birthday}
+                                onChange={(date) => this.onChange('birthday', date)}
                                 error={!!this.state.errors.birthday}
-                                errorText={this.state.errors.birthday} /> */}
+                                errorText={this.state.errors.birthday} />
                         </View>
                     </View>
                     <View style={styles.row}>
@@ -153,7 +251,7 @@ class ProfileScreen extends Component {
                             :
                             <Button
                                 mode="contained"
-                                // onPress={this.onSubmit}
+                                onPress={this.onUpdatePrifle}
                                 style={{ marginTop: 24 }}>
                                 Cập nhật
                         </Button>
@@ -165,6 +263,22 @@ class ProfileScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    containerMain: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    bottomView: {
+        width: '100%',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        // height: '40%',
+        backgroundColor: 'white',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        position: 'absolute', //Here is the trick
+        bottom: 0, //Here is the trick
+    },
     row: {
         flexDirection: 'row', width: '100%',
         marginTop: 4
@@ -183,13 +297,23 @@ const styles = StyleSheet.create({
     },
     col_50_male: {
         flexDirection: 'row', width: '50%', textAlignVertical: 'center'
-    }
+    },
+    image: {
+        width: 110,
+        height: 110,
+        marginBottom: 8,
+        borderRadius: 55,
+        borderColor: 'white',
+        borderWidth: 3
+    },
+    rowModal: { opacity: 0.6, flexDirection: 'row', alignItems: 'center', width: '100%', paddingLeft: 10, paddingTop: 15, paddingBottom: 15 },
+    textRowModal: { fontSize: 18, paddingLeft: 15, fontWeight: "bold", color: 'black' }
 })
 
 const mapStateToProps = state => {
     return {
         userProfileReducer: state.userProfileReducer,
-        userInfoReducer: state.userInfoReducer
+        userInfoReducer: state.userInfoReducer,
     }
 }
 

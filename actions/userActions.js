@@ -153,6 +153,7 @@ export const updateAvatarRequest = (file) => {
     const formData = new FormData();
     formData.append('image', file);
     callApiToken(dispatch, 'upload-image', 'POST', formData).then(response => {
+      console.log(response);
       if (response.status === 0) {
         dispatch(updateUrlProfileRequest(response.data.url));
       }

@@ -5,22 +5,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { logoutRequest } from './../../actions/userActions';
 
-class CartsScreen extends Component {
-
-    onPress = () => {
-        console.log('onPress');
-    }
+class SettingScreen extends Component {
 
     render() {
         const { userInfo } = this.props.userInfoReducer;
-        console.log(userInfo);
         const image = userInfo.image ? { uri: userInfo.image } : '';
         const name = userInfo.name || '';
         return (
             <ScrollView style={{ width: '100%' }}>
                 <View style={{ width: '100%', height: '100%', padding: 10, backgroundColor: '#F1F2F6' }}>
                     <View style={styles.row}><Text style={{ fontSize: 24, fontWeight: "bold", paddingBottom: 5 }}>Menu</Text></View>
-                    <TouchableOpacity onPress={() => { this.props.navigation.replace('ProfileScreen') }} style={styles.row} >
+                    <TouchableOpacity onPress={() => { this.props.navigation.push('ProfileScreen') }} style={styles.row} >
                         <Image source={image ? image : require('../../assets/avatar.png')} style={{ width: 24, height: 24, borderWidth: 1, borderRadius: 12 }} />
                         <Text style={styles.textRow}>{name}</Text>
                     </TouchableOpacity>
@@ -69,4 +64,4 @@ const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logoutRequest())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SettingScreen);
