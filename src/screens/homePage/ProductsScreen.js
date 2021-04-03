@@ -24,9 +24,8 @@ class ProductsScreen extends Component {
 
   render() {
     const { products, loading } = this.props.productsReducer;
-    console.log(products);
     if (loading)
-      return <View>
+      return <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>LOADING...</Text>
       </View>
     else
