@@ -1,21 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { TouchableOpacity, View, StyleSheet, ScrollView, Image, Modal } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, ScrollView, Image, Modal, Alert } from 'react-native';
 import { Text, RadioButton } from 'react-native-paper';
-import Background from '../components/Background';
-import Header from '../components/Header';
-import Button from '../components/Button';
-import TextInput from '../components/TextInput';
-import DateInput from '../components/DateInput';
-import BackButton from '../components/BackButton';
-import { theme } from '../core/theme';
-import { isValidLength, isValidDate } from '../../extentions/ArrayEx';
+import Background from '../../components/Background';
+import Header from '../../components/Header';
+import Button from '../../components/Button';
+import TextInput from '../../components/TextInput';
+import DateInput from '../../components/DateInput';
+import BackButton from '../../components/BackButton';
+import { theme } from '../../core/theme';
+import { isValidLength, isValidDate } from '../../../extentions/ArrayEx';
 import {
     fetchProfileRequest,
     updateProfileRequest,
     updateAvatarRequest,
-    clearInform
-} from '../../actions/userActions';
+} from '../../../actions/userActions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import * as ImagePicker from "react-native-image-picker"
 
@@ -72,14 +71,23 @@ class ProfileScreen extends Component {
     }
 
     onUpdatePrifle = () => {
-        console.log(this.state);
+        if (this.validateForm(this.state.errors)) {
+            const data = {
+                name: this.state.name,
+                birthday: this.state.birthday,
+                male: this.state.male
+            };
+            this.props.updateProfile(data);
+        }
     }
 
-    onUpdateAvatar = () => {
-        console.log(this.state);
-    }
+    validateForm = errors => {
+        let valid = true;
+        Object.values(errors).forEach(val => val.length > 0 && (valid = false));
+        return valid;
+    };
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps) {//userActionReducer
         if (this.props.userProfileReducer !== prevProps.userProfileReducer && this.props.userProfileReducer.loading === false) {
             const { userProfile } = this.props.userProfileReducer;
             if (userProfile && !this.state.name)
@@ -91,6 +99,17 @@ class ProfileScreen extends Component {
                     image: userProfile.image,
                     oldImage: userProfile.image,
                 });
+        }
+        if (this.props.userActionReducer !== prevProps.userActionReducer && this.props.userActionReducer.loading === false) {
+            const { changeAvatarSuccess, updateProfileSuccess } = this.props.userActionReducer;
+            if (changeAvatarSuccess === true)
+                Alert.alert(
+                    "Thông báo",
+                    "Cập nhật ảnh bìa thành công");
+            else if (updateProfileSuccess === true)
+                Alert.alert(
+                    "Thông báo",
+                    "Cập nhật thông tin thành công");
         }
     }
 
@@ -122,7 +141,8 @@ class ProfileScreen extends Component {
             else {
                 const image = response.uri;
                 this.setState({ data: response, image });
-                this.props.updateAvatar(data);
+                this.props.updateAvatar(response);
+                this.onShowModal();
             }
         });
 
@@ -136,7 +156,6 @@ class ProfileScreen extends Component {
             },
         };
         ImagePicker.launchImageLibrary(options, (response) => {
-            console.log(response);
             if (response.didCancel)
                 console.log('User cancelled image picker');
             else if (response.error)
@@ -144,16 +163,17 @@ class ProfileScreen extends Component {
             else if (response.customButton)
                 console.log('User tapped custom button: ', response.customButton);
             else {
-                const image = response.uri
-                console.log(image);
+                const image = response.uri;
                 this.setState({ data: response, image });
                 this.props.updateAvatar(response);
+                this.onShowModal();
             }
         });
     }
 
     render() {
         const { message, loading } = this.props.userProfileReducer;
+        const { updateProfileMessage, changeAvatarMessage } = this.props.userActionReducer;
         return (
             <ScrollView style={{ width: '100%' }}>
                 <Background style={styles.containerMain}>
@@ -240,6 +260,12 @@ class ProfileScreen extends Component {
                     <View style={styles.row}>
                         <Text style={{ color: 'red' }}>{message ? message : ''}</Text>
                     </View>
+                    <View style={styles.row}>
+                        <Text style={{ color: 'red' }}>{updateProfileMessage ? updateProfileMessage : ''}</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={{ color: 'red' }}>{changeAvatarMessage ? changeAvatarMessage : ''}</Text>
+                    </View>
                     {
                         loading
                             ?
@@ -272,10 +298,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
-        // height: '40%',
         backgroundColor: 'white',
-        // justifyContent: 'center',
-        // alignItems: 'center',
         position: 'absolute', //Here is the trick
         bottom: 0, //Here is the trick
     },
@@ -314,6 +337,7 @@ const mapStateToProps = state => {
     return {
         userProfileReducer: state.userProfileReducer,
         userInfoReducer: state.userInfoReducer,
+        userActionReducer: state.userActionReducer,
     }
 }
 
@@ -327,8 +351,7 @@ const mapDispatchToProps = (dispatch, props) => {
         },
         updateAvatar: (file) => {
             dispatch(updateAvatarRequest(file));
-        },
-        clearInform: () => { dispatch(clearInform()) }
+        }
     }
 }
 

@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View, Text, Image, TouchableOpacity } from 'rea
 import { connect } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { logoutRequest } from './../../actions/userActions';
+import { logoutRequest } from '../../../actions/userActions';
 
 class SettingScreen extends Component {
 
@@ -16,14 +16,14 @@ class SettingScreen extends Component {
                 <View style={{ width: '100%', height: '100%', padding: 10, backgroundColor: '#F1F2F6' }}>
                     <View style={styles.row}><Text style={{ fontSize: 24, fontWeight: "bold", paddingBottom: 5 }}>Menu</Text></View>
                     <TouchableOpacity onPress={() => { this.props.navigation.push('ProfileScreen') }} style={styles.row} >
-                        <Image source={image ? image : require('../../assets/avatar.png')} style={{ width: 24, height: 24, borderWidth: 1, borderRadius: 12 }} />
+                        <Image source={image ? image : require('../../../assets/avatar.png')} style={{ width: 24, height: 24, borderWidth: 1, borderRadius: 12 }} />
                         <Text style={styles.textRow}>{name}</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.row}>
+                    <TouchableOpacity onPress={() => { this.props.navigation.push('ChangePhoneNumberScreen') }} style={styles.row}>
                         <Ionicons name="ios-phone-portrait" size={20} />
                         <Text style={styles.textRow}>Số điện thoại</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.row}>
+                    <TouchableOpacity onPress={() => { this.props.navigation.push('ChangePasswordSreen') }} style={styles.row}>
                         <Ionicons name="key" size={20} />
                         <Text style={styles.textRow}>Đổi mật khẩu</Text>
                     </TouchableOpacity>

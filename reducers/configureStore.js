@@ -5,10 +5,12 @@ import {
     userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer
 } from './user';
 import { citiesReducer, districtsReducer } from './location';
+import { productsReducer, productDetailReducer } from './products';
 const rootReducer = combineReducers(
     {
         userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer,
-        citiesReducer, districtsReducer
+        citiesReducer, districtsReducer,
+        productsReducer, productDetailReducer
     }
 );
 const configureStore = () => {

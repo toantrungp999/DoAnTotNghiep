@@ -1,9 +1,4 @@
 export { default as HomeScreen } from './HomeScreen';
-export { default as LoginScreen } from './LoginScreen';
-export { default as RegisterScreen } from './RegisterScreen';
-export { default as ForgotPasswordScreen } from './ForgotPasswordScreen';
-export { default as PersonalSreen } from './PersonalSreen';
 export { default as NotificationsScreen } from './NotificationsScreen';
 export { default as CartsScreen } from './CartsScreen';
-export { default as SettingScreen } from './SettingScreen';
-export { default as ProfileScreen } from './ProfileScreen';
+export { default as PersonalScreen } from './PersonalScreen';

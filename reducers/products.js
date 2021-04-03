@@ -27,37 +27,15 @@ function productsReducer(state = {}, action) {
     }
 }
 
-function productCreateReducer(state = {}, action) {
-    switch (action.type) {
-        case Types.PRODUCT_CREATE_REQUEST:
-            return { loading: true }
-        case Types.PRODUCT_CREATE_SUCCESS:
-            return { loading: false };
-        case Types.PRODUCT_CREATE_FAIL:
-            return { loading: false, success: false, message: action.payload.message };
-        default: return state;
-    }
-}
-
 function productDetailReducer(state = { loading: true }, action) {
     switch (action.type) {
         case Types.PRODUCT_DETAIL_REQUEST:
             state.loading = true;
             state.message = '';
             return { ...state };
-        case Types.PRODUCT_UPDATE_REQUEST:
-            state.message = null;
-            state.success = null;
-            state.loading = false;
-            return { ...state };
         case Types.PRODUCT_DETAIL_SUCCESS:
             return { loading: false, product: action.payload.data };
-        case Types.PRODUCT_UPDATE_SUCCESS:
-            state.product = action.payload.data;
-            state.loading = false;
-            state.success = true;
-            return { ...state };
-        case Types.PRODUCT_UPDATE_FAIL || Types.PRODUCT_DETAIL_FAIL:
+        case Types.PRODUCT_DETAIL_FAIL:
             state.loading = false;
             state.message = action.payload.message;
             state.success = false;
@@ -67,4 +45,4 @@ function productDetailReducer(state = { loading: true }, action) {
 }
 
 
-export { productsReducer, productCreateReducer, productDetailReducer }
+export { productsReducer, productDetailReducer }

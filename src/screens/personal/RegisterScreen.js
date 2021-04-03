@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import { Text, RadioButton } from 'react-native-paper';
-import Background from '../components/Background';
-import Logo from '../components/Logo';
-import Header from '../components/Header';
-import Button from '../components/Button';
-import TextInput from '../components/TextInput';
-import MyPicker from '../components/MyPicker';
-import DateInput from '../components/DateInput';
-import BackButton from '../components/BackButton';
-import { theme } from '../core/theme';
-import { registerRequest } from './../../actions/userActions';
-import { fetchCitiesRequest, fetchDistrictsRequest } from '../../actions/locationActions';
-import { isValidLength, isPhoneNumber, isEmail, isValidDate } from '../../extentions/ArrayEx';
-import { formatDate } from '../../utils/datetime';
+import Background from '../../components/Background';
+import Logo from '../../components/Logo';
+import Header from '../../components/Header';
+import Button from '../../components/Button';
+import TextInput from '../../components/TextInput';
+import MyPicker from '../../components/MyPicker';
+import DateInput from '../../components/DateInput';
+import BackButton from '../../components/BackButton';
+import { theme } from '../../core/theme';
+import { registerRequest } from '../../../actions/userActions';
+import { fetchCitiesRequest, fetchDistrictsRequest } from '../../../actions/locationActions';
+import { isValidLength, isPhoneNumber, isEmail, isValidDate } from '../../../extentions/ArrayEx';
+import { formatDate } from '../../../utils/datetime';
 
 class RegisterScreen extends Component {
 

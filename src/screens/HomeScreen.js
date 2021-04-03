@@ -1,18 +1,26 @@
-import React from 'react'
-import Background from '../components/Background'
-import Logo from '../components/Logo'
-import Header from '../components/Header'
-import Paragraph from '../components/Paragraph'
+import React, { Component } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import {
+  ProductsScreen,
+  DetailProductScreen,
+} from './homePage/index';
 
-const HomeScreen = ({ navigation }) => (
-  <Background>
-    <Logo />
-    <Header>Let’s start</Header>
-    <Paragraph>
-      Your amazing app starts here. Open you favorite code editor and start
-      editing this project.
-    </Paragraph>
-  </Background>
-)
+const Stack = createStackNavigator();
 
-export default HomeScreen
+class HomeScreen extends Component {
+
+  render() {
+    return (
+      <Stack.Navigator
+        initialRouteName="ProductsScreen"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="ProductsScreen" component={ProductsScreen} />
+        <Stack.Screen name="DetailProductScreen" component={DetailProductScreen} />
+      </Stack.Navigator>
+    );
+  }
+}
+
+export default HomeScreen;

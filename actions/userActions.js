@@ -151,9 +151,10 @@ export const updateAvatarRequest = (file) => {
   return (dispatch) => {
     dispatch({ type: Types.USER_AVATAR_REQUEST });
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', { uri: file.uri, name: file.fileName, type: file.type });
+    // formData.append('Content-Type', 'image/png');
     callApiToken(dispatch, 'upload-image', 'POST', formData).then(response => {
-      console.log(response);
+      console.log(response)
       if (response.status === 0) {
         dispatch(updateUrlProfileRequest(response.data.url));
       }

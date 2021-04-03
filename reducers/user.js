@@ -70,7 +70,7 @@ function userProfileReducer(state = { loading: false, userProfile: {}, messege: 
       state.userProfile.phoneNumber = action.payload.data;
       return { ...state };
     case Types.USER_AVATAR_SUCCESS:
-      state.userProfile.image = action.payload.data;
+      state.userProfile.image = action.payload.data.url;
       return { ...state };
     case Types.CLEAR_INFORM_PROFILE:
       state.message = '';
@@ -88,13 +88,13 @@ function userActionReducer(state = { loading: false }, action) {
     case Types.USER_PROFILE_UPDATE_SUCCESS:
       return { loading: false, updateProfileSuccess: true };
     case Types.USER_PROFILE_UPDATE_FAIL:
-      return { loading: false, updateProfilemessage: action.payload.message };
+      return { loading: false, updateProfileMessage: action.payload.message };
     case Types.USER_AVATAR_REQUEST:
       return { loading: false };
     case Types.USER_AVATAR_SUCCESS:
       return { loading: false, changeAvatarSuccess: true };
     case Types.USER_AVATAR_FAIL:
-      return { loading: false, changeAvatarmessage: action.payload.message };
+      return { loading: false, changeAvatarMessage: action.payload.message };
     case Types.USER_CHANGEPASSWORD_REQUEST:
       return { loading: true }
     case Types.USER_CHANGEPASSWORD_SUCCESS:

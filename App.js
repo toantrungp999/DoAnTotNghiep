@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { theme } from './src/core/theme';
 import {
   HomeScreen,
-  PersonalSreen,
+  PersonalScreen,
   CartsScreen,
   NotificationsScreen
 } from './src/screens';
@@ -59,7 +59,7 @@ class App extends Component {
             <Tab.Screen name="Trang chủ" component={HomeScreen} options={{ tabBarBadge: 3 }} />
             {userInfo ? <Tab.Screen name="Giỏ hàng" component={CartsScreen} /> : null}
             {userInfo ? <Tab.Screen name="Thông báo" component={NotificationsScreen} /> : null}
-            <Tab.Screen name={userInfo ? "Cá nhân" : "Đăng nhập"} component={PersonalSreen} />
+            <Tab.Screen name={userInfo ? "Cá nhân" : "Đăng nhập"} component={PersonalScreen} />
           </Tab.Navigator>
         </NavigationContainer>
       </Provider>

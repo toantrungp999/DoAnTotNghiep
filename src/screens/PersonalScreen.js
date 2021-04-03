@@ -6,12 +6,14 @@ import {
     RegisterScreen,
     ForgotPasswordScreen,
     SettingScreen,
-    ProfileScreen
-} from './index';
+    ProfileScreen,
+    ChangePasswordSreen,
+    ChangePhoneNumberScreen
+} from './personal/index';
 
 const Stack = createStackNavigator();
 
-class PersonalSreen extends Component {
+class PersonalScreen extends Component {
 
     render() {
         const { userInfo } = this.props.userInfoReducer;
@@ -25,6 +27,8 @@ class PersonalSreen extends Component {
                 {!userInfo && <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />}
                 {userInfo && <Stack.Screen name="SettingScreen" component={SettingScreen} />}
                 {userInfo && <Stack.Screen name="ProfileScreen" component={ProfileScreen} />}
+                {userInfo && <Stack.Screen name="ChangePasswordSreen" component={ChangePasswordSreen} />}
+                {userInfo && <Stack.Screen name="ChangePhoneNumberScreen" component={ChangePhoneNumberScreen} />}
             </Stack.Navigator>
         );
     }
@@ -40,5 +44,5 @@ const mapDispatchToProps = dispatch => ({
 
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(PersonalSreen);
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalScreen);
 
