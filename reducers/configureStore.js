@@ -6,11 +6,13 @@ import {
 } from './user';
 import { citiesReducer, districtsReducer } from './location';
 import { productsReducer, productDetailReducer } from './products';
+import { productOptionsReducer } from './productOptions';
+
 const rootReducer = combineReducers(
     {
         userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer,
         citiesReducer, districtsReducer,
-        productsReducer, productDetailReducer
+        productsReducer, productDetailReducer, productOptionsReducer
     }
 );
 const configureStore = () => {

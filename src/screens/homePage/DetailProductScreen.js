@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 import {
   fectchProductRequest
 } from '../../../actions/productActions';
+import {
+  fectchColorOptionsRequest, fectchQuantityOptionsRequest, fectchSizeOptionsRequest
+} from '../../../actions/productOptionActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import styles from './styles';
-import { convertNumberToVND } from '../../../extentions/ArrayEx';
+import ProductOption from '../../components/productOption/ProductOption';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
@@ -21,8 +24,12 @@ class DetailProductScreen extends Component {
 
   componentDidMount() {
     const { id } = this.props.route.params;
-    if (id)
+    if (id) {
       this.props.fectchProduct(id);
+      this.props.fectchColorOptions(id);
+      this.props.fectchSizeOptions(id);
+      this.props.fectchQuantityOptions(id);
+    }
   }
 
   renderImage = ({ item }) => (
@@ -79,29 +86,7 @@ class DetailProductScreen extends Component {
             </View>
             <View style={styles.infoRecipeContainer}>
               <Text style={styles.infoRecipeName}>{product.name}</Text>
-              <View style={styles.row}>
-                <Text style={styles.textPrice}>Giá: </Text>
-                <Text style={styles.price}>{convertNumberToVND(product.price - (product.saleOff || 0))}₫</Text>
-                {product.saleOff ? <Text style={styles.salePrice}>{convertNumberToVND(product.price)}₫</Text> : null}
-              </View>
-              <View style={styles.row}>
-                  <Text style={styles.text}>Size:</Text>
-              </View>
-              <View style={styles.row}>
-
-              </View>
-              <View style={styles.row}>
-                  <Text style={styles.text}>Màu:</Text>
-              </View>
-              <View style={styles.row}>
-
-              </View>
-              <View style={styles.row}>
-                  <Text style={styles.text}>Số lượng:</Text>
-              </View>
-              <View style={styles.row}>
-
-              </View>
+              <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} />
               <View style={styles.infoContainer}>
                 <Text style={styles.infoDescriptionRecipe}>{product.description}</Text>
               </View>
@@ -114,13 +99,23 @@ class DetailProductScreen extends Component {
 
 const mapStateToProps = state => {
   return {
-    productDetailReducer: state.productDetailReducer
+    productDetailReducer: state.productDetailReducer,
+    productOptionsReducer: state.productOptionsReducer
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   fectchProduct: (id) => {
     dispatch(fectchProductRequest(id));
+  },
+  fectchColorOptions: (id) => {
+    dispatch(fectchColorOptionsRequest(id));
+  },
+  fectchQuantityOptions: (id) => {
+    dispatch(fectchQuantityOptionsRequest(id));
+  },
+  fectchSizeOptions: (id) => {
+    dispatch(fectchSizeOptionsRequest(id));
   },
 })
 

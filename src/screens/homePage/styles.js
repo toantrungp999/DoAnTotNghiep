@@ -85,39 +85,6 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center'
   },
-  row: {
-    flexDirection: 'row', width: '100%',
-    marginTop: 5,
-  },
-  textSize:{
-    fontSize: 18,
-    marginLeft: 14,
-  },
-  text:{
-    fontSize: 18,
-    marginLeft: 14,
-    color: '#0000CD',
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  textPrice: {
-    fontSize: 18,
-    marginLeft: 14,
-  },
-  price: {
-    fontSize: 18,
-    color: '#0000CD',
-    marginRight: 10,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  salePrice: {
-    color: '#ccc',
-    fontSize: 18,
-    textDecorationLine: 'line-through',
-    fontWeight: 'bold',
-    color: 'black',
-  },
 });
 
 export default styles;
