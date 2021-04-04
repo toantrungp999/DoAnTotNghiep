@@ -5,11 +5,15 @@ import {
   fectchProductRequest
 } from '../../../actions/productActions';
 import {
+  fectchBrandRequest
+} from '../../../actions/brandActions';
+import {
   fectchColorOptionsRequest, fectchQuantityOptionsRequest, fectchSizeOptionsRequest
 } from '../../../actions/productOptionActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import styles from './styles';
-import ProductOption from '../../components/productOption/ProductOption';
+import ProductOption from '../../components/productDetail/ProductOption';
+import More from '../../components/productDetail/More';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
@@ -51,47 +55,44 @@ class DetailProductScreen extends Component {
       return (
         <ScrollView style={styles.container}>
           <View style={styles.carouselContainer}>
-            <View style={styles.carouselContainer}>
-              <View style={styles.carousel}>
-                <Carousel
-                  ref={c => {
-                    this.slider1Ref = c;
-                  }}
-                  data={product.images}
-                  renderItem={this.renderImage}
-                  sliderWidth={viewportWidth}
-                  itemWidth={viewportWidth}
-                  inactiveSlideScale={1}
-                  inactiveSlideOpacity={1}
-                  firstItem={0}
-                  loop={false}
-                  autoplay={false}
-                  autoplayDelay={500}
-                  autoplayInterval={3000}
-                  onSnapToItem={index => this.setState({ activeSlide: index })}
-                />
-                <Pagination
-                  dotsLength={product.images.length}
-                  activeDotIndex={activeSlide}
-                  containerStyle={styles.paginationContainer}
-                  dotColor="rgba(255, 255, 255, 0.92)"
-                  dotStyle={styles.paginationDot}
-                  inactiveDotColor="white"
-                  inactiveDotOpacity={0.4}
-                  inactiveDotScale={0.6}
-                  carouselRef={this.slider1Ref}
-                  tappableDots={!!this.slider1Ref}
-                />
-              </View>
-            </View>
-            <View style={styles.infoRecipeContainer}>
-              <Text style={styles.infoRecipeName}>{product.name}</Text>
-              <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} />
-              <View style={styles.infoContainer}>
-                <Text style={styles.infoDescriptionRecipe}>{product.description}</Text>
-              </View>
+            <View style={styles.carousel}>
+              <Carousel
+                ref={c => {
+                  this.slider1Ref = c;
+                }}
+                data={product.images}
+                renderItem={this.renderImage}
+                sliderWidth={viewportWidth}
+                itemWidth={viewportWidth}
+                inactiveSlideScale={1}
+                inactiveSlideOpacity={1}
+                firstItem={0}
+                loop={false}
+                autoplay={false}
+                autoplayDelay={500}
+                autoplayInterval={3000}
+                onSnapToItem={index => this.setState({ activeSlide: index })}
+              />
+              <Pagination
+                dotsLength={product.images.length}
+                activeDotIndex={activeSlide}
+                containerStyle={styles.paginationContainer}
+                dotColor="rgba(255, 255, 255, 0.92)"
+                dotStyle={styles.paginationDot}
+                inactiveDotColor="white"
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+                carouselRef={this.slider1Ref}
+                tappableDots={!!this.slider1Ref}
+              />
             </View>
           </View>
+          <View style={styles.infoRecipeContainer}>
+            <Text style={styles.infoRecipeName}>{product.name}</Text>
+            <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} />
+            <More product={product} fectchBrand={this.props.fectchBrand} brandReducer={this.props.brandReducer} />
+          </View>
+
         </ScrollView>
       );
   }
@@ -100,7 +101,8 @@ class DetailProductScreen extends Component {
 const mapStateToProps = state => {
   return {
     productDetailReducer: state.productDetailReducer,
-    productOptionsReducer: state.productOptionsReducer
+    productOptionsReducer: state.productOptionsReducer,
+    brandReducer: state.brandReducer
   }
 }
 
@@ -117,6 +119,9 @@ const mapDispatchToProps = dispatch => ({
   fectchSizeOptions: (id) => {
     dispatch(fectchSizeOptionsRequest(id));
   },
+  fectchBrand: (id) => {
+    dispatch(fectchBrandRequest(id))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailProductScreen);

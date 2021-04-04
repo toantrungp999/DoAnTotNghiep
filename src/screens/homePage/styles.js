@@ -4,6 +4,7 @@ const { width: viewportWidth } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
+    width:'100%',
     backgroundColor: 'white',
     flex: 1
   },

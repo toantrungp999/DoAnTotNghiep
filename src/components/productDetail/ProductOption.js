@@ -91,19 +91,24 @@ export default class ProductOption extends Component {
                         <Text style={styles.price}>{convertNumberToVND(this.props.price - (this.props.saleOff || 0))}₫</Text>
                         {this.props.saleOff ? <Text style={styles.salePrice}>{convertNumberToVND(this.props.price)}₫</Text> : null}
                     </View>
-                    <View style={styles.row}>
-                        <Text style={styles.text}>Size:</Text>
-                    </View>
-                    <View style={styles.row}>
-                        {sizeComponent}
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.text}>Màu:</Text>
-                    </View>
-                    <View style={styles.row}>
-                        {colorComponent}
-                    </View>
+                    {quantityOptions && quantityOptions.length > 0 &&
+                        <>
+                            <View style={styles.row}>
+                                <Text style={styles.text}>Size:</Text>
+                            </View>
+                            <View style={styles.row}>
+                                {sizeComponent}
+                            </View>
+                            <View style={styles.row}>
+                                <Text style={styles.text}>Màu:</Text>
+                            </View>
+                            <View style={styles.row}>
+                                {colorComponent}
+                            </View>
+                        </>
+                    }
                     {this.state.quantityOption ? <>
+
                         <View style={styles.row}>
                             <Text style={styles.text}>Số lượng hiện có: {this.state.quantityOption.quantity}</Text>
                         </View>
@@ -117,7 +122,13 @@ export default class ProductOption extends Component {
                                 returnKeyType="next"
                             />
                         </View>
-                    </> : null}
+                    </> :
+                        null}
+                    {
+                        !quantityOptions || quantityOptions.length === 0 && <View style={styles.row}>
+                            <Text style={styles.textRed}>Sản phẩm sắp ra mắt</Text>
+                        </View>
+                    }
                 </View>
             </View>
         );
@@ -132,17 +143,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row', width: '100%',
         marginTop: 8,
     },
-    textSize: {
-        fontSize: 18,
-
-    },
     text: {
         marginTop: 5,
         marginBottom: 2,
         fontSize: 18,
-        color: '#0000CD',
         fontWeight: 'bold',
         color: 'black',
+    },
+    textRed: {
+        marginTop: 5,
+        marginBottom: 2,
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'red',
     },
     textPrice: {
         fontSize: 18,
@@ -152,13 +165,12 @@ const styles = StyleSheet.create({
         color: '#0000CD',
         marginRight: 10,
         fontWeight: 'bold',
-        color: 'black',
+        color: 'red',
     },
     salePrice: {
         color: '#ccc',
         fontSize: 18,
         textDecorationLine: 'line-through',
-        fontWeight: 'bold',
         color: 'black',
     },
     chooseBtn: {
