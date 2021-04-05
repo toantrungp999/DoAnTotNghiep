@@ -5,7 +5,7 @@ const { width: viewportWidth } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     width:'100%',
-    backgroundColor: 'white',
+    backgroundColor: '#F1F2F6',
     flex: 1
   },
   carouselContainer: {
