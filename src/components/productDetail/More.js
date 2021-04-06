@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
-import Comments from './Comments';
-import Rates from './Rates';
+import Comments from './comment/Comments';
+import Rates from './rate/Rates';
 import Description from './Description';
 
 export default class More extends Component {
@@ -25,8 +25,24 @@ export default class More extends Component {
         <View style={styles.row}>
           <View style={{ marginLeft: 10 }}>
             {index === 0 && <Description fectchBrand={this.props.fectchBrand} product={this.props.product} brandReducer={this.props.brandReducer} />}
-            {index === 1 && <Comments />}
-            {index === 2 && <Rates />}
+            {
+              index === 1 &&
+              <Comments
+                viewMoreComments={this.props.viewMoreComments} lengthCmt={this.props.lengthCmt} totalCmt={this.props.totalCmt}
+                onCreateComment={this.props.onCreateComment} onCreateReply={this.props.onCreateReply}
+                onUpdateComment={this.props.onUpdateComment} onDeleteComment={this.props.onDeleteComment}
+                onUpdateCommentReply={this.props.onUpdateCommentReply} onDeleteCommentReply={this.props.onDeleteCommentReply}
+                commentsReducer={this.props.commentsReducer} userInfo={this.props.userInfo}
+              />
+            }
+            {
+              index === 2 &&
+              <Rates
+                viewMoreRates={this.props.viewMoreRates} lengthRate={this.props.lengthRate} totalRate={this.props.totalRate}
+                onCreateRate={this.props.onCreateRate} onCreateRateReply={this.props.onCreateRateReply} onUpdateRate={this.props.onUpdateRate}
+                onUpdateRateReply={this.props.onUpdateRateReply} onDeleteRate={this.props.onDeleteRate} onDeleteRateReply={this.props.onDeleteRateReply}
+                ratesReducer={this.props.ratesReducer} userInfo={this.props.userInfo}
+              />}
           </View>
         </View>
       </View>

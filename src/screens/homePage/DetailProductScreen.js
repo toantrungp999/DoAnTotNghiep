@@ -10,6 +10,16 @@ import {
 import {
   fectchColorOptionsRequest, fectchQuantityOptionsRequest, fectchSizeOptionsRequest
 } from '../../../actions/productOptionActions';
+import {
+  fectchCommentsRequest, createCommentRequest, updateCommentRequest,
+  createReplyRequest, updateReplyRequest,
+  deleteCommentRequest, deleteReplyRequest
+} from '../../../actions/commentActions';
+import {
+  fectchRatesRequest, createRateRequest, updateRateRequest,
+  createRateReplyRequest, updateRateReplyRequest,
+  deleteRateRequest, deleteRateReplyRequest
+} from '../../../actions/rateActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import styles from './styles';
 import ProductOption from '../../components/productDetail/ProductOption';
@@ -22,17 +32,43 @@ class DetailProductScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeSlide: 0
-    };
+      id: '',
+      images: '',
+      activeSlide: 0,
+      lengthCmt: 5,
+      lengthRate: 5,
+    }
+  }
+
+  onCreateComment = (content, dataUser) => {
+    this.props.createComment({ productId: this.state.id, content }, dataUser);
+  }
+
+  onCreateRate = (data, dataUser) => {
+    data.productId = this.state.id;
+    this.props.createRate(data, dataUser);
+  }
+
+  viewMoreComments = () => {
+    this.props.fectchComments(this.state.id, this.state.lengthCmt + 5);
+    this.setState({ lengthCmt: this.state.lengthCmt + 5 })
+  }
+
+  viewMoreRates = () => {
+    this.props.fectchRates(this.state.id, this.state.lengthRate + 5);
+    this.setState({ lengthRate: this.state.lengthRate + 5 })
   }
 
   componentDidMount() {
     const { id } = this.props.route.params;
     if (id) {
+      this.setState({ id });
       this.props.fectchProduct(id);
       this.props.fectchColorOptions(id);
       this.props.fectchSizeOptions(id);
       this.props.fectchQuantityOptions(id);
+      this.props.fectchComments(id, this.state.lengthCmt);
+      this.props.fectchRates(id, this.state.lengthRate);
     }
   }
 
@@ -47,6 +83,7 @@ class DetailProductScreen extends Component {
   render() {
     const { product, loading } = this.props.productDetailReducer;
     const { activeSlide } = this.state;
+    const { userInfo } = this.props.userInfoReducer;
     if (loading)
       return <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>LOADING...</Text>
@@ -90,7 +127,21 @@ class DetailProductScreen extends Component {
           <View style={styles.infoRecipeContainer}>
             <Text style={styles.infoRecipeName}>{product.name}</Text>
             <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} />
-            <More product={product} fectchBrand={this.props.fectchBrand} brandReducer={this.props.brandReducer} />
+            <More
+              product={product} fectchBrand={this.props.fectchBrand} brandReducer={this.props.brandReducer}
+              viewMoreRates={this.viewMoreRates} lengthRate={this.state.lengthRate} totalRate={this.props.ratesReducer.total}
+              onCreateRate={this.onCreateRate} onCreateRateReply={this.props.createRateReply} onUpdateRate={this.props.updateRate}
+              onUpdateRateReply={this.props.updateRateReply} onDeleteRate={this.props.deleteRate} onDeleteRateReply={this.props.deleteRateReply}
+              ratesReducer={this.props.ratesReducer}
+              viewMoreComments={this.viewMoreComments} lengthCmt={this.state.lengthCmt} totalCmt={this.props.commentsReducer.total}
+              onCreateComment={this.onCreateComment} onCreateReply={this.props.createReply}
+              onUpdateComment={this.props.updateComment} onDeleteComment={this.props.deleteComment}
+              onUpdateCommentReply={this.props.updateReply} onDeleteCommentReply={this.props.deleteReply}
+              commentsReducer={this.props.commentsReducer}
+              userInfo={userInfo}
+
+
+            />
           </View>
 
         </ScrollView>
@@ -100,9 +151,12 @@ class DetailProductScreen extends Component {
 
 const mapStateToProps = state => {
   return {
+    userInfoReducer: state.userInfoReducer,
     productDetailReducer: state.productDetailReducer,
     productOptionsReducer: state.productOptionsReducer,
-    brandReducer: state.brandReducer
+    brandReducer: state.brandReducer,
+    commentsReducer: state.commentsReducer,
+    ratesReducer: state.ratesReducer,
   }
 }
 
@@ -121,7 +175,23 @@ const mapDispatchToProps = dispatch => ({
   },
   fectchBrand: (id) => {
     dispatch(fectchBrandRequest(id))
-  }
+  },
+  fectchComments: (_id, length) => { dispatch(fectchCommentsRequest(_id, length)) },
+  fectchRates: (_id, length) => { dispatch(fectchRatesRequest(_id, length)) },
+  //
+  createComment: (data, dataUser) => { dispatch(createCommentRequest(data, dataUser)) },
+  updateComment: (data) => { dispatch(updateCommentRequest(data)) },
+  updateReply: (data) => { dispatch(updateReplyRequest(data)) },
+  createReply: (data) => { dispatch(createReplyRequest(data)) },
+  deleteComment: (data) => { dispatch(deleteCommentRequest(data)) },
+  deleteReply: (data) => { dispatch(deleteReplyRequest(data)) },
+  ///
+  createRate: (data, dataUser) => { dispatch(createRateRequest(data, dataUser)) },
+  createRateReply: (data) => { dispatch(createRateReplyRequest(data)) },
+  updateRate: (data) => { dispatch(updateRateRequest(data)) },
+  updateRateReply: (data) => { dispatch(updateRateReplyRequest(data)) },
+  deleteRate: (data) => { dispatch(deleteRateRequest(data)) },
+  deleteRateReply: (data) => { dispatch(deleteRateReplyRequest(data)) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailProductScreen);
