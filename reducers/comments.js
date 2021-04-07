@@ -32,7 +32,8 @@ function commentsReducer(state = { loading: true }, action) {
             return { ...state };
         case Types.COMMENT_UPDATE_SUCCESS:
             comment = action.payload.data;
-            index = findIndexById(state.comments, comment._id);
+            console.log(comment);
+            index = findIndexById(state.comments, comment.commentId);
             if (index >= 0)
                 state.comments[index].content = comment.content;
             state.updateLoading = false;

@@ -9,8 +9,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row', width: '100%',
         marginTop: 8,
     },
+    rowEdit: {
+        flexDirection: 'row', width: '100%',
+    },
     img: {
-        width: '16%'
+        width: '15%'
     },
     avartar: {
         width: 40, height: 40, borderWidth: 1, borderRadius: 20, marginTop: 2
@@ -19,27 +22,44 @@ const styles = StyleSheet.create({
         width: '75%',
         marginBottom: 5,
     },
+    editComent: {
+        width: '84%',
+        marginBottom: 5,
+    },
     viewSend: {
         width: '25%',
         justifyContent: 'center',
         alignItems: 'center'
-
+    },
+    viewEditAction: {
+        width: '16%',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     sendBtn: {
         fontSize: 16,
         color: 'rgb(0,119,212)',
     },
+    editBtn: {
+        marginLeft:20,
+        fontSize: 16,
+        color: 'rgb(0,119,212)',
+    },
     contentArea: {
-        width: '84%',
+        width: '85%',
     },
     content: {
         backgroundColor: 'white',
         borderRadius: 10,
         minHeight: 45
     },
+    name:{
+        fontSize: 13,
+        color: 'black',
+        paddingLeft: 10, paddingTop: 5, paddingRight: 10,
+        fontWeight:'bold'
+    },
     text: {
-        borderRadius: 30,
-        backgroundColor: 'white',
         fontSize: 13,
         color: 'black',
         paddingLeft: 10, paddingTop: 5, paddingRight: 10, paddingBottom: 5

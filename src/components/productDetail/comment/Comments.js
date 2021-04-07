@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import styles from './styles';
 import Comment from './Comment';
 import AddComment from './AddComment';
@@ -20,7 +20,7 @@ export default class Comments extends Component {
             return <Comment key={_id} index={index}
                 updateLoading={updateLoading} updateReplyLoading={updateReplyLoading}
                 deleteLoading={deleteLoading} deleteReplyLoading={deleteReplyLoading} createReplyLoading={createReplyLoading}
-                commentId={_id} content={content} date={date} replies={replies} user={user}  productId={comment.productId}
+                commentId={_id} content={content} date={date} replies={replies} user={user} productId={comment.productId}
                 userInfo={this.props.userInfo}
                 onCreateReply={this.props.onCreateReply}
                 onUpdateComment={this.props.onUpdateComment} onDeleteComment={this.props.onDeleteComment}
@@ -29,8 +29,9 @@ export default class Comments extends Component {
         }) : '';
         return (
             <View style={styles.container}>
-                {this.props.userInfo && !createLoading ? <AddComment onCreateComment={this.props.onCreateComment} userInfo={this.props.userInfo} /> : ''}
+                {this.props.userInfo && !createLoading ? <AddComment onCreateComment={this.props.onCreateComment} userInfo={this.props.userInfo} /> : null}
                 {listComments}
+                {this.props.totalCmt > this.props.lengthCmt && <View style={styles.row}><TouchableOpacity onPress={this.props.viewMoreComments}><Text style={styles.textAction}>Xem thêm bình luận</Text></TouchableOpacity></View>}
             </View>
         );
     }

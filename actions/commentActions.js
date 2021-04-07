@@ -33,8 +33,14 @@ export const updateCommentRequest = (data) => {
     return (dispatch) => {
         dispatch({ type: Types.COMMENT_UPDATE_REQUEST });
         callApiToken(dispatch, 'comments', 'PUT', data).then(response => {
-            const type = response.status === 0 ? Types.COMMENT_UPDATE_SUCCESS : Types.COMMENT_UPDATE_FAIL;
+            if (response.status === 0) {
+                response.data = data;
+                type = Types.COMMENT_UPDATE_SUCCESS;
+            }
+            else
+                type = Types.COMMENT_UPDATE_FAIL;
             dispatch({ type, payload: response });
+           
         });
     };
 }
