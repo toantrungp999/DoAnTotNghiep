@@ -86,6 +86,7 @@ export const deleteReplyRequest = (data) => {
         dispatch({ type: Types.REPLY_DELETE_REQUEST });
         callApiToken(dispatch, 'comments/replies', 'DELETE', data).then(response => {
             let type = null;
+            console.log(response);
             if (response.status === 0) {
                 type = Types.REPLY_DELETE_SUCCESS;
                 response.data = data;

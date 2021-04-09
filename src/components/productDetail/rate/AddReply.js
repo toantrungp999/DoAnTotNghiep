@@ -6,7 +6,7 @@ export default class Comment extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            content: '',
+            reply: '',
         }
     }
 
@@ -16,28 +16,28 @@ export default class Comment extends Component {
         });
     };
 
-    onSubmit = () => {
-        const content = this.state.content.trim();
-        if (content) {
-            this.props.onCreateComment(this.state.content, { name: this.props.userInfo.name, image: this.props.userInfo.image, role: this.props.userInfo.role });
-            this.setState({
-                content: '',
-            });
-        }
+    onCreateReply = () => {
+        let { reply } = this.state;
+        const { rateId } = this.props;
+        reply = reply.trim();
+        if (reply)
+            this.props.onCreateReply({ rateId, reply });
+        this.props.onShowReplyForm();
+        this.setState({ reply: '' });
     }
 
     render() {
         return (
             <View style={styles.row}>
-                <View style={styles.addComment}>
+                <View style={styles.addReply}>
                     <TextInput
                         style={styles.input}
                         underlineColor="transparent"
-                        onChangeText={(text) => this.onChange('content', text)}
+                        onChangeText={(text) => this.onChange('reply', text)}
                     />
                 </View>
-                <View style={styles.viewSend}>
-                    <TouchableOpacity onPress={this.onSubmit}><Text style={styles.sendBtn}>Bình luận</Text></TouchableOpacity>
+                <View style={styles.sendReply}>
+                    <TouchableOpacity onPress={this.onCreateReply}><Text style={styles.sendBtn}>Phản hồi</Text></TouchableOpacity>
                 </View>
             </View>
         );

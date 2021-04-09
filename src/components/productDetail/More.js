@@ -28,6 +28,7 @@ export default class More extends Component {
             {
               index === 1 &&
               <Comments
+                productId={this.props.product._id}
                 viewMoreComments={this.props.viewMoreComments} lengthCmt={this.props.lengthCmt} totalCmt={this.props.totalCmt}
                 onCreateComment={this.props.onCreateComment} onCreateReply={this.props.onCreateReply}
                 onUpdateComment={this.props.onUpdateComment} onDeleteComment={this.props.onDeleteComment}
@@ -38,6 +39,7 @@ export default class More extends Component {
             {
               index === 2 &&
               <Rates
+                productId={this.props.productId}
                 viewMoreRates={this.props.viewMoreRates} lengthRate={this.props.lengthRate} totalRate={this.props.totalRate}
                 onCreateRate={this.props.onCreateRate} onCreateRateReply={this.props.onCreateRateReply} onUpdateRate={this.props.onUpdateRate}
                 onUpdateRateReply={this.props.onUpdateRateReply} onDeleteRate={this.props.onDeleteRate} onDeleteRateReply={this.props.onDeleteRateReply}

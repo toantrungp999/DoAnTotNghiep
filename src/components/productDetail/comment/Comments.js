@@ -18,6 +18,7 @@ export default class Comments extends Component {
         const listComments = comments ? comments.map((comment, index) => {
             let { _id, content, user, date, replies } = comment;
             return <Comment key={_id} index={index}
+                productId={this.props.productId}
                 updateLoading={updateLoading} updateReplyLoading={updateReplyLoading}
                 deleteLoading={deleteLoading} deleteReplyLoading={deleteReplyLoading} createReplyLoading={createReplyLoading}
                 commentId={_id} content={content} date={date} replies={replies} user={user} productId={comment.productId}
@@ -26,7 +27,7 @@ export default class Comments extends Component {
                 onUpdateComment={this.props.onUpdateComment} onDeleteComment={this.props.onDeleteComment}
                 onUpdateCommentReply={this.props.onUpdateCommentReply} onDeleteCommentReply={this.props.onDeleteCommentReply}
             />
-        }) : '';
+        }) : null;
         return (
             <View style={styles.container}>
                 {this.props.userInfo && !createLoading ? <AddComment onCreateComment={this.props.onCreateComment} userInfo={this.props.userInfo} /> : null}

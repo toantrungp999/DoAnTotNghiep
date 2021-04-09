@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import { TextInput } from 'react-native-paper';
 
@@ -10,22 +10,21 @@ export default class Reply extends Component {
             replyId: '',
             content: '',
             user: {},
-            data: '',
+            oldContent: '',
             isEdit: false
         }
     }
 
     componentDidMount() {
         const { _id, content, user, date } = this.props.reply;
-        console.log(this.props.reply);
         this.setState({
-            replyId: _id, content, user, date
+            replyId: _id, content, user, date, oldContent: content
         });
     }
 
     onDelete = () => {
         let { replyId } = this.state;
-        this.props.onDeleteCommentReply({ replyId, commentId: this.props.commentId });
+        this.props.onDeleteReply({ productId: this.props.productId, replyId, commentId: this.props.commentId });
     }
 
     onChange = (name, value) => {
@@ -43,6 +42,24 @@ export default class Reply extends Component {
         }
     }
 
+    prepareToDelete = () => {
+        Alert.alert(
+            "Cảnh báo",
+            "Bạn muốn xóa bình luận này",
+            [
+                {
+                    text: "Đồng ý",
+                    onPress: () => this.onDelete()
+                },
+                {
+                    text: "Hủy",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+            ]
+        );
+    }
+
     render() {
         var isUser = this.props.userInfo && this.state.user._id === this.props.userInfo._id;
         return (
@@ -58,7 +75,6 @@ export default class Reply extends Component {
                         </View>
                         {isUser && <View style={styles.areaAction}>
                             <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Phản hồi</Text></TouchableOpacity>
                             <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity></View>}
                     </View>
                 </View> :

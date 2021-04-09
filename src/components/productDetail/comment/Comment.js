@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity,Alert } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import Reply from './Reply';
+import AddReply from './AddReply';
 import { TextInput } from 'react-native-paper';
 
 export default class Comment extends Component {
@@ -52,24 +53,6 @@ export default class Comment extends Component {
         }
     }
 
-    onCreateReply = () => {
-        let { commentId, reply } = this.state;
-        reply = reply.trim();
-        if (reply)
-            this.props.onCreateCommentReply({ commentId, reply });
-        this.onShowReplyForm();
-        this.setState({ reply: '' })
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps) {
-            const { replies } = nextProps;
-            this.setState({
-                replies
-            });
-        }
-    }
-
     prepareToDelete = () => {
         Alert.alert(
             "Cảnh báo",
@@ -90,8 +73,8 @@ export default class Comment extends Component {
 
     render() {
         var isUser = this.props.userInfo && this.state.user._id === this.props.userInfo._id;
-        var elementReplies = this.state.replies ? this.state.replies.map((reply, index) => {
-            return <Reply commentId={this.state.commentId} key={reply._id} reply={reply} index={index} userInfo={this.props.userInfo} onDeleteCommentReply={this.props.onDeleteCommentReply} onUpdateCommentReply={this.props.onUpdateCommentReply} />
+        var elementReplies = this.props.replies ? this.props.replies.map((reply, index) => {
+            return <Reply productId={this.props.productId} commentId={this.state.commentId} key={reply._id} reply={reply} index={index} userInfo={this.props.userInfo} onDeleteReply={this.props.onDeleteCommentReply} onUpdateCommentReply={this.props.onUpdateCommentReply} />
         }) : null;
         return (
             !this.state.isEdit ?
@@ -106,9 +89,10 @@ export default class Comment extends Component {
                         </View>
                         {isUser && <View style={styles.areaAction}>
                             <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Phản hồi</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.onShowReplyForm}><Text style={styles.textAction}>Phản hồi</Text></TouchableOpacity>
                             <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity></View>}
                         <View style={styles.areaAction}>
+                            {this.state.isReply && <AddReply commentId={this.state.commentId} onShowReplyForm={this.onShowReplyForm} onCreateReply={this.props.onCreateReply} />}
                             {elementReplies}
                         </View>
                     </View>

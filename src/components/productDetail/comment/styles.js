@@ -18,9 +18,18 @@ const styles = StyleSheet.create({
     avartar: {
         width: 40, height: 40, borderWidth: 1, borderRadius: 20, marginTop: 2
     },
-    addComent: {
+    addComment: {
         width: '75%',
         marginBottom: 5,
+    },
+    addReply: {
+        width: '72%',
+        marginBottom: 5,
+    },
+    sendReply: {
+        width: '28%',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     editComent: {
         width: '84%',
@@ -68,7 +77,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         borderRadius: 20,
-        height: 40,
+        height: 30,
         fontSize: 13,
         backgroundColor: 'white',
         color: 'black',
