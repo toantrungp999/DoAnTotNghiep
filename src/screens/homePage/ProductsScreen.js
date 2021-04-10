@@ -5,70 +5,120 @@ import {
   FlatList,
   Text
 } from 'react-native';
+import { SearchBar } from 'react-native-elements';
 import Product from '../../components/product/Product';
 import { connect } from 'react-redux';
 import {
   fectchProductsRequest, searchProductsRequest
 } from '../../../actions/productActions';
+import { DataTable } from 'react-native-paper';
 
 class ProductsScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      searchValue: '',
+      pageSize: '',
+      paging: 1,
+      option: 0,
+    };
   }
 
   componentDidMount() {
     this.props.fectchProducts(0, 0, 1, 0);
   }
 
+  onSearch = (value) => {
+    this.setState({
+      searchValue: value
+    });
+    if (value)
+      // this.props.searchProducts(value, this.state.paging, 12, true, this.state.option);
+      this.props.searchProducts(value, 1, 12, true, 0);
+    else
+      this.props.fectchProducts(0, 0, 1, 0);
+  };
+
+  setPage = (paging) => {
+    if (paging >= 1 && paging !== this.state.paging) {
+      this.setState({
+        paging
+      });
+      if (this.state.searchValue)
+        // this.props.searchProducts(value, this.state.paging, 12, true, this.state.option);
+        this.props.searchProducts(searchValue, paging, 12, true, 0);
+      else
+        this.props.fectchProducts(0, 0, paging, 0);
+    }
+  }
+
   render() {
-    const { products, loading } = this.props.productsReducer;
+    const { products, loading, pagingInfo } = this.props.productsReducer;
+    console.log(pagingInfo);
+    let partScreen = '';
     if (loading)
-      return <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      partScreen = <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>LOADING...</Text>
       </View>
     else
-      return (
-        <View style={styles.container}>
-          <FlatList style={styles.list}
-            contentContainerStyle={styles.listContainer}
-            data={products}
-            horizontal={false}
-            numColumns={2}
-            keyExtractor={(item) => {
-              return item.id;
-            }}
-            ItemSeparatorComponent={() => {
-              return (
-                <View style={styles.separator} />
-              )
-            }}
-            renderItem={(post) => {
-              const item = post.item;
-              return (
-                <Product navigation={this.props.navigation} id={item._id} image={item.images[0]} name={item.name} price={item.price} salePrice="50 USD" avgRate={item.avgRate} />
-              )
-            }} />
-        </View>
-      );
+      partScreen = <FlatList style={styles.list}
+        contentContainerStyle={styles.listContainer}
+        data={products}
+        horizontal={false}
+        numColumns={2}
+        keyExtractor={(item) => {
+          return item.id;
+        }}
+        ItemSeparatorComponent={() => {
+          return (
+            <View style={styles.separator} />
+          )
+        }}
+        renderItem={(post) => {
+          const item = post.item;
+          return (
+            <Product navigation={this.props.navigation} id={item._id} image={item.images[0]} name={item.name} price={item.price} salePrice="50 USD" avgRate={item.avgRate} />
+          )
+        }} />
+    return (
+      <View style={styles.container}>
+        <SearchBar
+          round
+          lightTheme
+          searchIcon={{ size: 24 }}
+          onChangeText={(text) => this.onSearch(text)}
+          onClear={() => this.onSearch('')}
+          placeholder="Tìm kiếm..."
+          value={this.state.searchValue}
+        />
+        {partScreen}
+        {!loading && <DataTable>
+          <DataTable.Pagination
+            page={pagingInfo.totalPage}
+            numberOfPages={pagingInfo.pageSize}
+            onPageChange={page => this.setPage(page)}
+            label={`Hiển thị từ ${(pagingInfo.currentPage - 1) * pagingInfo.pageSize + 1} đến ${(pagingInfo.currentPage - 1) * pagingInfo.pageSize + products.length} của ${pagingInfo.totalPage * pagingInfo.pageSize} kết quả`}
+          />
+        </DataTable>
+        }
+      </View>
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: 20,
+    flex: 1
   },
   list: {
-    paddingHorizontal: 5,
     backgroundColor: "#E6E6E6",
   },
   listContainer: {
     alignItems: 'center'
   },
   separator: {
-    marginTop: 10,
+    // marginTop: 10,
   },
   /******** card **************/
   card: {
