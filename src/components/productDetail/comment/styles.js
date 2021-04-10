@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     addReply: {
-        width: '72%',
+        width: '85%',
         marginBottom: 5,
     },
     sendReply: {
-        width: '28%',
+        width: '15%',
         justifyContent: 'center',
         alignItems: 'center'
     },

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import { TextInput } from 'react-native-paper';
+import { time_ago } from './../../../../extentions/ArrayEx';
 
 export default class Reply extends Component {
     constructor(props) {
@@ -11,6 +12,7 @@ export default class Reply extends Component {
             content: '',
             user: {},
             oldContent: '',
+            date: '',
             isEdit: false
         }
     }
@@ -73,9 +75,10 @@ export default class Reply extends Component {
                             <Text style={styles.name}>{this.state.user.name && this.state.user.name}</Text>
                             <Text style={styles.text}>{this.state.content}</Text>
                         </View>
-                        {isUser && <View style={styles.areaAction}>
-                            <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity></View>}
+                        <View style={styles.areaAction}>
+                            <Text style={styles.textAction}>{time_ago(this.state.date)}</Text>
+                            {isUser && <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>}
+                            {isUser && <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity>}</View>
                     </View>
                 </View> :
                 <View>

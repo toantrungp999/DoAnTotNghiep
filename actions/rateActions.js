@@ -16,12 +16,11 @@ export const createRateRequest = (data, dataUser) => {
     return (dispatch) => {
         dispatch({ type: Types.RATE_CREATE_REQUEST });
         callApiToken(dispatch, 'rates', 'POST', data).then(response => {
+            console.log(response)
             let type = null;
             if (response.status === 0) {
                 type = Types.RATE_CREATE_SUCCESS;
-                const _id = response.data.user;
                 response.data.user = dataUser;
-                response.data.user._id = _id;
             }
             else
                 type = Types.RATE_CREATE_FAIL;

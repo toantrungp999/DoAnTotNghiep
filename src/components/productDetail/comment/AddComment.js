@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import { TextInput } from 'react-native-paper';
-export default class Comment extends Component {
+export default class AddComment extends Component {
     constructor(props) {
         super(props);
         this.state = {

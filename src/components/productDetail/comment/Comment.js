@@ -4,6 +4,7 @@ import styles from './styles';
 import Reply from './Reply';
 import AddReply from './AddReply';
 import { TextInput } from 'react-native-paper';
+import { time_ago } from './../../../../extentions/ArrayEx';
 
 export default class Comment extends Component {
     constructor(props) {
@@ -13,6 +14,7 @@ export default class Comment extends Component {
             user: '',
             content: '',
             reply: '',
+            date: '',
             isEdit: false,
             isReply: false,
             oldContent: '',
@@ -87,13 +89,16 @@ export default class Comment extends Component {
                             <Text style={styles.name}>{this.state.user.name && this.state.user.name}</Text>
                             <Text style={styles.text}>{this.state.content}</Text>
                         </View>
-                        {isUser && <View style={styles.areaAction}>
-                            <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={this.onShowReplyForm}><Text style={styles.textAction}>Phản hồi</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity></View>}
                         <View style={styles.areaAction}>
-                            {this.state.isReply && <AddReply commentId={this.state.commentId} onShowReplyForm={this.onShowReplyForm} onCreateReply={this.props.onCreateReply} />}
-                            {elementReplies}
+                            <Text style={styles.textAction}>{time_ago(this.state.date)}</Text>
+                            {isUser && <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>}
+                            {this.props.userInfo && <TouchableOpacity onPress={this.onShowReplyForm}><Text style={styles.textAction}>Phản hồi</Text></TouchableOpacity>}
+                            {isUser && <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity>}</View>
+                        <View style={styles.areaAction}>
+                            <View style={{ width: '100%' }}>
+                                {this.state.isReply && <AddReply commentId={this.state.commentId} onShowReplyForm={this.onShowReplyForm} onCreateReply={this.props.onCreateReply} />}
+                                {elementReplies}
+                            </View>
                         </View>
                     </View>
                 </View> :

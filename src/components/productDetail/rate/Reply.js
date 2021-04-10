@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import { TextInput } from 'react-native-paper';
+import { time_ago } from './../../../../extentions/ArrayEx';
 
 export default class Reply extends Component {
     constructor(props) {
@@ -33,11 +34,11 @@ export default class Reply extends Component {
         });
     };
 
-    onUpdateCommentReply = () => {
+    onUpdateReply = () => {
         let { replyId, content } = this.state;
         content = content.trim();
         if (content) {
-            this.props.onUpdateCommentReply({ rateId: this.props.rateId, replyId, content });
+            this.props.onUpdateReply({ rateId: this.props.rateId, replyId, content });
             this.setState({ isEdit: false });
         }
     }
@@ -45,7 +46,7 @@ export default class Reply extends Component {
     prepareToDelete = () => {
         Alert.alert(
             "Cảnh báo",
-            "Bạn muốn xóa bình luận này",
+            "Bạn muốn xóa phản hồi này",
             [
                 {
                     text: "Đồng ý",
@@ -73,9 +74,10 @@ export default class Reply extends Component {
                             <Text style={styles.name}>{this.state.user.name && this.state.user.name}</Text>
                             <Text style={styles.text}>{this.state.content}</Text>
                         </View>
-                        {isUser && <View style={styles.areaAction}>
-                            <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>
-                            <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity></View>}
+                        <View style={styles.areaAction}>
+                            <Text style={styles.textAction}>{time_ago(this.state.date)}</Text>
+                            {isUser && <TouchableOpacity onPress={() => this.setState({ isEdit: true })}><Text style={styles.textAction}>Chỉnh sửa</Text></TouchableOpacity>}
+                            {isUser && <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity>}</View>
                     </View>
                 </View> :
                 <View>
@@ -89,7 +91,7 @@ export default class Reply extends Component {
                             />
                         </View>
                         <View style={styles.viewEditAction}>
-                            <TouchableOpacity onPress={this.onUpdateCommentReply}><Text style={styles.textAction}>Lưu</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.onUpdateReply}><Text style={styles.textAction}>Lưu</Text></TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.rowEdit}>

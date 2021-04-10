@@ -50,7 +50,6 @@ function time_ago(time) {
     [58060800000, 'thể kỷ trước', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
   ];
   var seconds = (+new Date() - time) / 1000,
-    token = 'trước',
     list_choice = 1;
 
   if (seconds === 0) {
@@ -58,7 +57,6 @@ function time_ago(time) {
   }
   if (seconds < 0) {
     seconds = Math.abs(seconds);
-    token = 'kể từ bây giờ';
     list_choice = 2;
   }
   var i = 0;
@@ -70,7 +68,7 @@ function time_ago(time) {
       if (typeof format[2] === 'string')
         return format[list_choice];
       else
-        return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
+        return Math.floor(seconds / format[2]) + ' ' + format[1];
     }
   }
   return time;

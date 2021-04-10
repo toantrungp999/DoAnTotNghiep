@@ -18,16 +18,16 @@ const styles = StyleSheet.create({
     avartar: {
         width: 40, height: 40, borderWidth: 1, borderRadius: 20, marginTop: 2
     },
-    addComment: {
+    addRate: {
         width: '75%',
         marginBottom: 5,
     },
     addReply: {
-        width: '72%',
+        width: '85%',
         marginBottom: 5,
     },
     sendReply: {
-        width: '28%',
+        width: '15%',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -46,11 +46,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     sendBtn: {
+        marginLeft:5,
         fontSize: 16,
         color: 'rgb(0,119,212)',
     },
     editBtn: {
-        marginLeft:20,
+        marginLeft: 20,
         fontSize: 16,
         color: 'rgb(0,119,212)',
     },
@@ -62,11 +63,11 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         minHeight: 45
     },
-    name:{
+    name: {
         fontSize: 13,
         color: 'black',
         paddingLeft: 10, paddingTop: 5, paddingRight: 10,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     text: {
         fontSize: 13,
@@ -74,14 +75,14 @@ const styles = StyleSheet.create({
         paddingLeft: 10, paddingTop: 5, paddingRight: 10, paddingBottom: 5
     },
     input: {
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        borderRadius: 20,
-        height: 30,
-        fontSize: 13,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        borderRadius: 15,
+        height: 35,
+        fontSize: 12,
         backgroundColor: 'white',
         color: 'black',
-        paddingLeft: 10, paddingTop: 5, paddingRight: 10, paddingBottom: 5,
+        paddingLeft: 10,
         width: '100%'
     },
     areaAction: {
@@ -94,12 +95,36 @@ const styles = StyleSheet.create({
         color: 'rgb(0,119,212)',
         marginLeft: 10,
     },
+    textActionEdit: {
+        fontSize: 14,
+        color: 'rgb(0,119,212)',
+        marginLeft: 5,
+        marginTop:10
+    },
     avartarReply: {
         width: 36, height: 36, borderRadius: 18, marginTop: 3
     },
     imgReply: {
         width: '16%'
     },
+    star: {
+        flexDirection: 'row', width: '100%',
+        marginTop: 5,
+        marginLeft: 8
+    },
+    AddRateStar: {
+        flexDirection: 'row', width: '100%',
+        marginLeft: 8,
+        marginBottom: 8,
+    },
+    icon: {
+        marginLeft: 5
+    },
+    sendAddReteBtn:{
+        fontSize: 16,
+        color: 'rgb(0,119,212)',
+        marginTop:8
+    }
 });
 
 export default styles;

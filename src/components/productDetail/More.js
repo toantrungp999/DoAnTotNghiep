@@ -39,9 +39,8 @@ export default class More extends Component {
             {
               index === 2 &&
               <Rates
-                productId={this.props.productId}
                 viewMoreRates={this.props.viewMoreRates} lengthRate={this.props.lengthRate} totalRate={this.props.totalRate}
-                onCreateRate={this.props.onCreateRate} onCreateRateReply={this.props.onCreateRateReply} onUpdateRate={this.props.onUpdateRate}
+                onCreateRate={this.props.onCreateRate} onCreateReply={this.props.onCreateRateReply} onUpdateRate={this.props.onUpdateRate}
                 onUpdateRateReply={this.props.onUpdateRateReply} onDeleteRate={this.props.onDeleteRate} onDeleteRateReply={this.props.onDeleteRateReply}
                 ratesReducer={this.props.ratesReducer} userInfo={this.props.userInfo}
               />}

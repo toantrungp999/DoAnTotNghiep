@@ -37,7 +37,7 @@ export default class Comment extends Component {
                     />
                 </View>
                 <View style={styles.sendReply}>
-                    <TouchableOpacity onPress={this.onCreateReply}><Text style={styles.sendBtn}>Phản hồi</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={this.onCreateReply}><Text style={styles.sendBtn}>Gửi</Text></TouchableOpacity>
                 </View>
             </View>
         );
