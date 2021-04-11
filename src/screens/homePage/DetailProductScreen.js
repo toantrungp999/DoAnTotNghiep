@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TouchableHighlight, ScrollView, Dimensions, View, Image, Text } from 'react-native';
+import { TouchableHighlight, ScrollView, Dimensions, View, Image, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import {
   fectchProductRequest
@@ -20,6 +20,9 @@ import {
   createRateReplyRequest, updateRateReplyRequest,
   deleteRateRequest, deleteRateReplyRequest
 } from '../../../actions/rateActions';
+import {
+  createCartRequest, clearStateCart
+} from '../../../actions/cartActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import styles from './styles';
 import ProductOption from '../../components/productDetail/ProductOption';
@@ -63,12 +66,51 @@ class DetailProductScreen extends Component {
     const { id } = this.props.route.params;
     if (id) {
       this.setState({ id });
+      this.props.clearStateCart();
       this.props.fectchProduct(id);
       this.props.fectchColorOptions(id);
       this.props.fectchSizeOptions(id);
       this.props.fectchQuantityOptions(id);
       this.props.fectchComments(id, this.state.lengthCmt);
       this.props.fectchRates(id, this.state.lengthRate);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.cartsReducer !== prevProps.cartsReducer) {
+      const { messageCreate, createStatus, createLoading } = this.props.cartsReducer;
+      if (createLoading === false) {
+        if (messageCreate)
+          Alert.alert(
+            "Cảnh báo",
+            messageCreate,
+            [
+              {
+                text: "Xác nhận",
+              },
+            ]
+          );
+        if (createStatus === true)
+          Alert.alert(
+            "Thông báo",
+            "Thêm vào giỏ hàng thành công",
+            [
+              {
+                text: "Xác nhận",
+              },
+            ]
+          );
+      }
+    }
+  }
+
+  onAddToCart = (data) => {
+    const { userInfo } = this.props.userInfoReducer;
+    if (!userInfo)
+      this.props.navigation.navigate('Đăng nhập');
+    else {
+      this.setState({ isAddToCart: true });
+      this.props.createCart(data);
     }
   }
 
@@ -126,7 +168,7 @@ class DetailProductScreen extends Component {
           </View>
           <View style={styles.infoRecipeContainer}>
             <Text style={styles.infoRecipeName}>{product.name}</Text>
-            <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} />
+            <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} onAddToCart={this.onAddToCart} />
             <More
               product={product} fectchBrand={this.props.fectchBrand} brandReducer={this.props.brandReducer}
               viewMoreRates={this.viewMoreRates} lengthRate={this.state.lengthRate} totalRate={this.props.ratesReducer.total}
@@ -157,6 +199,7 @@ const mapStateToProps = state => {
     brandReducer: state.brandReducer,
     commentsReducer: state.commentsReducer,
     ratesReducer: state.ratesReducer,
+    cartsReducer: state.cartsReducer,
   }
 }
 
@@ -192,6 +235,9 @@ const mapDispatchToProps = dispatch => ({
   updateRateReply: (data) => { dispatch(updateRateReplyRequest(data)) },
   deleteRate: (data) => { dispatch(deleteRateRequest(data)) },
   deleteRateReply: (data) => { dispatch(deleteRateReplyRequest(data)) },
+
+  createCart: (data) => { dispatch(createCartRequest(data)) },
+  clearStateCart: () => { dispatch(clearStateCart()) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailProductScreen);

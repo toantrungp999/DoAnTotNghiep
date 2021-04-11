@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
 import { Button, TextInput } from 'react-native-paper'
 import { convertNumberToVND } from '../../../extentions/ArrayEx';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export default class ProductOption extends Component {
     constructor(props) {
@@ -14,9 +15,6 @@ export default class ProductOption extends Component {
     }
 
     onChange(name, value) {
-        this.setState({
-            [name]: value
-        });
         if (name === 'colorId') {
             let { quantityOptions } = this.props.productOptionsReducer;
             if (quantityOptions) {
@@ -41,15 +39,23 @@ export default class ProductOption extends Component {
                 quantityOption: ''
             });
         }
-        else {
-            if (name === "quantity") {
-                value = value.replace('.', '');
-                value = value.replace(',', '');
-            }
+        else if (name === 'quantity') {
+            let quantity = Number(value);
+            if (quantity > 5)
+                quantity = 5
             this.setState({
-                [name]: value
+                [name]: quantity
             });
         }
+    }
+    
+    onAddToCart = () => {
+        let { quantityOption, quantity } = this.state;
+        this.props.onAddToCart({
+            colorId: quantityOption.colorId,
+            sizeId: quantityOption.sizeId,
+            quantity
+        });
     }
 
     render() {
@@ -82,15 +88,9 @@ export default class ProductOption extends Component {
                 });
             }
         }
-
         return (
             <View style={styles.container}>
-                <View style={{ marginLeft: 20 }}>
-                    <View style={styles.row}>
-                        <Text style={styles.textPrice}>Giá: </Text>
-                        <Text style={styles.price}>{convertNumberToVND(this.props.price - (this.props.saleOff || 0))}₫</Text>
-                        {this.props.saleOff ? <Text style={styles.salePrice}>{convertNumberToVND(this.props.price)}₫</Text> : null}
-                    </View>
+                <View style={{ marginLeft: 5 }}>
                     {quantityOptions && quantityOptions.length > 0 &&
                         <>
                             <View style={styles.row}>
@@ -107,6 +107,11 @@ export default class ProductOption extends Component {
                             </View>
                         </>
                     }
+                    <View style={styles.row}>
+                        <Text style={styles.textPrice}>Giá: </Text>
+                        <Text style={styles.price}>{convertNumberToVND(this.props.price * this.state.quantity - (this.props.saleOff || 0) * this.state.quantity)}₫</Text>
+                        {this.props.saleOff ? <Text style={styles.salePrice}>{convertNumberToVND(this.props.price)}₫</Text> : null}
+                    </View>
                     {this.state.quantityOption ? <>
 
                         <View style={styles.row}>
@@ -115,6 +120,8 @@ export default class ProductOption extends Component {
                         <View style={styles.row}>
                             <Text style={styles.text}>Số lượng:</Text>
                             <TextInput
+                                onChangeText={(text) => this.onChange('quantity', text)}
+                                value={this.state.quantity.toString()}
                                 keyboardType="phone-pad"
                                 style={styles.input}
                                 underlineColor="transparent"
@@ -129,8 +136,18 @@ export default class ProductOption extends Component {
                             <Text style={styles.textRed}>Sản phẩm sắp ra mắt</Text>
                         </View>
                     }
+                    {
+                        this.state.sizeId && this.state.quantityOption ?
+                            <TouchableHighlight style={{ marginTop: 20 }} onPress={this.onAddToCart}>
+                                <View style={styles.addToCart}>
+                                    <MaterialIcons style={{ color: 'white' }} name="add-shopping-cart" size={20} />
+                                    <Text style={{ color: 'white', marginLeft: 10 }}>Thêm vào giỏ hàng</Text>
+                                </View>
+                            </TouchableHighlight>
+                            : null
+                    }
                 </View>
-            </View>
+            </View >
         );
     }
 }
@@ -139,9 +156,12 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
     },
+    addToCart: {
+        flexDirection: 'row', width: '100%', backgroundColor: '#000000', padding: 10, alignItems: 'center',
+        justifyContent: 'center',
+    },
     row: {
-        flexDirection: 'row', width: '100%',
-        marginTop: 8,
+        flexDirection: 'row', width: '100%', marginTop: 8
     },
     text: {
         marginTop: 5,

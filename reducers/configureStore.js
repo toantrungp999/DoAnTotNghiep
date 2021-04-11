@@ -10,6 +10,7 @@ import { productOptionsReducer } from './productOptions';
 import { brandReducer, brandsReducer } from './brands';
 import { commentsReducer } from './comments';
 import { ratesReducer } from './rates';
+import { cartsReducer } from './carts';
 
 const rootReducer = combineReducers(
     {
@@ -17,7 +18,8 @@ const rootReducer = combineReducers(
         citiesReducer, districtsReducer,
         productsReducer, productDetailReducer, productOptionsReducer,
         brandReducer, brandsReducer,
-        commentsReducer,ratesReducer
+        commentsReducer,ratesReducer,
+        cartsReducer
     }
 );
 const configureStore = () => {
