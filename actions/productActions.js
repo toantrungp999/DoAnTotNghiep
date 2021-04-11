@@ -3,7 +3,7 @@ import { callApi } from '../utils/apiCaller';
 
 export const fectchProductsRequest = (brand, type, page, option = 0, status = 'all') => {
   return (dispatch) => {
-    dispatch({ type: Types.PRODUCTS_REQUEST });
+    dispatch({ type: page > 1 ? Types.PRODUCTS_VIEW_MORE_REQUEST : Types.PRODUCTS_REQUEST });
     callApi(`products/brandId=${brand}&categoryId=${type}&page=${page}&option=${option}&status=${status}`, 'GET', null).then(response => {
       const type = response.status === 0 ? Types.PRODUCTS_SUCCESS : Types.PRODUCTS_FAIL;
       dispatch({ type, payload: response });
@@ -14,7 +14,7 @@ export const fectchProductsRequest = (brand, type, page, option = 0, status = 'a
 export const searchProductsRequest = (keyword, page, pageSize, isSearch = false, option = 0, status = 'all') => {
   return (dispatch) => {
     if (isSearch)
-      dispatch({ type: Types.PRODUCTS_REQUEST });
+      dispatch({ type: page > 1 ? Types.PRODUCTS_VIEW_MORE_REQUEST : Types.PRODUCTS_REQUEST });
     else
       dispatch({ type: Types.PRODUCTS_SEARCH_REQUEST, payload: { keyword } });
     callApi(`products/searchString=${keyword}&page=${page}&pagesize=${pageSize}&option=${option}&status=${status}`, 'GET', null).then(response => {

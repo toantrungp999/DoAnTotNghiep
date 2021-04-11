@@ -3,11 +3,24 @@ import * as Types from "../constants/ProductsActTypes";
 function productsReducer(state = {}, action) {
     switch (action.type) {
         case Types.PRODUCTS_REQUEST:
-            return { loading: true }
+            return { loading: true };
+        case Types.PRODUCTS_VIEW_MORE_REQUEST:
+            state.viewMoreloading = true;
+            return { ...state };
         case Types.PRODUCTS_SUCCESS:
-            return { loading: false, products: action.payload.data.products, pagingInfo: action.payload.data.pagingInfo };
+            const products = action.payload.data.products;
+            const pagingInfo = action.payload.data.pagingInfo;
+            if (!state.viewMoreloading || !state.products)
+                return { loading: false, products: action.payload.data.products, pagingInfo };
+            else {
+                state.viewMoreloading = false;
+                for (let i = 0; i < products.length; i++)
+                    state.products.push(products[i]);
+                state.pagingInfo = pagingInfo;
+                return { ...state };
+            }
         case Types.PRODUCTS_FAIL:
-            return { loading: false, message: action.payload.message };
+            return { loading: false, viewMoreloading: false, message: action.payload.message };
         case Types.PRODUCTS_SEARCH_REQUEST:
             state.loadingSearchProducts = true;
             state.searchProducts = [];

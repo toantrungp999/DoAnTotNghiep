@@ -11,7 +11,11 @@ import { connect } from 'react-redux';
 import {
   fectchProductsRequest, searchProductsRequest
 } from '../../../actions/productActions';
-import { DataTable } from 'react-native-paper';
+
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+  return layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - 20;
+};
 
 class ProductsScreen extends Component {
 
@@ -35,27 +39,24 @@ class ProductsScreen extends Component {
     });
     if (value)
       // this.props.searchProducts(value, this.state.paging, 12, true, this.state.option);
-      this.props.searchProducts(value, 1, 12, true, 0);
+      this.props.searchProducts(value, 1, 4, true, 0);
     else
       this.props.fectchProducts(0, 0, 1, 0);
   };
 
-  setPage = (paging) => {
-    if (paging >= 1 && paging !== this.state.paging) {
-      this.setState({
-        paging
-      });
+  viewMore = () => {
+    const { viewMoreloading, pagingInfo } = this.props.productsReducer;
+    if (!viewMoreloading && pagingInfo && pagingInfo.currentPage < pagingInfo.totalPage) {
       if (this.state.searchValue)
         // this.props.searchProducts(value, this.state.paging, 12, true, this.state.option);
-        this.props.searchProducts(searchValue, paging, 12, true, 0);
+        this.props.searchProducts(this.state.searchValue, pagingInfo.currentPage + 1, 4, true, 0);
       else
-        this.props.fectchProducts(0, 0, paging, 0);
+        this.props.fectchProducts(0, 0, pagingInfo.currentPage + 1, 0);
     }
   }
 
   render() {
-    const { products, loading, pagingInfo } = this.props.productsReducer;
-    console.log(pagingInfo);
+    const { products, loading, viewMoreloading, pagingInfo } = this.props.productsReducer;
     let partScreen = '';
     if (loading)
       partScreen = <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -63,12 +64,17 @@ class ProductsScreen extends Component {
       </View>
     else
       partScreen = <FlatList style={styles.list}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            this.viewMore();
+          }
+        }}
         contentContainerStyle={styles.listContainer}
         data={products}
         horizontal={false}
         numColumns={2}
         keyExtractor={(item) => {
-          return item.id;
+          return item._id;
         }}
         ItemSeparatorComponent={() => {
           return (
@@ -78,7 +84,7 @@ class ProductsScreen extends Component {
         renderItem={(post) => {
           const item = post.item;
           return (
-            <Product navigation={this.props.navigation} id={item._id} image={item.images[0]} name={item.name} price={item.price} salePrice="50 USD" avgRate={item.avgRate} />
+            <Product navigation={this.props.navigation} key={item._id} id={item._id} image={item.images[0]} name={item.name} price={item.price} salePrice="50 USD" avgRate={item.avgRate} />
           )
         }} />
     return (
@@ -93,7 +99,7 @@ class ProductsScreen extends Component {
           value={this.state.searchValue}
         />
         {partScreen}
-        {!loading && <DataTable>
+        {/* {!loading && <DataTable>
           <DataTable.Pagination
             page={pagingInfo.totalPage}
             numberOfPages={pagingInfo.pageSize}
@@ -101,6 +107,10 @@ class ProductsScreen extends Component {
             label={`Hiển thị từ ${(pagingInfo.currentPage - 1) * pagingInfo.pageSize + 1} đến ${(pagingInfo.currentPage - 1) * pagingInfo.pageSize + products.length} của ${pagingInfo.totalPage * pagingInfo.pageSize} kết quả`}
           />
         </DataTable>
+        } */}
+        {viewMoreloading && <View style={{ justifyContent: "center", alignItems: "center", height: 30 }}>
+          <Text>LOADING...</Text>
+        </View>
         }
       </View>
     );
