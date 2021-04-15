@@ -48,7 +48,7 @@ export default class ProductOption extends Component {
             });
         }
     }
-    
+
     onAddToCart = () => {
         let { quantityOption, quantity } = this.state;
         this.props.onAddToCart({
@@ -110,7 +110,7 @@ export default class ProductOption extends Component {
                     <View style={styles.row}>
                         <Text style={styles.textPrice}>Giá: </Text>
                         <Text style={styles.price}>{convertNumberToVND(this.props.price * this.state.quantity - (this.props.saleOff || 0) * this.state.quantity)}₫</Text>
-                        {this.props.saleOff ? <Text style={styles.salePrice}>{convertNumberToVND(this.props.price)}₫</Text> : null}
+                        {this.props.saleOff ? <Text style={styles.salePrice}>{convertNumberToVND(this.props.price * this.state.quantity)}₫</Text> : null}
                     </View>
                     {this.state.quantityOption ? <>
 
