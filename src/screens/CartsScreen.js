@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, ScrollView, View, Text, TouchableOpacity,Alert } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   fectchCartsRequest, updateCartRequest, deleteCartRequest
 } from '../../actions/cartActions';
 import CartItem from '../components/cart/CartItem';
+import { convertNumberToVND } from '../../extentions/ArrayEx';
+import { RadioButton } from 'react-native-paper';
 
 class CartsScreen extends Component {
 
@@ -13,12 +15,17 @@ class CartsScreen extends Component {
     super(props);
     this.state = {
       selectedList: [],
-      selectAll: true,
+      selectAll: false,
+      isVisible: false
     }
   }
 
   componentDidMount() {
     this.props.fectchCarts();
+  }
+
+  onShowModel = () => {
+    this.setState({ isVisible: !this.state.isVisible });
   }
 
   onUpdateSelectedList = (_id, status) => {
@@ -37,11 +44,9 @@ class CartsScreen extends Component {
     })
   }
 
-  onCheck = (event) => {
-    let checked = event.target.checked;
-    let selected = this.state.selectedList;
-    if (!checked) {
-      selected = [];
+  onCheckAll = () => {
+    if (this.state.selectAll) {
+      selected = []; 
     } else {
       let carts = this.props.cartsReducer.carts;
       selected = [];
@@ -50,7 +55,7 @@ class CartsScreen extends Component {
       }) : [];
     }
     this.setState({
-      selectAll: checked,
+      selectAll: !this.state.selectAll,
       selectedList: selected
     });
   }
@@ -112,7 +117,7 @@ class CartsScreen extends Component {
 
   render() {
     let { loading, updateLoading, updateStatus, carts } = this.props.cartsReducer;
-    if (loading)
+    if (loading === true)
       return <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text>LOADING...</Text>
       </View>
@@ -130,26 +135,39 @@ class CartsScreen extends Component {
       let type = 'Màu: ' + colorId.color + ', kích cỡ: ' + size;
 
       let checked = selectedList.includes(cart._id);
-      return <CartItem
+      return <CartItem onShowModel={this.onShowModel}
         _id={cart._id} key={cart._id} index={index} colorId={colorId._id} sizeId={sizeId._id}
         deleteCart={this.deleteCart} updateLoading={updateLoading} updateStatus={updateStatus} updateCart={this.props.updateCart}
         name={productId.name} productId={productId._id} image={colorId.image} type={type} quantity={quantity} quantityInStore={quantityInStore}
         price={productId.price} saleOff={productId.saleOff}
         onUpdateSelectedList={this.onUpdateSelectedList}
-        checked={checked} />
+        checked={checked}
+        isVisible={this.state.isVisible} />
     }) : null;
     return (
-      <ScrollView style={{ width: '100%' }}>
-        <View style={styles.containerMain}>
+      <View style={styles.containerMain}>
+        <ScrollView style={this.state.isVisible ? { backgroundColor: '#999999', width: '100%' } : { width: '100%', backgroundColor: 'white' }}>
           <View style={styles.header}>
-            <TouchableOpacity onPress={() => { this.props.navigation.goBack() }}><Ionicons style={{ backgroundColor: 'rgb(240,242,245)' }} name="arrow-back-sharp" size={30} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => { this.props.navigation.goBack() }}><Ionicons style={{ marginTop: 4 }} name="arrow-back-sharp" size={25} /></TouchableOpacity>
             <Text style={styles.textHeader}>Giỏ hàng</Text>
           </View>
-          <View style={{ backgroundColor: 'white', padding: 10 }}>
+          <View style={{ padding: 10 }}>
             {elementCarts}
           </View>
+        </ScrollView>
+        <View style={styles.bottomView}>
+          <View style={{ flexDirection: 'row', width: '35%', justifyContent: 'center', alignItems: 'center', }}>
+            <RadioButton
+              status={this.state.selectAll ? 'checked' : 'unchecked'}
+              onPress={() => this.onCheckAll()} />
+            <Text style={styles.text}> Tất cả</Text>
+          </View>
+          <View style={{ width: '45%' }}>
+            <Text style={styles.text}>Tổng tiền: {convertNumberToVND(total)}  ₫</Text>
+          </View>
+          <TouchableOpacity style={styles.btnBuy}><Text style={styles.textBtnBuy}>Mua ngay</Text></TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     )
   }
 }
@@ -161,12 +179,59 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    padding: 20,
-    flexDirection: 'row', width: '100%', backgroundColor: 'rgb(240,242,245)'
+    padding: 15,
+    flexDirection: 'row', width: '100%',
   },
   textHeader: {
     fontSize: 24,
     marginLeft: 10
+  },
+  bottomView: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute', //Here is the trick
+    bottom: 0, //Here is the trick
+  },
+  textStyle: {
+    color: '#fff',
+    fontSize: 18,
+  },
+  horizontalLine: {
+    flexDirection: 'row', width: '100%', borderBottomColor: 'black', borderBottomWidth: .3, opacity: 0.5, marginTop: 20, marginBottom: 12
+  },
+  row: {
+    flexDirection: 'row', width: '100%',
+    marginTop: 8
+  },
+  textBtnBuy: {
+    color: 'white',
+    fontSize: 16
+  },
+  footer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute', //Here is the trick
+    bottom: 0, //Here is the trick,
+    paddingTop: 10, borderBottomColor: 'black', borderTopWidth: .3
+  },
+  btnBuy: {
+    justifyContent: 'center',
+    height: 50,
+    width: '29%',
+    backgroundColor: '#EE5407',
+    margin: 2
+  },
+  text: {
+    textAlign: 'center',
+    fontSize: 12
+  },
+  textBtnBuy: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 12
   }
 })
 

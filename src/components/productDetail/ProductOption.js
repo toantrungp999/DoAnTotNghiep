@@ -8,35 +8,33 @@ export default class ProductOption extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            sizeId: '',
+            colorId: '',
             quantityOption: '',
             quantity: 1
         }
     }
 
     onChange(name, value) {
-        if (name === 'colorId') {
+        if (name === 'sizeId') {
             let { quantityOptions } = this.props.productOptionsReducer;
             if (quantityOptions) {
                 let total = quantityOptions.length;
                 for (let i = 0; i < total; i++) {
-                    if (quantityOptions[i].sizeId === this.state.sizeId && quantityOptions[i].colorId === value) {
+                    if (quantityOptions[i].colorId === this.state.colorId && quantityOptions[i].sizeId === value) {
                         this.setState({
-                            quantityOption: quantityOptions[i]
+                            quantityOption: quantityOptions[i],
+                            quantity: quantityOptions[i].quantity > 0 ? 1 : 0
                         });
                         break;
                     }
                 }
-                // let { colorOptions } = this.props.productOptionsReducer;
-                // let index = findIndexById(colorOptions, value);
-                // if (index >= 0)
-                //     this.props.onShowColorImage(index);
             }
         }
-        else if (name === 'sizeId') {
+        else if (name === 'colorId') {
             this.setState({
-                sizeId: value,
-                quantityOption: ''
+                colorId: value,
+                quantityOption: '',
+                quantity: 0
             });
         }
         else if (name === 'quantity') {
@@ -62,27 +60,25 @@ export default class ProductOption extends Component {
         const { sizeOptions, colorOptions, quantityOptions, colorLoading, sizeLoading, quantityLoading } = this.props.productOptionsReducer;
         let sizeComponent, colorComponent;
         if (quantityLoading === false && quantityOptions) {
-            if (sizeLoading === false && sizeOptions) {
-                sizeComponent = sizeOptions.map((sizeOption, index) => {
-                    let total = quantityOptions.length;
-                    for (let i = 0; i < total; i++) {
-                        if (quantityOptions[i].sizeId === sizeOption._id)
-                            return <Button style={this.state.sizeId === sizeOption._id ? styles.chooseBtn : styles.btn}
-                                labelStyle={this.state.sizeId === sizeOption._id ? styles.chooseBtnText : styles.btnText}
-                                key={sizeOption._id} index={index} onPress={() => this.onChange('sizeId', sizeOption._id)}>{sizeOption.size}</Button>
-                    }
-                    return null;
-                });
-            }
-            if (colorLoading === false && colorOptions) {
+            if (sizeLoading === false && sizeOptions && colorLoading === false && colorOptions) {
                 colorComponent = colorOptions.map((colorOption, index) => {
                     let total = quantityOptions.length;
                     for (let i = 0; i < total; i++) {
-                        if ((!this.state.sizeId || quantityOptions[i].sizeId === this.state.sizeId) && quantityOptions[i].colorId === colorOption._id)
+                        if (quantityOptions[i].colorId === colorOption._id)
                             return <Button
-                                style={this.state.quantityOption.colorId === colorOption._id ? styles.chooseBtn : styles.btn}
-                                labelStyle={this.state.quantityOption.colorId === colorOption._id ? styles.chooseBtnText : styles.btnText}
+                                style={this.state.colorId === colorOption._id ? styles.chooseBtn : styles.btn}
+                                labelStyle={this.state.colorId === colorOption._id ? styles.chooseBtnText : styles.btnText}
                                 key={colorOption._id} index={index} onPress={() => this.onChange('colorId', colorOption._id)}>{colorOption.color}</Button>
+                    }
+                    return null;
+                });
+                sizeComponent = sizeOptions.map((sizeOption, index) => {
+                    let total = quantityOptions.length;
+                    for (let i = 0; i < total; i++) {
+                        if ((!this.state.colorId || quantityOptions[i].colorId === this.state.colorId) && quantityOptions[i].sizeId === sizeOption._id)
+                            return <Button style={this.state.quantityOption.sizeId === sizeOption._id ? styles.chooseBtn : styles.btn}
+                                labelStyle={this.state.quantityOption.sizeId === sizeOption._id ? styles.chooseBtnText : styles.btnText}
+                                key={sizeOption._id} index={index} onPress={() => this.onChange('sizeId', sizeOption._id)}>{sizeOption.size}</Button>
                     }
                     return null;
                 });
@@ -94,17 +90,18 @@ export default class ProductOption extends Component {
                     {quantityOptions && quantityOptions.length > 0 &&
                         <>
                             <View style={styles.row}>
-                                <Text style={styles.text}>Size:</Text>
-                            </View>
-                            <View style={styles.row}>
-                                {sizeComponent}
-                            </View>
-                            <View style={styles.row}>
                                 <Text style={styles.text}>Màu:</Text>
                             </View>
                             <View style={styles.row}>
                                 {colorComponent}
                             </View>
+                            <View style={styles.row}>
+                                <Text style={styles.text}>Size:</Text>
+                            </View>
+                            <View style={styles.row}>
+                                {sizeComponent}
+                            </View>
+
                         </>
                     }
                     <View style={styles.row}>
@@ -137,7 +134,7 @@ export default class ProductOption extends Component {
                         </View>
                     }
                     {
-                        this.state.sizeId && this.state.quantityOption ?
+                        this.state.colorId && this.state.quantityOption ?
                             <TouchableHighlight style={{ marginTop: 20 }} onPress={this.onAddToCart}>
                                 <View style={styles.addToCart}>
                                     <MaterialIcons style={{ color: 'white' }} name="add-shopping-cart" size={20} />

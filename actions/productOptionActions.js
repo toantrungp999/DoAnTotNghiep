@@ -26,7 +26,7 @@ export const fectchSizeOptionsRequest = (_id) => {
 export const fectchQuantityOptionsRequest = (_id) => {
   return (dispatch) => {
     dispatch({ type: Types.QUANTITY_OPTIONS_REQUEST });
-    callApi(`warehouse/productId=${_id}`, 'GET', null).then(response => {
+    callApi(`quantity-options/productId=${_id}`, 'GET', null).then(response => {
       const type = response.status === 0 ? Types.QUANTITY_OPTIONS_SUCCESS : Types.QUANTITY_OPTIONS_FAIL;
       dispatch({ type, payload: response });
     });

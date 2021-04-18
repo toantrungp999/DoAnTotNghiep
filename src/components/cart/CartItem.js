@@ -4,20 +4,21 @@ import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { convertNumberToVND } from '../../../extentions/ArrayEx';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ModelChangeCart from './ModelChangeCart';
 
 class CartItem extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { _id: '', quantity: 0, price: 0, type: '', message: '', isLoading: false, showDiaLogChangeType: false }
+        this.state = {
+            _id: '', quantity: 0, price: 0, type: '', message: '', isLoading: false, showDiaLogChangeType: false,
+            isVisible: false
+        }
     }
 
     componentDidMount() {
-        let { _id, quantity, price, type, quantityInStore, defaultCheck } = this.props;
+        let { _id, quantity, price, type, quantityInStore } = this.props;
         this.setState({ _id, quantity, price, type, quantityInStore });
-        // if (defaultCheck) {
-        //     this.props.onUpdateSelectedList(_id, true);
-        // }
     }
 
     onUp = () => {
@@ -91,11 +92,9 @@ class CartItem extends Component {
         this.props.deleteCart(this.state._id);
     }
 
-    // onCheck = (event) => {
-    //     let checked = event.target.checked;
-    //     this.props.onUpdateSelectedList(this.state._id, checked);
-
-    // }
+    onCheck = () => {
+        this.props.onUpdateSelectedList(this.state._id, !this.props.checked);
+    }
 
 
     componentDidUpdate(prevProps) {
@@ -111,24 +110,43 @@ class CartItem extends Component {
     onEditType = () => {
         // this.setState({ showDiaLogChangeType: true });
     }
+    onCloseModal = () => {
+        this.setState({ isVisible: false });
+        this.props.onShowModel();
+    }
+
+    onOpenModal = () => {
+        this.setState({ isVisible: true });
+        this.props.onShowModel();
+    }
 
 
     render() {
         return (
-            <View style={{ backgroundColor: 'white', padding: 10 }}>
+            <View style={{ padding: 10, borderBottomColor: 'black', borderTopWidth: .4 }}>
+                {this.state.isVisible ? <ModelChangeCart onCloseModal={this.onCloseModal} isVisible={this.state.isVisible}
+                    price={this.props.price} saleOff={this.props.saleOff} cartId={this.state._id} quantity={this.state.quantity}
+                    colorId={this.props.colorId}
+                    sizeId={this.props.sizeId} productId={this.props.productId}
+                    image={this.props.image}
+                    quantityInStore={this.props.quantityInStore}
+                /> : null}
                 <View style={styles.row}>
-                    <View style={styles.col_15}>
-                        <RadioButton />
+                    <View style={styles.col_12}>
+                        <RadioButton
+                            status={this.props.checked ? 'checked' : 'unchecked'}
+                            onPress={() => this.onCheck()}
+                        />
                     </View>
                     <View style={styles.col_25}>
-                        <Image style={styles.image} source={{ 'uri': this.props.image }} />
+                        <Image style={this.props.isVisible ? styles.imageLowColor : styles.image} source={{ 'uri': this.props.image }} />
                     </View>
-                    <View style={styles.col_60}>
+                    <View style={styles.col_63}>
                         <View style={styles.row}>
                             <Text style={styles.title}>{this.props.name}</Text>
                         </View>
                         <View style={styles.row}>
-                            <TouchableOpacity><View style={styles.category}><Text>{this.props.type}  <AntDesign name="caretdown" size={14} /></Text></View></TouchableOpacity>
+                            <TouchableOpacity onPress={this.onOpenModal}><View style={this.props.isVisible ? styles.categoryLowColor : styles.category}><Text>{this.props.type}  <AntDesign name="caretdown" size={14} /></Text></View></TouchableOpacity>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.price}>{convertNumberToVND(this.state.quantity * (this.props.price - this.props.saleOff))} ₫</Text>
@@ -141,7 +159,7 @@ class CartItem extends Component {
                     <Text style={styles.quantity}>{this.state.quantity}</Text>
                     <TouchableOpacity onPress={this.onUp}><Text style={styles.btnSubAdd}>+</Text></TouchableOpacity>
                 </View>
-                <View style={{alignItems: 'flex-end'}}>
+                <View style={{ alignItems: 'flex-end' }}>
                     <TouchableOpacity onPress={this.prepareToDelete}><Ionicons style={styles.delete} name="trash" size={20} /></TouchableOpacity>
                 </View>
             </View>
@@ -155,10 +173,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    header: {
-        padding: 20,
-        flexDirection: 'row', width: '100%', backgroundColor: 'rgb(240,242,245)'
-    },
     textHeader: {
         fontSize: 24,
         marginLeft: 10
@@ -171,21 +185,28 @@ const styles = StyleSheet.create({
         flexDirection: 'row', width: '100%', justifyContent: 'center',
         marginTop: 10
     },
-    col_15: {
-        flexDirection: 'row', width: '15%', alignItems: 'center'
+    col_12: {
+        flexDirection: 'row', width: '12%', alignItems: 'center'
     },
     col_25: {
         flexDirection: 'row', width: '25%', textAlignVertical: 'center'
     },
-    col_60: {
-        width: '60%', textAlignVertical: 'center',
+    col_63: {
+        width: '62%', textAlignVertical: 'center',
         marginLeft: 15
     },
     image: {
         resizeMode: 'contain',
         flex: 1,
-        aspectRatio: 1
+        aspectRatio: 1,
     },
+    imageLowColor: {
+        resizeMode: 'contain',
+        flex: 1,
+        aspectRatio: 1,
+        backgroundColor: '#999999'
+    },
+
     btnSubAdd: {
         fontSize: 18,
         width: 36,
@@ -205,6 +226,7 @@ const styles = StyleSheet.create({
 
     },
     category: { padding: 10, backgroundColor: '#F1F2F6', borderRadius: 5 },
+    categoryLowColor: { padding: 10, backgroundColor: '#999999', borderRadius: 5 },
     textPrice: {
         fontSize: 18,
     },

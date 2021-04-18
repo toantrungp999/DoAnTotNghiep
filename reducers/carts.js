@@ -19,6 +19,7 @@ function cartsReducer(state = { loading: true }, action) {
             return { ...state };
 
         case Types.CART_CREATE_REQUEST:
+            state.message = '';
             state.messageCreate = '';
             state.createStatus = false;
             state.createLoading = true;
@@ -26,16 +27,25 @@ function cartsReducer(state = { loading: true }, action) {
         case Types.CART_CREATE_SUCCESS:
             state.createStatus = true;
             state.createLoading = false;
-            state.cartId = action.payload.data.cartId;
+            state.cartId = action.payload.data._id;
+            if (state.carts !== undefined) {
+                index = findIndexById(state.carts, action.payload.data._id);
+                if (index >= 0)
+                    state.carts[index] = action.payload.data;
+                else
+                    state.carts.push(action.payload.data);
+            }
+
             return { ...state };
         case Types.CART_CREATE_FAIL:
             state.createLoading = false;
             state.createStatus = false;
             state.messageCreate = action.payload.message;
             return { ...state };
-            
+
         case Types.CART_UPDATE_REQUEST:
             state.message = '';
+            state.messageCreate = '';
             state.updateLoading = true;
             state.updateStatus = false;
             state.updateTypeStatus = false;
@@ -57,6 +67,7 @@ function cartsReducer(state = { loading: true }, action) {
 
         case Types.CART_UPDATE_TYPE_REQUEST:
             state.message = '';
+            state.messageCreate = '';
             state.updateTypeLoading = true;
             state.updateStatus = false;
             state.updateTypeStatus = false;
@@ -84,6 +95,7 @@ function cartsReducer(state = { loading: true }, action) {
 
         case Types.CART_DELETE_REQUEST:
             state.message = '';
+            state.messageCreate = '';
             state.deleteLoading = true;
             state.updateStatus = false;
             state.deleteStatus = false;
@@ -102,9 +114,6 @@ function cartsReducer(state = { loading: true }, action) {
             state.deleteStatus = false;
             state.message = action.payload.message;
             return { ...state };
-
-        case Types.CART_CLEAR_STATE:
-            return { loading: true };
         default: return state;
     }
 }

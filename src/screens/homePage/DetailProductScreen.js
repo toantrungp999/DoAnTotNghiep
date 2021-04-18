@@ -21,7 +21,7 @@ import {
   deleteRateRequest, deleteRateReplyRequest
 } from '../../../actions/rateActions';
 import {
-  createCartRequest, clearStateCart
+  createCartRequest
 } from '../../../actions/cartActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import styles from './styles';
@@ -66,7 +66,6 @@ class DetailProductScreen extends Component {
     const { id } = this.props.route.params;
     if (id) {
       this.setState({ id });
-      this.props.clearStateCart();
       this.props.fectchProduct(id);
       this.props.fectchColorOptions(id);
       this.props.fectchSizeOptions(id);
@@ -236,8 +235,7 @@ const mapDispatchToProps = dispatch => ({
   deleteRate: (data) => { dispatch(deleteRateRequest(data)) },
   deleteRateReply: (data) => { dispatch(deleteRateReplyRequest(data)) },
 
-  createCart: (data) => { dispatch(createCartRequest(data)) },
-  clearStateCart: () => { dispatch(clearStateCart()) }
+  createCart: (data) => { dispatch(createCartRequest(data)) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailProductScreen);
