@@ -25,8 +25,8 @@ import {
 } from '../../../actions/cartActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import styles from './styles';
-import ProductOption from '../../components/productDetail/ProductOption';
-import More from '../../components/productDetail/More';
+import ProductOption from './components/productDetail/ProductOption';
+import More from './components/productDetail/More';
 
 const { width: viewportWidth } = Dimensions.get('window');
 

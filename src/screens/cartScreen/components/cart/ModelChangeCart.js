@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity, Modal, Image } from 'react-native';
-import { convertNumberToVND } from '../../../extentions/ArrayEx';
+import { convertNumberToVND } from '../../../../../extentions/ArrayEx';
 import Octicons from 'react-native-vector-icons/Octicons';
 import {
     updateTypeCartRequest
-} from '../../../actions/cartActions';
+} from '../../../../../actions/cartActions';
 import {
     fectchColorOptionsRequest, fectchQuantityOptionsRequest, fectchSizeOptionsRequest,
-} from '../../../actions/productOptionActions';
+} from '../../../../../actions/productOptionActions';
 
 class ChangeItemCart extends Component {
 

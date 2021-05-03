@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import { TextInput } from 'react-native-paper';
-import { time_ago } from './../../../../extentions/ArrayEx';
+import { time_ago } from '../../../../../extentions/ArrayEx';
 
 export default class Reply extends Component {
     constructor(props) {

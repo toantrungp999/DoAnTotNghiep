@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
-import Comments from './comment/Comments';
-import Rates from './rate/Rates';
+import Comments from '../comment/Comments';
+import Rates from '../rate/Rates';
 import Description from './Description';
 
 export default class More extends Component {

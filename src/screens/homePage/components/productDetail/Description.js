@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { time_ago } from './../../../extentions/ArrayEx';
+import { time_ago } from '../../../../../extentions/ArrayEx';
 
 
 export default class Description extends Component {

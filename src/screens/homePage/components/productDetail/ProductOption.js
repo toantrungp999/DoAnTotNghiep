@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
 import { Button, TextInput } from 'react-native-paper'
-import { convertNumberToVND } from '../../../extentions/ArrayEx';
+import { convertNumberToVND } from '../../../../../extentions/ArrayEx';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export default class ProductOption extends Component {

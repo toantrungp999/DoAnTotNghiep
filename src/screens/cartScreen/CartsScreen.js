@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { updateCartRequest, deleteCartRequest
-} from '../../actions/cartActions';
-import CartItem from '../components/cart/CartItem';
-import { convertNumberToVND } from '../../extentions/ArrayEx';
+} from '../../../actions/cartActions';
+import CartItem from './components/cart/CartItem';
+import { convertNumberToVND } from '../../../extentions/ArrayEx';
 import { RadioButton } from 'react-native-paper';
 
 class CartsScreen extends Component {

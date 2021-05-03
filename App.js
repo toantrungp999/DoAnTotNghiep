@@ -33,7 +33,7 @@ class App extends Component {
     if (userInfo) {
       const { loading, feedNews } = this.props.notificationsReducer;
       if (!loading && !feedNews)
-        this.props.fectchNotifications(5);
+        this.props.fectchNotifications(7);
     }
   }
 

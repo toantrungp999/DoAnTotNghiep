@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { convertNumberToVND } from '../../../extentions/ArrayEx';
+import { convertNumberToVND } from '../../../../../extentions/ArrayEx';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import ModelChangeCart from './ModelChangeCart';
 

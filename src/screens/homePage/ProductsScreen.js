@@ -6,7 +6,7 @@ import {
   Text
 } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import Product from '../../components/product/Product';
+import Product from './components/productItem/Product';
 import { connect } from 'react-redux';
 import {
   fectchProductsRequest, searchProductsRequest

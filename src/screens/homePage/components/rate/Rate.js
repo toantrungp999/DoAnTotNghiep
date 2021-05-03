@@ -1,20 +1,30 @@
 import React, { Component } from 'react';
-import { View, Image, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Alert, Platform } from 'react-native';
 import styles from './styles';
 import Reply from './Reply';
 import AddReply from './AddReply';
 import { TextInput } from 'react-native-paper';
-import { time_ago } from './../../../../extentions/ArrayEx';
+import { time_ago } from '../../../../../extentions/ArrayEx';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-export default class Comment extends Component {
+let filledIconName = 'ios-star';
+let emptyIconName = 'ios-star-outline';
+if (Platform.OS === 'android') {
+    filledIconName = 'md-star';
+    emptyIconName = 'md-star-outline';
+}
+const MAX_RATING = 5;
+
+export default class Rate extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            commentId: '',
+            rateId: '',
+            productId: '',
             user: '',
             content: '',
-            reply: '',
             date: '',
+            rate: 5,
             isEdit: false,
             isReply: false,
             oldContent: '',
@@ -22,15 +32,15 @@ export default class Comment extends Component {
     }
 
     componentDidMount() {
-        const { commentId, content, user, date } = this.props;
+        const { _id, productId, content, user, rate, date } = this.props.rate;
         this.setState({
-            commentId, content, user, date, oldContent: content
+            rateId: _id, content, user, date, rate, oldContent: content, productId
         });
     }
 
     onDelete = () => {
-        let { commentId } = this.state;
-        this.props.onDeleteComment({ commentId, productId: this.props.productId });
+        let { rateId, productId } = this.state;
+        this.props.onDeleteRate({ rateId, productId });
     }
 
     onShowReplyForm = () => {
@@ -44,11 +54,11 @@ export default class Comment extends Component {
 
     };
 
-    onEditComment = () => {
-        let { commentId, content } = this.state;
+    onEditRate = () => {
+        let { productId, rateId, rate, content } = this.state;
         content = content.trim();
         if (content) {
-            this.props.onUpdateComment({ commentId, content });
+            this.props.onUpdateRate({ productId, rateId, rate, content });
             this.setState({
                 isEdit: !this.state.isEdit,
             });
@@ -74,10 +84,20 @@ export default class Comment extends Component {
     }
 
     render() {
-        var isUser = this.props.userInfo && this.state.user._id === this.props.userInfo._id;
-        var elementReplies = this.props.replies ? this.props.replies.map((reply, index) => {
-            return <Reply productId={this.props.productId} commentId={this.state.commentId} key={reply._id} reply={reply} index={index} userInfo={this.props.userInfo} onDeleteReply={this.props.onDeleteCommentReply} onUpdateCommentReply={this.props.onUpdateCommentReply} />
+        const isUser = this.props.userInfo && this.state.user._id === this.props.userInfo._id;
+        const elementReplies = this.props.rate && this.props.rate.replies ? this.props.rate.replies.map((reply, index) => {
+            return <Reply productId={this.state.productId} rateId={this.state.rateId} key={reply._id} reply={reply} index={index} userInfo={this.props.userInfo} onDeleteReply={this.props.onDeleteRateReply} onUpdateReply={this.props.onUpdateRateReply} />
         }) : null;
+        let rangeView = [];
+        for (let i = 0; i < MAX_RATING; i++) {
+            rangeView.push(<TouchableOpacity onPress={() => { if (this.state.isEdit) this.onChange('rate', i + 1) }} key={i} id={i}><Icon
+                name={this.state.rate > i ? filledIconName : emptyIconName}
+                size={14}
+                color="#FFD700"
+                style={styles.icon}
+            />
+            </TouchableOpacity>)
+        }
         return (
             !this.state.isEdit ?
                 <View style={styles.row}>
@@ -86,6 +106,7 @@ export default class Comment extends Component {
                     </View>
                     <View style={styles.contentArea}>
                         <View style={styles.content}>
+                            <View style={styles.star}>{rangeView}</View>
                             <Text style={styles.name}>{this.state.user.name && this.state.user.name}</Text>
                             <Text style={styles.text}>{this.state.content}</Text>
                         </View>
@@ -96,7 +117,7 @@ export default class Comment extends Component {
                             {isUser && <TouchableOpacity onPress={this.prepareToDelete}><Text style={styles.textAction}>Xóa</Text></TouchableOpacity>}</View>
                         <View style={styles.areaAction}>
                             <View style={{ width: '100%' }}>
-                                {this.state.isReply && <AddReply commentId={this.state.commentId} onShowReplyForm={this.onShowReplyForm} onCreateReply={this.props.onCreateReply} />}
+                                {this.state.isReply && <AddReply rateId={this.state.rateId} onShowReplyForm={this.onShowReplyForm} onCreateReply={this.props.onCreateReply} />}
                                 {elementReplies}
                             </View>
                         </View>
@@ -105,6 +126,7 @@ export default class Comment extends Component {
                 <View>
                     <View style={styles.row}>
                         <View style={styles.editComent}>
+                            <View style={styles.AddRateStar}>{rangeView}</View>
                             <TextInput
                                 value={this.state.content}
                                 style={styles.input}
@@ -113,11 +135,11 @@ export default class Comment extends Component {
                             />
                         </View>
                         <View style={styles.viewEditAction}>
-                            <TouchableOpacity onPress={this.onEditComment}><Text style={styles.textAction}>Lưu</Text></TouchableOpacity>
+                            <TouchableOpacity onPress={this.onEditRate}><Text style={styles.textActionEdit}>Lưu</Text></TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.rowEdit}>
-                        <TouchableOpacity onPress={() => this.setState({ isEdit: false, content: this.state.oldContent })}><Text style={styles.textAction}>Hủy</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={() => this.setState({ isEdit: false, content: this.state.oldContent })}><Text style={styles.textActionEdit}>Hủy</Text></TouchableOpacity>
                     </View>
                 </View>
         );

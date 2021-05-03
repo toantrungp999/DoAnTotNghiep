@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
-import { REPLIED_COMMENT, APPROVAL, REPLIED_RATE, CANCELED_ORDER } from '../../constants/NotificationActTypes';
-import { fectchNotificationsRequest, updateNotificationRequest, clearNotify } from '../../actions/notifacationActions';
-import { time_ago } from './../../extentions/ArrayEx';
+import { REPLIED_COMMENT, APPROVAL, REPLIED_RATE, CANCELED_ORDER } from '../../../constants/NotificationActTypes';
+import { fectchNotificationsRequest, updateNotificationRequest, clearNotify } from '../../../actions/notifacationActions';
+import { time_ago } from '../../../extentions/ArrayEx';
+
+const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+  return layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - 20;
+};
 
 class NotificationsScreen extends Component {
 
+  viewMore = () => {
+    const { loading, pagingInfo } = this.props.notificationsReducer;
+    if (loading === false && pagingInfo && pagingInfo.currentPage < pagingInfo.totalPage)
+      this.props.fectchNotifications(7, pagingInfo.currentPage + 1);
+  }
+
   render() {
-    const { notifications, loading, pagingInfo } = this.props.notificationsReducer;
-    console.log(pagingInfo);
-    console.log(loading);
+    const { notifications } = this.props.notificationsReducer;
     let count = 0;
     const notificationsElement = notifications && notifications.length > 0 ? notifications.map((notification, index) => {
       let action = null;
@@ -52,14 +61,17 @@ class NotificationsScreen extends Component {
       }
     }) : null;
     return (
-      <ScrollView style={{ width: '100%' }}>
+      <ScrollView style={{ width: '100%' }} onScroll={({ nativeEvent }) => {
+        if (isCloseToBottom(nativeEvent)){
+          console.log('có nek');
+          this.viewMore();
+        }
+      }}
+      >
         <View style={styles.header}>
           <Text style={styles.textHeader}>Thông báo</Text>
         </View>
         {notificationsElement}
-        {loading === false && pagingInfo && pagingInfo.currentPage < pagingInfo.totalPage ?
-          <View style={styles.row}><TouchableOpacity onPress={() => { this.props.fectchNotifications(5, pagingInfo.currentPage + 1); }}><Text style={styles.viewMore}>Xem thêm</Text></TouchableOpacity></View>
-          : null}
       </ScrollView>
     );
   }

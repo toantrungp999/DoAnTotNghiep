@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  ProductsScreen,
-  DetailProductScreen,
-} from './homePage/index';
+import ProductsScreen from './ProductsScreen';
+import DetailProductScreen from './DetailProductScreen';
 
 const Stack = createStackNavigator();
 
