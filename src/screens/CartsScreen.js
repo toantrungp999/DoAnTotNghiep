@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {
-  fectchCartsRequest, updateCartRequest, deleteCartRequest
+import { updateCartRequest, deleteCartRequest
 } from '../../actions/cartActions';
 import CartItem from '../components/cart/CartItem';
 import { convertNumberToVND } from '../../extentions/ArrayEx';
@@ -18,10 +17,6 @@ class CartsScreen extends Component {
       selectAll: false,
       isVisible: false
     }
-  }
-
-  componentDidMount() {
-    this.props.fectchCarts();
   }
 
   onShowModel = () => {
@@ -243,7 +238,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    fectchCarts: () => { dispatch(fectchCartsRequest()) },
     updateCart: (data) => { dispatch(updateCartRequest(data)) },
     deleteCart: (_id) => { dispatch(deleteCartRequest(_id)) },
   }

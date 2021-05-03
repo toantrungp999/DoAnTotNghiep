@@ -80,8 +80,8 @@ export const deleteCartRequest = (data) => {
     };
 }
 
-// export const clearStateCart = () => {
-//     return (dispatch) => {
-//         dispatch({ type: Types.CART_CLEAR_STATE });
-//     }
-// }
+export const clearStateCart = () => {
+    return (dispatch) => {
+        dispatch({ type: Types.CART_CLEAR_STATE });
+    }
+}

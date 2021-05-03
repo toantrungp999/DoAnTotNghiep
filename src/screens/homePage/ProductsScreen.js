@@ -56,7 +56,7 @@ class ProductsScreen extends Component {
   }
 
   render() {
-    const { products, loading, viewMoreloading, pagingInfo } = this.props.productsReducer;
+    const { products, loading, viewMoreloading } = this.props.productsReducer;
     let partScreen = '';
     if (loading)
       partScreen = <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>

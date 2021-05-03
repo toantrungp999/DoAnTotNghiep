@@ -7,6 +7,8 @@ import {
   GoogleSignin,
 } from '@react-native-google-signin/google-signin';
 import { GetItemFromStorage } from '../extentions/Storage';
+import { fectchCartsRequest } from "./cartActions";
+import { clearNotify, fectchNewNotificationsRequest } from "./notifacationActions";
 //\\
 export const initial = () => {
   return (dispatch) => {
@@ -40,6 +42,8 @@ export const signinByApiRequest = (url, postData) => {
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;
         dispatch(actLoginSuccess(response.data.userData, accessToken, refreshToken));
+        dispatch(fectchCartsRequest());
+        dispatch(fectchNewNotificationsRequest(5,1));
       }
       else
         dispatch({ type: Types.USER_SIGNIN_FAIL, payload: response });
@@ -108,6 +112,7 @@ export const logoutRequest = () => (dispatch) => {
   GoogleSignin.revokeAccess().then().catch((error) => { console.log(error.message) });
   GoogleSignin.signOut().then().catch((error) => { console.log(error.message) });
   ClearStorage();
+  dispatch(clearNotify());
   dispatch({ type: Types.USER_LOGOUT });
   dispatch({ type: NOTIFICATION_CLEAR });
 };

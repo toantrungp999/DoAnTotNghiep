@@ -11,6 +11,7 @@ import { brandReducer, brandsReducer } from './brands';
 import { commentsReducer } from './comments';
 import { ratesReducer } from './rates';
 import { cartsReducer } from './carts';
+import { notificationsReducer } from './notifications';
 
 const rootReducer = combineReducers(
     {
@@ -19,7 +20,7 @@ const rootReducer = combineReducers(
         productsReducer, productDetailReducer, productOptionsReducer,
         brandReducer, brandsReducer,
         commentsReducer,ratesReducer,
-        cartsReducer
+        cartsReducer,notificationsReducer
     }
 );
 const configureStore = () => {

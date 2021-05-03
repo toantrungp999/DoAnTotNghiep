@@ -12,17 +12,44 @@ import {
 } from './src/screens';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { initial } from './/actions/userActions';
-// import AsyncStorage from '@react-native-community/async-storage';
-// const Stack = createStackNavigator();
+import { fectchNewNotificationsRequest } from './actions/notifacationActions';
+import {
+  fectchCartsRequest
+} from './actions/cartActions';
+
+
 const Tab = createBottomTabNavigator();
 class App extends Component {
 
-  componentDidMount(){
+  intervalId = 0;
+
+  componentDidMount() {
     this.props.initial();
+    this.intervalId = setInterval(this.fectchNotifications, 5000);
+  }
+
+  fectchNotifications = () => {
+    const { userInfo } = this.props.userInfoReducer;
+    if (userInfo) {
+      const { loading, feedNews } = this.props.notificationsReducer;
+      if (!loading && !feedNews)
+        this.props.fectchNotifications(5);
+    }
   }
 
   render() {
     const { userInfo } = this.props.userInfoReducer;
+    let count = 0;
+    const { pagingInfo } = this.props.notificationsReducer;
+    if (pagingInfo) {
+      const { notSeen } = pagingInfo;
+      count = notSeen;
+    }
+
+    let { carts } = this.props.cartsReducer;
+    let lengthCarts = 0;
+    if (carts)
+      lengthCarts = carts.length;
     return (
       <Provider theme={theme}>
         <NavigationContainer>
@@ -56,9 +83,9 @@ class App extends Component {
               inactiveTintColor: 'gray',
             }}
           >
-            <Tab.Screen name="Trang chủ" component={HomeScreen} options={{ tabBarBadge: 3 }} />
-            {userInfo ? <Tab.Screen name="Giỏ hàng" component={CartsScreen} /> : null}
-            {userInfo ? <Tab.Screen name="Thông báo" component={NotificationsScreen} /> : null}
+            <Tab.Screen name="Trang chủ" component={HomeScreen} />
+            {userInfo ? <Tab.Screen name="Giỏ hàng" options={{ tabBarBadge: lengthCarts }} component={CartsScreen} /> : null}
+            {userInfo ? <Tab.Screen name="Thông báo" options={{ tabBarBadge: count }} component={NotificationsScreen} /> : null}
             <Tab.Screen name={userInfo ? "Cá nhân" : "Đăng nhập"} component={PersonalScreen} />
           </Tab.Navigator>
         </NavigationContainer>
@@ -69,7 +96,9 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    userInfoReducer: state.userInfoReducer
+    userInfoReducer: state.userInfoReducer,
+    notificationsReducer: state.notificationsReducer,
+    cartsReducer: state.cartsReducer
   }
 }
 
@@ -77,7 +106,9 @@ const mapDispatchToProps = (dispatch, props) => {
   return {
     initial: () => {
       dispatch(initial())
-    }
+    },
+    fectchNotifications: (pageSize) => dispatch(fectchNewNotificationsRequest(pageSize, 1)),
+    fectchCarts: () => { dispatch(fectchCartsRequest()) },
   }
 }
 
