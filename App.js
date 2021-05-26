@@ -24,9 +24,7 @@ class App extends Component {
   intervalId = 0;
 
   componentDidMount() {
-    const { userInfo } = this.props.userInfoReducer;
-    if (userInfo)
-      this.props.fectchCarts();
+    this.props.fectchCarts();
     this.props.initial();
     this.intervalId = setInterval(this.fectchNotifications, 5000);
   }
