@@ -11,7 +11,10 @@ import { brandReducer, brandsReducer } from './brands';
 import { commentsReducer } from './comments';
 import { ratesReducer } from './rates';
 import { cartsReducer } from './carts';
+import { createOrderReducer } from './orders';
 import { notificationsReducer } from './notifications';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 
 const rootReducer = combineReducers(
     {
@@ -20,10 +23,13 @@ const rootReducer = combineReducers(
         productsReducer, productDetailReducer, productOptionsReducer,
         brandReducer, brandsReducer,
         commentsReducer,ratesReducer,
-        cartsReducer,notificationsReducer
+        cartsReducer,notificationsReducer,
+        createOrderReducer
     }
 );
+
+const middleware = applyMiddleware(thunk);
 const configureStore = () => {
-    return createStore(rootReducer, applyMiddleware(thunk));
+    return createStore(rootReducer, {}, composeWithDevTools(middleware));
 }
 export default configureStore;
