@@ -5,14 +5,15 @@ import {
     userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer
 } from './user';
 import { citiesReducer, districtsReducer } from './location';
-import { productsReducer, productDetailReducer } from './products';
+import { productsReducer, productDetailReducer,productHomepagesReducer } from './products';
 import { productOptionsReducer } from './productOptions';
 import { brandReducer, brandsReducer } from './brands';
 import { commentsReducer } from './comments';
 import { ratesReducer } from './rates';
 import { cartsReducer } from './carts';
-import { createOrderReducer } from './orders';
+import { createOrderReducer,orderReducer, orderDetailReducer } from './orders';
 import { notificationsReducer } from './notifications';
+import { categoryGroupsReducer } from './categoryGroups';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 
@@ -20,11 +21,12 @@ const rootReducer = combineReducers(
     {
         userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer,
         citiesReducer, districtsReducer,
-        productsReducer, productDetailReducer, productOptionsReducer,
+        productsReducer, productDetailReducer,productHomepagesReducer, productOptionsReducer,
         brandReducer, brandsReducer,
         commentsReducer,ratesReducer,
         cartsReducer,notificationsReducer,
-        createOrderReducer
+        createOrderReducer,orderReducer,orderDetailReducer,
+        categoryGroupsReducer
     }
 );
 

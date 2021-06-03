@@ -1,2 +1,1 @@
-export { default as ProductsScreen } from './ProductsScreen';
-export { default as DetailProductScreen } from './DetailProductScreen';
+export { default as HomeScreen } from './HomeScreen';

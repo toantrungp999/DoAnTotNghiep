@@ -1,10 +1,20 @@
 import * as Types from "../constants/ProductsActTypes";
 import { callApi } from '../utils/apiCaller';
 
-export const fectchProductsRequest = (brand, type, page, option = 0, status = 'all') => {
+export const fectchProductHomepagesRequest = () => {
   return (dispatch) => {
-    dispatch({ type: page > 1 ? Types.PRODUCTS_VIEW_MORE_REQUEST : Types.PRODUCTS_REQUEST });
-    callApi(`products/brandId=${brand}&categoryId=${type}&page=${page}&option=${option}&status=${status}`, 'GET', null).then(response => {
+    dispatch({ type: Types.PRODUCT_HOMEPAGE_REQUEST });
+    callApi(`products/homepage`, 'GET', null).then(response => {
+      const type = response.status === 0 ? Types.PRODUCT_HOMEPAGE_SUCCESS : Types.PRODUCT_HOMEPAGE_FAIL;
+      dispatch({ type, payload: response });
+    });
+  };
+}
+
+export const fectchProductsRequest = (path, key, min, max, option, page, status = 'all') => {
+  return (dispatch) => {
+    dispatch({ type: Number(page)>1?Types.PRODUCTS_VIEW_MORE_REQUEST:Types.PRODUCTS_REQUEST });
+    callApi(`products/path=${path}&key=${key}&min=${min}&max=${max}&option=${option}&page=${page}&status=${status}`, 'GET', null).then(response => {
       const type = response.status === 0 ? Types.PRODUCTS_SUCCESS : Types.PRODUCTS_FAIL;
       dispatch({ type, payload: response });
     });

@@ -15,9 +15,14 @@ class SettingScreen extends Component {
             <ScrollView style={{ width: '100%' }}>
                 <View style={{ width: '100%', height: '100%', padding: 10, backgroundColor: '#F1F2F6' }}>
                     <View style={styles.row}><Text style={{ fontSize: 24, fontWeight: "bold", paddingBottom: 5 }}>Menu</Text></View>
+
                     <TouchableOpacity onPress={() => { this.props.navigation.push('ProfileScreen') }} style={styles.row} >
                         <Image source={image ? image : require('../../../assets/avatar.png')} style={{ width: 24, height: 24, borderWidth: 1, borderRadius: 12 }} />
                         <Text style={styles.textRow}>{name}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => { this.props.navigation.push('orderStackScreen', { screen: 'orderScreen' }) }} style={styles.row} >
+                        <MaterialIcons name="receipt" size={20} />
+                        <Text style={styles.textRow}>Đơn hàng</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => { this.props.navigation.push('ChangePhoneNumberScreen') }} style={styles.row}>
                         <Ionicons name="ios-phone-portrait" size={20} />

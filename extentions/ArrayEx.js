@@ -141,12 +141,18 @@ function formatDate(dateVal) {
 
   sHour = padValue(sHour);
 
-  return sHour + ":" + sMinute + " " + sMonth + "-" + sDay + "-" + sYear;
+  return sHour + ":" + sMinute + " " +sDay +"-"+ sMonth   + "-" + sYear;
 }
 
 function padValue(value) {
   return (value < 10) ? "0" + value : value;
 }
 
+function getStringDate(miliSec){
+  const date = new Date(miliSec);
+  return `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`;
+}
 
-export { findIndexById, convertNumberToVND, time_ago, isNumber, isValidLength, isValidDate, isPhoneNumber, isEmail, formatDate }
+
+
+export { findIndexById, convertNumberToVND, time_ago, isNumber, isValidLength, isValidDate, isPhoneNumber, isEmail, formatDate,getStringDate }

@@ -17,18 +17,17 @@ export const fetchProductRequest = (data) => {
 
 export const createOrderRequest = (data,path) => {
     return (dispatch) => {
-        dispatch({ type: Types.ORDER_CREATE_REQUEST });
+        dispatch({ type:Types.ORDER_CREATE_REQUEST });
         callApiToken(dispatch, `orders/${path}`, 'POST', data).then(response => {
             const type = response.status === 0 ? Types.ORDER_CREATE_SUCCESS : Types.ORDER_CREATE_FAIL;
             dispatch({ type, payload: response });
-            dispatch(useAlert('Đặt hàng', response.message, response.status === 0));
         });
     };
 }
 
 export const fetchOrdersRequest = (all, status, search, page) => {
     return (dispatch) => {
-        dispatch({ type: Types.ORDERS_REQUEST });
+        dispatch({ type: Number(page)>1?Types.ORDERS_VIEW_MORE_REQUEST:Types.ORDERS_REQUEST });
         callApiToken(dispatch, `orders${all}?status=${status}&search=${search}&page=${page}`, 'GET', null).then(response => {
             const type = response.status === 0 ? Types.ORDERS_SUCCESS : Types.ORDERS_FAIL;
             dispatch({ type, payload: response });
@@ -52,7 +51,6 @@ export const orderChangeTypeRequest = (path,_id, data) => {
         callApiToken(dispatch, `orders/${path}/${_id}`, 'PUT', data).then(response => {
             const type = response.status === 0 ? Types.ORDER_CHANGE_TYPE_SUCCESS : Types.ORDER_CHANGE_TYPE_FAIL;
             dispatch({ type, payload: response });
-            dispatch(useAlert('Thao tác', response.message, response.status === 0));
         });
     };
 }

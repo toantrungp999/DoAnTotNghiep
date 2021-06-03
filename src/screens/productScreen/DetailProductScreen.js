@@ -24,9 +24,9 @@ import {
   createCartRequest
 } from '../../../actions/cartActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
-import styles from './styles';
 import ProductOption from './components/productDetail/ProductOption';
 import More from './components/productDetail/More';
+import styles from './styles';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
@@ -35,7 +35,7 @@ class DetailProductScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: '',
+      _id: '',
       images: '',
       activeSlide: 0,
       lengthCmt: 5,
@@ -44,34 +44,34 @@ class DetailProductScreen extends Component {
   }
 
   onCreateComment = (content, dataUser) => {
-    this.props.createComment({ productId: this.state.id, content }, dataUser);
+    this.props.createComment({ productId: this.state._id, content }, dataUser);
   }
 
   onCreateRate = (data, dataUser) => {
-    data.productId = this.state.id;
+    data.productId = this.state._id;
     this.props.createRate(data, dataUser);
   }
 
   viewMoreComments = () => {
-    this.props.fectchComments(this.state.id, this.state.lengthCmt + 5);
+    this.props.fectchComments(this.state._id, this.state.lengthCmt + 5);
     this.setState({ lengthCmt: this.state.lengthCmt + 5 })
   }
 
   viewMoreRates = () => {
-    this.props.fectchRates(this.state.id, this.state.lengthRate + 5);
+    this.props.fectchRates(this.state._id, this.state.lengthRate + 5);
     this.setState({ lengthRate: this.state.lengthRate + 5 })
   }
 
   componentDidMount() {
-    const { id } = this.props.route.params;
-    if (id) {
-      this.setState({ id });
-      this.props.fectchProduct(id);
-      this.props.fectchColorOptions(id);
-      this.props.fectchSizeOptions(id);
-      this.props.fectchQuantityOptions(id);
-      this.props.fectchComments(id, this.state.lengthCmt);
-      this.props.fectchRates(id, this.state.lengthRate);
+    const { _id } = this.props.route.params;
+    if (_id) {
+      this.setState({ _id });
+      this.props.fectchProduct(_id);
+      this.props.fectchColorOptions(_id);
+      this.props.fectchSizeOptions(_id);
+      this.props.fectchQuantityOptions(_id);
+      this.props.fectchComments(_id, this.state.lengthCmt);
+      this.props.fectchRates(_id, this.state.lengthRate);
     }
   }
 
@@ -180,8 +180,6 @@ class DetailProductScreen extends Component {
               onUpdateCommentReply={this.props.updateReply} onDeleteCommentReply={this.props.deleteReply}
               commentsReducer={this.props.commentsReducer}
               userInfo={userInfo}
-
-
             />
           </View>
 
@@ -203,20 +201,20 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  fectchProduct: (id) => {
-    dispatch(fectchProductRequest(id));
+  fectchProduct: (_id) => {
+    dispatch(fectchProductRequest(_id));
   },
-  fectchColorOptions: (id) => {
-    dispatch(fectchColorOptionsRequest(id));
+  fectchColorOptions: (_id) => {
+    dispatch(fectchColorOptionsRequest(_id));
   },
-  fectchQuantityOptions: (id) => {
-    dispatch(fectchQuantityOptionsRequest(id));
+  fectchQuantityOptions: (_id) => {
+    dispatch(fectchQuantityOptionsRequest(_id));
   },
-  fectchSizeOptions: (id) => {
-    dispatch(fectchSizeOptionsRequest(id));
+  fectchSizeOptions: (_id) => {
+    dispatch(fectchSizeOptionsRequest(_id));
   },
-  fectchBrand: (id) => {
-    dispatch(fectchBrandRequest(id))
+  fectchBrand: (_id) => {
+    dispatch(fectchBrandRequest(_id))
   },
   fectchComments: (_id, length) => { dispatch(fectchCommentsRequest(_id, length)) },
   fectchRates: (_id, length) => { dispatch(fectchRatesRequest(_id, length)) },

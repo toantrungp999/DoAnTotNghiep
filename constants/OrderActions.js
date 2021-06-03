@@ -1,8 +1,8 @@
 const CREATE = "Đặt hàng"
 const PAY = "Thanh toán"
 const APPROVE = "Duyệt"
-const PASS = "Xác nhận hoàn thành"
-const FAIL = "Xác nhận thất bại"
+const PASS = "Hoàn thành"
+const FAIL = "Thất bại"
 const CANCEL = "Hủy"
 
 module.exports = {

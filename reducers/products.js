@@ -1,40 +1,41 @@
 import * as Types from "../constants/ProductsActTypes";
 
-function productsReducer(state = {}, action) {
+function productsReducer(state = { loading: true }, action) {
     switch (action.type) {
         case Types.PRODUCTS_REQUEST:
-            return { loading: true };
+            return { loading: true }
         case Types.PRODUCTS_VIEW_MORE_REQUEST:
             state.viewMoreloading = true;
             return { ...state };
         case Types.PRODUCTS_SUCCESS:
-            const products = action.payload.data.products;
-            const pagingInfo = action.payload.data.pagingInfo;
-            if (!state.viewMoreloading || !state.products)
-                return { loading: false, products: action.payload.data.products, pagingInfo };
-            else {
-                state.viewMoreloading = false;
-                for (let i = 0; i < products.length; i++)
-                    state.products.push(products[i]);
-                state.pagingInfo = pagingInfo;
-                return { ...state };
-            }
+            var products = action.payload.data.products;
+            if (state.viewMoreloading)
+                products = state.products.concat(products);
+            return {
+                loading: false,
+                products,
+                colorOptions: action.payload.data.colorOptions,
+                sizeOptions: action.payload.data.sizeOptions,
+                pagingInfo: action.payload.data.pagingInfo,
+                searchInfo: action.payload.data.searchInfo
+            };
         case Types.PRODUCTS_FAIL:
-            return { loading: false, viewMoreloading: false, message: action.payload.message };
-        case Types.PRODUCTS_SEARCH_REQUEST:
-            state.loadingSearchProducts = true;
-            state.searchProducts = [];
-            state.keyword = action.payload.keyword;
-            return { ...state };
-        case Types.PRODUCTS_SEARCH_SUCCESS:
-            if (state.keyword === action.payload.data.keyword) {
-                state.loadingSearchProducts = false;
-                state.searchProducts = action.payload.data.products;
-                state.searchPagingInfo = action.payload.data.searchPagingInfo;
-            }
-            return { ...state };
-        case Types.PRODUCTS_SEARCH_FAIL:
-            state.loadingSearchProducts = false;
+            return { loading: false, message: action.payload.message };
+
+        default: return state;
+    }
+}
+
+
+function productHomepagesReducer(state = { loading: true }, action) {
+    switch (action.type) {
+        case Types.PRODUCT_HOMEPAGE_REQUEST:
+            return { loading: true };
+        case Types.PRODUCT_HOMEPAGE_SUCCESS:
+            return { loading: false, productHomepages: action.payload.data };
+        case Types.PRODUCT_HOMEPAGE_FAIL:
+            state.loading = false;
+            state.message = action.payload.message;
             return { ...state };
         default: return state;
     }
@@ -58,4 +59,4 @@ function productDetailReducer(state = { loading: true }, action) {
 }
 
 
-export { productsReducer, productDetailReducer }
+export { productsReducer, productDetailReducer, productHomepagesReducer }

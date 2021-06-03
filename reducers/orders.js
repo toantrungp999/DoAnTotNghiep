@@ -26,22 +26,22 @@ function createOrderReducer(state = { loading: true }, action) {
             return { ...state };
 
         case Types.SHIPPING_FEE_REQUEST:
-            state.shippingFee = null;
+            state.shipInfos = null;
             return { ...state };
         case Types.SHIPPING_FEE_SUCCESS:
-            state.shippingFee = action.payload.data.shippingFee;
+            state.shipInfos = action.payload.data.shippingFees;
             return { ...state };
         case Types.SHIPPING_FEE_FAIL:
-            state.shippingFee = '---';
+            state.shipInfos = "fail";
             return { ...state };
 
         case Types.STORE_ADDRESSES_REQUEST:
             return { ...state };
         case Types.STORE_ADDRESSES_SUCCESS:
-            state.storeAddresses = action.payload.data.storeAddresses;
+            state.storeAddress = action.payload.data;
             return { ...state };
         case Types.STORE_ADDRESSES_FAIL:
-            state.storeAddresses = null;
+            state.storeAddress = null;
             return { ...state };
 
         case Types.CLEAR_STATE:
@@ -55,10 +55,17 @@ function orderReducer(state = { loading: true }, action) {
     switch (action.type) {
         case Types.ORDERS_REQUEST:
             return { loading: true }
+        case Types.ORDERS_VIEW_MORE_REQUEST:
+            state.viewMoreloading = true;
+            return { ...state };
         case Types.ORDERS_SUCCESS:
+            var orders = action.payload.data.orders;
+            if(state.viewMoreloading )
+                orders = state.orders.concat(orders);
             return {
                 loading: false,
-                orders: action.payload.data.orders,
+                viewMoreloading : false,
+                orders,
                 pageInfo: action.payload.data.pageInfo,
                 currentStatus: action.payload.data.currentStatus,
                 currentSearch: action.payload.data.currentSearch
@@ -95,6 +102,7 @@ function orderDetailReducer(state = { loading: true }, action) {
             state.loading = false;
             state.changeTypeSuccess = true;
             state.order.orderInfo.status = action.payload.data.status;
+            state.order.orderInfo.actionLog = action.payload.data.actionLog;
             state.message = action.payload.message;
             return { ...state };
         case Types.ORDER_UPDATE_SERIALS_SUCCESS:
