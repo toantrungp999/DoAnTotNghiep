@@ -18,7 +18,6 @@ function notificationsReducer(state = { loading: false }, action) {
                 console.log(notifications[i]._id);
                 index = findIndexById(state.notifications, notifications[i]._id);
                 if (index === -1) {
-                    console.log('co them')
                     state.notifications.push(notifications[i]);
                 }
             }
