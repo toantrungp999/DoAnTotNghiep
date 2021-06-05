@@ -61,9 +61,9 @@ export const actLoginSuccess = (userInfo, accessToken, refreshToken) => {
     SetItemFromStorage('refreshToken', refreshToken);
     SetItemFromStorage('userInfo', userInfo);
     dispatch(showAlertWithTimeout('Đăng nhập thành công', '', true));
-    dispatch ({
+    dispatch({
       type: Types.USER_SIGNIN_SUCCESS,
-        payload: { status: 0, data: userInfo, message: "Success" }
+      payload: { status: 0, data: userInfo, message: "Success" }
     });
   }
 };
@@ -90,8 +90,18 @@ export const registerRequest = (userRegister) => {
 export const forgotPasswordRequest = (email) => {
   return (dispatch) => {
     dispatch({ type: Types.USER_FORGOTPASSWORD_REQUEST });
-    callApi('auth/forgotpassword', 'POST', { email }).then(response => {
+    callApi('auth/mobile/forgotpassword', 'POST', { email }).then(response => {
       const type = response.status === 0 ? Types.USER_FORGOTPASSWORD_SUCCESS : Types.USER_FORGOTPASSWORD_FAIL;
+      dispatch({ type, payload: response });
+    });
+  };
+}
+
+export const verifyOTPRequest = (code) => {
+  return (dispatch) => {
+    dispatch({ type: Types.USER_VERIFY_OTP_REQUEST });
+    callApi('auth/verify-otp', 'POST', { code }).then(response => {
+      const type = response.status === 0 ? Types.USER_VERIFY_OTP_SUCCESS : Types.USER_VERIFY_OTP_FAIL;
       dispatch({ type, payload: response });
     });
   };
@@ -104,12 +114,13 @@ export const resetPasswordRequest = (code, password) => {
     callApi('auth/reset-password', 'POST', { code, password }).then(response => {
       if (response.status === 0) {
         dispatch({ type: Types.USER_RESET_PASSSWORD_SUCCESS });
-        dispatch({ type: Types.USER_INFORM, payload: { message: 'Đã đổi mật khẩu thành công!' } });
       }
       else {
         const type = Types.USER_RESET_PASSSWORD_FAIL;
+
         dispatch({ type, payload: response });
       }
+      dispatch(useAlert('Đặt lại mật khẩu', response.message, response.status === 0));
     });
   };
 }

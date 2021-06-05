@@ -9,55 +9,37 @@ import TextInput from '../../components/TextInput';
 import BackButton from '../../components/BackButton';
 import { theme } from '../../core/theme';
 import {
-    fetchProfileRequest,
-    changePhoneRequest
+    changePasswordRequest
 } from '../../../actions/userActions';
-import { isPhoneNumber } from './../../../extentions/ArrayEx';
 
-class ChangePhoneNumberScreen extends Component {
+class ResetPasswordSreen extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            password: '',
-            phoneNumber: '',
+            newPassword: '',
+            rePassword: '',
             errors: {
-                password: 'Chưa nhập',
-                phoneNumber: 'Chưa nhập'
+                newPassword: 'Chưa nhập',
+                rePassword: 'Chưa nhập'
             },
         };
     }
 
-    componentDidMount() {
-        const { userProfile } = this.props.userProfileReducer;
-        if (!userProfile || JSON.stringify(userProfile) === '{}') {
-            this.props.fetchProfile();
-        }
-        else
-            this.setState({
-                phoneNumber: userProfile.phoneNumber?userProfile.phoneNumber:''
-            });
-    }
-
     checkValidate = (name, value) => {
         let errors = this.state.errors;
-        let checkPhoneNumber;
         switch (name) {
-            case 'password':
-                if (value.length > 50)
-                    errors.password = 'Mật khẩu không được quá 50 ký tự';
-                else if (value.length === 0)
-                    errors.password = 'Chưa nhập mật khẩu';
-                else
-                    errors.password = '';
-                break;
-            case 'phoneNumber':
+            case 'newPassword':
                 if (value.length === 0)
-                    errors.phoneNumber = 'Chưa nhập số điện thoại'
-                else {
-                    checkPhoneNumber = isPhoneNumber(value);
-                    errors.phoneNumber = !checkPhoneNumber ? 'Không phải số điện thoại' : ''
-                }
+                    errors.newPassword = 'Chưa nhập';
+                else if (value.length < 6 || value.length > 255)
+                    errors.newPassword = 'Mật khẩu phải từ 6 - 255 ký tự';
+                else
+                    errors.newPassword = '';
+                errors.rePassword = (this.state.rePassword !== value) ? 'Mật khẩu không khớp' : '';
+                break;
+            case 'rePassword':
+                errors.rePassword = (this.state.newPassword !== value) ? 'Mật khẩu không khớp' : '';
                 break;
             default: break;
         }
@@ -73,19 +55,12 @@ class ChangePhoneNumberScreen extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (this.props.userProfileReducer !== prevProps.userProfileReducer && this.props.userProfileReducer.loading === false) {
-            const { userProfile } = this.props.userProfileReducer;
-            if (userProfile && !this.state.phoneNumber)
-                this.setState({
-                    phoneNumber: userProfile.phoneNumber
-                });
-        }
         if (this.props.userActionReducer !== prevProps.userActionReducer && this.props.userActionReducer.loading === false) {
-            const { changePhoneSuccess } = this.props.userActionReducer;
-            if (changePhoneSuccess === true)
+            const { changePasswordSuccess } = this.props.userActionReducer;
+            if (changePasswordSuccess === true)
                 Alert.alert(
                     "Thông báo",
-                    "Cập nhật số điện thoại thành công");
+                    "Cập nhật mật khẩu thành công");
         }
     }
 
@@ -96,40 +71,41 @@ class ChangePhoneNumberScreen extends Component {
         });
     };
 
-    onUpdatePhoneNumber = () => {
+    onUpdatePassword = () => {
         if (!this.validateForm(this.errors))
             return;
-        const { password, phoneNumber } = this.state;
-        if (password && phoneNumber)
-            this.props.changePhone({ password, phoneNumber });
-        this.setState({ password: '' });
+        const { newPassword } = this.state;
+        if (newPassword) {
+            this.props.changePassword({ newPassword });
+            this.setState({ newPassword: '', rePassword: '' });
+        }
     }
 
     render() {
-        const { loading, changePhoneMessage } = this.props.userActionReducer;
+        const { loading, changePasswordMessage } = this.props.userActionReducer;
         return (
             <ScrollView style={{ width: '100%' }}>
                 <Background style={styles.containerMain}>
                     <BackButton goBack={this.props.navigation.goBack} />
-                    <Header>Số điện thoại</Header>
+                    <Header>Đặt lại mật khẩu</Header>
                     <TextInput
-                        label="Số điện thoại"
-                        keyboardType="phone-pad"
+                        label="Mật khẩu mới"
                         returnKeyType="next"
-                        value={this.state.phoneNumber}
-                        onChangeText={(text) => this.onChange('phoneNumber', text)}
-                        error={!!this.state.errors.phoneNumber}
-                        errorText={this.state.errors.phoneNumber} />
+                        value={this.state.newPassword}
+                        onChangeText={(text) => this.onChange('newPassword', text)}
+                        error={!!this.state.errors.newPassword}
+                        errorText={this.state.errors.newPassword}
+                        secureTextEntry />
                     <TextInput
-                        label="Mật khẩu"
+                        label="Nhập lại mật khẩu mới"
                         returnKeyType="next"
-                        value={this.state.password}
-                        onChangeText={(text) => this.onChange('password', text)}
-                        error={!!this.state.errors.password}
-                        errorText={this.state.errors.password}
+                        value={this.state.rePassword}
+                        onChangeText={(text) => this.onChange('rePassword', text)}
+                        error={!!this.state.errors.rePassword}
+                        errorText={this.state.errors.rePassword}
                         secureTextEntry />
                     <View style={styles.row}>
-                        <Text style={{ color: 'red' }}>{changePhoneMessage ? changePhoneMessage : ''}</Text>
+                        <Text style={{ color: 'red' }}>{changePasswordMessage ? changePasswordMessage : ''}</Text>
                     </View>
                     {
                         loading
@@ -142,7 +118,7 @@ class ChangePhoneNumberScreen extends Component {
                             :
                             <Button
                                 mode="contained"
-                                onPress={this.onUpdatePhoneNumber}
+                                onPress={this.onUpdatePassword}
                                 style={{ marginTop: 24 }}>
                                 Cập nhật
                         </Button>
@@ -200,21 +176,16 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     return {
-        userProfileReducer: state.userProfileReducer,
-        userInfoReducer: state.userInfoReducer,
         userActionReducer: state.userActionReducer,
     }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        fetchProfile: () => {
-            dispatch(fetchProfileRequest());
-        },
-        changePhone: (data) => {
-            dispatch(changePhoneRequest(data))
+        changePassword: (data) => {
+            dispatch(changePasswordRequest(data))
         }
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChangePhoneNumberScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPasswordSreen);

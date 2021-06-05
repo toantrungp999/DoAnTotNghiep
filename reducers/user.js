@@ -31,18 +31,28 @@ function userInfoReducer(state = {}, action) {
 function userForgotPasswordReducer(state = {}, action) {
   switch (action.type) {
     case Types.USER_FORGOTPASSWORD_REQUEST:
-      return { loadingForgot: true }
+      return { loading: true }
     case Types.USER_FORGOTPASSWORD_SUCCESS:
-      return { loadingForgot: false, statusForgot: true };
+      return { loading: false, statusForgot: true, email: action.payload.data.email, msgSuccess: action.payload.message };
     case Types.USER_FORGOTPASSWORD_FAIL:
-      return { loadingForgot: false, statusForgot: false, message: action.payload.message };
+      return { loading: false, statusForgot: false, message: action.payload.message };
+    case Types.USER_VERIFY_OTP_REQUEST:
+      state.loading = true;
+      state.message = '';
+      return { ...state };
+    case Types.USER_VERIFY_OTP_SUCCESS:
+      return { loading: false, statusVerify: true, accessToken: action.payload.data.accessToken };
+    case Types.USER_VERIFY_OTP_FAIL:
+      state.loading = false;
+      state.message = action.payload.message;
+      state.statusVerify = false;
+      return { ...state };
     case Types.USER_RESET_PASSSWORD_REQUEST:
-      return { loadingReset: true }
+      return { loading: true }
     case Types.USER_RESET_PASSSWORD_SUCCESS:
-      return { loadingReset: false, statusReset: true };
+      return { loading: false, statusReset: true };
     case Types.USER_RESET_PASSSWORD_FAIL:
-      state.loadingReset = false; state.statusReset = false; state.message = action.payload.message;
-      return { loadingReset: false, statusReset: false, message: action.payload.message }
+      return { loading: false, statusReset: false, message: action.payload.message }
     default: return state;
   }
 }

@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import {
-    HomeScreen,
-    PersonalScreen,
-    NotificationsScreen
+    PersonalScreen
 } from '../screens';
-import CartsScreen from '../screens/cartScreen/CartsScreen';
+
+import CartsScreen from './cartScreen/CartsScreen';
+import HomeScreen from './homePage/HomeScreen';
+import NotificationsScreen from './notification/NotificationsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { initial } from '../../actions/userActions';
 import { fectchNewNotificationsRequest } from '../../actions/notifacationActions';

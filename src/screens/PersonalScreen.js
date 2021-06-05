@@ -8,7 +8,9 @@ import {
     SettingScreen,
     ProfileScreen,
     ChangePasswordSreen,
-    ChangePhoneNumberScreen
+    ChangePhoneNumberScreen,
+    OTPScreen,
+    ResetPasswordSreen
 } from './personal/index';
 
 const Stack = createStackNavigator();
@@ -25,6 +27,8 @@ class PersonalScreen extends Component {
                 {!userInfo && <Stack.Screen name="LoginScreen" component={LoginScreen} />}
                 {!userInfo && <Stack.Screen name="RegisterScreen" component={RegisterScreen} />}
                 {!userInfo && <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />}
+                {!userInfo && <Stack.Screen name="OTPScreen" component={OTPScreen} />}
+                {!userInfo && <Stack.Screen name="ResetPasswordSreen" component={ResetPasswordSreen} />}
                 {userInfo && <Stack.Screen name="SettingScreen" component={SettingScreen} />}
                 {userInfo && <Stack.Screen name="ProfileScreen" component={ProfileScreen} />}
                 {userInfo && <Stack.Screen name="ChangePasswordSreen" component={ChangePasswordSreen} />}

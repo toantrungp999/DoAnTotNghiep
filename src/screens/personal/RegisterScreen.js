@@ -20,9 +20,9 @@ import { formatDate } from '../../../utils/datetime';
 class RegisterScreen extends Component {
 
   constructor(props) {
+    super(props);
     let date = new Date();
     date.setFullYear(date.getFullYear() - 20);
-    super(props);
     this.state = {
       name: { value: '', error: '' },
       email: { value: '', error: '' },
@@ -34,7 +34,7 @@ class RegisterScreen extends Component {
       cityId: { value: 1, error: '' },
       districtId: { value: -1, error: '' },
       wardId: { value: -1, error: '' },
-      streetOrBuilding: { value: -1, error: '' },
+      streetOrBuilding: { value: '', error: '' },
     }
   }
 
@@ -155,9 +155,11 @@ class RegisterScreen extends Component {
     let optionCities = cities ? cities.map((city, index) => {
       return <Picker.Item key={city.id} index={index} value={city.id} label={city.name}></Picker.Item>
     }) : null;
+
     const { districts } = this.props.districtsReducer;
     let optionDistricts = null;
     let optionWards = null;
+
     if (districts) {
       optionDistricts = districts.map((district, index) => {
         return <Picker.Item key={district.id} index={index} value={district.id} label={district.name}></Picker.Item>
@@ -168,6 +170,7 @@ class RegisterScreen extends Component {
           return <Picker.Item key={ward.id} index={index} value={ward.id} label={ward.name}></Picker.Item>
         });
     }
+
     const { message, loading } = this.props.userRegisterReducer;
     return (
       <ScrollView style={{ width: '100%' }}>
@@ -175,6 +178,7 @@ class RegisterScreen extends Component {
           <BackButton goBack={this.props.navigation.goBack} />
           <Logo />
           <Header>Tạo tài khoản</Header>
+
           <TextInput
             label="Tên"
             returnKeyType="next"
@@ -182,6 +186,7 @@ class RegisterScreen extends Component {
             onChangeText={(text) => this.onChange('name', { value: text, error: '' })}
             error={!!this.state.name.error}
             errorText={this.state.name.error} />
+
           <TextInput
             label="Email"
             returnKeyType="next"
@@ -193,6 +198,7 @@ class RegisterScreen extends Component {
             autoCompleteType="email"
             textContentType="emailAddress"
             keyboardType="email-address" />
+
           <TextInput
             label="Số điện thoại"
             keyboardType="phone-pad"
@@ -201,6 +207,7 @@ class RegisterScreen extends Component {
             onChangeText={(text) => this.onChange('phoneNumber', { value: text, error: '' })}
             error={!!this.state.phoneNumber.error}
             errorText={this.state.phoneNumber.error} />
+
           <TextInput
             label="Mật khẩu"
             returnKeyType="next"
@@ -209,6 +216,7 @@ class RegisterScreen extends Component {
             error={!!this.state.password.error}
             errorText={this.state.password.error}
             secureTextEntry />
+
           <TextInput
             label="Nhập lại mật khẩu"
             returnKeyType="next"
@@ -217,6 +225,7 @@ class RegisterScreen extends Component {
             error={!!this.state.rePassword.error}
             errorText={this.state.rePassword.error}
             secureTextEntry />
+
           <View style={styles.row}>
             <View style={styles.col_35}><Text style={{ textAlign: 'center' }}>Ngày sinh:</Text></View>
             <View style={{ width: "65%" }}>
@@ -229,6 +238,7 @@ class RegisterScreen extends Component {
               />
             </View>
           </View>
+
           <View style={styles.row}>
             <View style={styles.col_35}><Text style={{ textAlign: 'center' }}>Giới tính:</Text></View>
             <View style={{ width: "65%", marginTop: 12 }}>
@@ -241,6 +251,7 @@ class RegisterScreen extends Component {
                   />
                   <Text style={{ marginTop: 8 }}>Nam</Text>
                 </View>
+
                 <View style={styles.col_50_male}>
                   <RadioButton
                     value="Nữ"
@@ -252,7 +263,9 @@ class RegisterScreen extends Component {
               </View>
             </View>
           </View>
+
           <View style={styles.row}><Text style={{ marginLeft: 10, marginTop: 15 }}>Địa chỉ nhận hàng</Text></View>
+          
           <View style={styles.row}>
             <View style={styles.col_35}><Text style={{ textAlign: 'center' }}>Tỉnh:</Text></View>
             <View style={{ width: "65%" }}>
@@ -266,6 +279,7 @@ class RegisterScreen extends Component {
               </MyPicker>
             </View>
           </View>
+
           <View style={styles.row}>
             <View style={styles.col_35}><Text style={{ textAlign: 'center' }}>Quận/Huyện:</Text></View>
             <View style={{ width: "65%" }}>
@@ -280,6 +294,7 @@ class RegisterScreen extends Component {
               </MyPicker>
             </View>
           </View>
+
           <View style={styles.row}>
             <View style={styles.col_35}><Text style={{ textAlign: 'center' }}>Phường/Xã:</Text></View>
             <View style={{ width: "65%" }}>
@@ -294,6 +309,7 @@ class RegisterScreen extends Component {
               </MyPicker>
             </View>
           </View>
+
           <TextInput
             label="Tòa nhà, tên đường"
             returnKeyType="next"
@@ -301,9 +317,11 @@ class RegisterScreen extends Component {
             onChangeText={(text) => this.onChange('streetOrBuilding', { value: text, error: '' })}
             error={!!this.state.streetOrBuilding.error}
             errorText={this.state.streetOrBuilding.error} />
+            
           <View style={styles.row}>
             <Text style={{ color: 'red' }}>{message ? message : ''}</Text>
           </View>
+
           {loading ?
             <Button
               mode="contained"
