@@ -1,5 +1,7 @@
 import * as Types from "../constants/OrdersActTypes";
 import { callApiToken } from '../utils/apiCaller';
+import {reFectchCartsRequest} from './cartActions';
+import { useAlert, showAlertWithTimeout } from './alertActions';
 
 export const clearState = () => {
     return ({ type: Types.CLEAR_STATE, payload: '' });
@@ -21,6 +23,8 @@ export const createOrderRequest = (data,path) => {
         callApiToken(dispatch, `orders/${path}`, 'POST', data).then(response => {
             const type = response.status === 0 ? Types.ORDER_CREATE_SUCCESS : Types.ORDER_CREATE_FAIL;
             dispatch({ type, payload: response });
+            dispatch(reFectchCartsRequest());
+            dispatch(useAlert('Đặt hàng', response.message, response.status === 0));
         });
     };
 }
@@ -51,6 +55,7 @@ export const orderChangeTypeRequest = (path,_id, data) => {
         callApiToken(dispatch, `orders/${path}/${_id}`, 'PUT', data).then(response => {
             const type = response.status === 0 ? Types.ORDER_CHANGE_TYPE_SUCCESS : Types.ORDER_CHANGE_TYPE_FAIL;
             dispatch({ type, payload: response });
+            dispatch(useAlert('Thao tác', response.message, response.status === 0));
         });
     };
 }
@@ -91,6 +96,7 @@ export const fetchPayRequest = (id) => {
         callApiToken(dispatch, `orders/payment/vnpay_url/${id}`, 'GET', null).then(response => {
             const type = response.status === 0 ? Types.PAY_URL_SUCCESS : Types.PAY_URL_FAIL;
             dispatch({ type, payload: response });
+            dispatch(showAlertWithTimeout('Thao tát thất bại, thử lại sau', response.message, false));
         });
     };
 }

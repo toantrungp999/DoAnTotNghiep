@@ -7,6 +7,7 @@ import LeftMenu from '../../components/LeftMenu';
 import RightMenu from './components/menu/RightMenu';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import Drawer from 'react-native-drawer';
+import Loading from '../../components/Loading';
 
 import {
     fectchProductsRequest
@@ -84,7 +85,7 @@ class ProductScreen extends Component {
     render() {
         const { loading, viewMoreloading, products, pagingInfo, mesage, searchInfo, colorOptions, sizeOptions } = this.props.productsReducer;
         if (loading)
-            return <Text>...loading</Text>
+            return   <Loading/>
         let productElements = products && products.length > 0 ? products.map((product, index) => {
             return <ProductItem key={product._id} index={index} product={product} navigation={this.props.navigation} />
         }) : <Text >Không tìm thấy sản phẩm</Text>;

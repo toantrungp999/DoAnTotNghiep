@@ -1,7 +1,7 @@
 const ONLINE_ORDER = {
     ORDER_TYPE: "Đặt hàng online",
     PAYMENT_TYPE: {
-        ONLINE: "Thanh toán online",
+        VNPAY: "Thanh toán qua VNPAY",
         OFFLINE: "Thanh toán khi nhận hàng"
     },
     RECEIVE_TYPE: {
@@ -13,12 +13,13 @@ const ONLINE_ORDER = {
 const IN_STORE_ORDER = {
     ORDER_TYPE: "Đặt tại của hàng",
     PAYMENT_TYPE: {
-        IN_STORE: "Thanh toán tại của hàng"
+        CASH: "Thanh toán tiền mặt",
+        VNPAY: "Thanh toán qua VNPAY",
     },
     RECEIVE_TYPE: {
         IN_STORE: "Nhận hàng tại của hàng"
     }
-} 
+}
 
 module.exports = {
     ONLINE_ORDER: ONLINE_ORDER,

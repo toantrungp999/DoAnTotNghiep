@@ -9,6 +9,8 @@ import {
 import { GetItemFromStorage } from '../extentions/Storage';
 import { fectchCartsRequest } from "./cartActions";
 import { clearNotify, fectchNewNotificationsRequest } from "./notifacationActions";
+import { useAlert, showAlertWithTimeout } from './alertActions';
+
 //\\
 export const initial = () => {
   return (dispatch) => {
@@ -29,6 +31,7 @@ export const signinRequest = (userInfo) => {
       }
       else
         dispatch({ type: Types.USER_SIGNIN_FAIL, payload: response });
+      dispatch(showAlertWithTimeout('Đăng nhập thất bại', response.message, false));
     });
   };
 }
@@ -43,7 +46,7 @@ export const signinByApiRequest = (url, postData) => {
         const refreshToken = response.data.refreshToken;
         dispatch(actLoginSuccess(response.data.userData, accessToken, refreshToken));
         dispatch(fectchCartsRequest());
-        dispatch(fectchNewNotificationsRequest(5,1));
+        dispatch(fectchNewNotificationsRequest(5, 1));
       }
       else
         dispatch({ type: Types.USER_SIGNIN_FAIL, payload: response });
@@ -53,13 +56,16 @@ export const signinByApiRequest = (url, postData) => {
 
 //\\
 export const actLoginSuccess = (userInfo, accessToken, refreshToken) => {
-  SetItemFromStorage('x-access-token', accessToken);
-  SetItemFromStorage('refreshToken', refreshToken);
-  SetItemFromStorage('userInfo', userInfo);
-  return {
-    type: Types.USER_SIGNIN_SUCCESS,
-    payload: { status: 0, data: userInfo, message: "Success" }
-  };
+  return (dispatch) => {
+    SetItemFromStorage('x-access-token', accessToken);
+    SetItemFromStorage('refreshToken', refreshToken);
+    SetItemFromStorage('userInfo', userInfo);
+    dispatch(showAlertWithTimeout('Đăng nhập thành công', '', true));
+    dispatch ({
+      type: Types.USER_SIGNIN_SUCCESS,
+        payload: { status: 0, data: userInfo, message: "Success" }
+    });
+  }
 };
 
 export const registerRequest = (userRegister) => {
@@ -76,6 +82,7 @@ export const registerRequest = (userRegister) => {
         const type = Types.USER_REGISTER_FAIL;
         dispatch({ type, payload: response });
       }
+      dispatch(useAlert('Đăng ký', response.message, response.status === 0));
     });
   };
 }
@@ -133,6 +140,7 @@ export const updateProfileRequest = (profile) => {
     callApiToken(dispatch, 'user/profile', 'PUT', profile).then(response => {
       const type = response.status === 0 ? Types.USER_PROFILE_UPDATE_SUCCESS : Types.USER_PROFILE_UPDATE_FAIL;
       dispatch({ type, payload: response });
+      dispatch(useAlert('Cập nhật thông tin', response.message, response.status === 0));
     });
   };
 }
@@ -148,6 +156,7 @@ export const updateUrlProfileRequest = (url) => {
       else
         type = Types.USER_AVATAR_FAIL;
       dispatch({ type, payload: response });
+      dispatch(useAlert('Cập nhật ảnh đại diện', response.message, response.status === 0));
     });
   };
 }
@@ -166,6 +175,7 @@ export const updateAvatarRequest = (file) => {
       else {
         const type = Types.USER_AVATAR_FAIL;
         dispatch({ type, payload: response });
+        dispatch(showAlertWithTimeout('Cập nhật ảnh đại diện thất bại', response.message, false));
       }
     });
   };
@@ -177,6 +187,7 @@ export const changePasswordRequest = (data) => {
     callApiToken(dispatch, 'user/password', 'PUT', data).then(response => {
       const type = response.status === 0 ? Types.USER_CHANGEPASSWORD_SUCCESS : Types.USER_CHANGEPASSWORD_FAIL;
       dispatch({ type, payload: response });
+      dispatch(useAlert('Đổi mật khẩu', response.message, response.status === 0));
     });
   };
 }
@@ -194,6 +205,7 @@ export const changePhoneRequest = (data) => {
       else
         type = Types.USER_CHANGEPHONE_FAIL;
       dispatch({ type, payload: response });
+      dispatch(useAlert('Cập nhật số điện thoại', response.message, response.status === 0));
     });
   };
 }
@@ -214,6 +226,8 @@ export const addAddressRequest = (data) => {
     callApiToken(dispatch, 'user/addresses', 'POST', data).then(response => {
       const type = response.status === 0 ? Types.USER_ADD_ADDRESS_SUCCESS : Types.USER_ADD_ADDRESS_FAIL;
       dispatch({ type, payload: response });
+      dispatch(useAlert('Thêm địa chỉ', response.message, response.status === 0));
+
     });
   };
 }
@@ -224,6 +238,7 @@ export const updateAddressRequest = (data) => {
     callApiToken(dispatch, 'user/addresses', 'PUT', data).then(response => {
       const type = response.status === 0 ? Types.USER_UPDATE_ADDRESS_SUCCESS : Types.USER_UPDATE_ADDRESS_FAIL;
       dispatch({ type, payload: response });
+      dispatch(useAlert('Cập nhật địa chỉ', response.message, response.status === 0));
     });
   };
 }
@@ -254,6 +269,7 @@ export const deleteAddressRequest = (addressId) => {
       else
         type = Types.USER_DELETE_ADDRESS_FAIL;
       dispatch({ type, payload: response });
+      dispatch(useAlert('Xóa địa chỉ', response.message, response.status === 0));
     });
   };
 }

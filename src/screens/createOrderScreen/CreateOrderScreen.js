@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as OrderTypes from '../../../constants/OrderTypes';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, ScrollView, View, Text, TouchableOpacity, Alert } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, HelperText } from 'react-native-paper';
 import {
     fetchProductRequest, createOrderRequest, clearState, ShippingFeeRequest, fetchStoreAddressesRequest
 } from '../../../actions/orderActions';
@@ -33,7 +33,15 @@ class CreateOrderScreen extends Component {
             firstSubmit: false,
             showModal: false,
             modalType: '',
-            options: ''
+            options: '',
+            errors: {
+                name: '',
+                phoneNumber: '',
+                paymentType: '',
+                receiveType: '',
+                addressId: '',
+                shipId: ''
+            }
         }
     }
 
@@ -106,6 +114,7 @@ class CreateOrderScreen extends Component {
     }
 
 
+
     changeType = (name, value) => {
         switch (name) {
             case 'paymentType':
@@ -147,6 +156,7 @@ class CreateOrderScreen extends Component {
                 });
             }
         }
+
         this.setState({ [name]: value });
         this.hideModal();
     }
@@ -160,10 +170,10 @@ class CreateOrderScreen extends Component {
         const optionList = this.props.createOrderReducer.carts.map(cart => {
             return { colorId: cart.colorId._id, sizeId: cart.sizeId._id, quantity: cart.quantity }
         });
-        const { orderType, paymentType, receiveType, addressId, name, phoneNumber, shipId } = this.state;
+        let { orderType, paymentType, receiveType, addressId, name, phoneNumber, shipId } = this.state;
         const userInfo = { name, phoneNumber };
         console.log(orderType);
-        if (orderType !== '' && paymentType !== '' && receiveType !== '' && isPhoneNumber(phoneNumber) && name &&name.length<=255) {
+        if (orderType !== '' && paymentType !== '' && receiveType !== '' && isPhoneNumber(phoneNumber) && name && name.length <= 255) {
             if (orderType === OrderTypes.ONLINE_ORDER.ORDER_TYPE) {
                 if (receiveType === OrderTypes.ONLINE_ORDER.RECEIVE_TYPE.SHIP && addressId !== '' && addressId !== '-100' && shipId !== '-1') {
                     const address = addressId === '-99' ? this.state.newAddress : userAddresses[Number(addressId)];
@@ -176,15 +186,22 @@ class CreateOrderScreen extends Component {
 
             }
         }
-        this.setState({ firstSubmit: true })
+
+        name = name === '' ? 'Chưa nhập tên' : name.length > '255' ? 'Nhập từ 255 ký tự trở xuống' : '';
+        phoneNumber = phoneNumber === '' ? 'Chưa nhập số điện thoại' : !isPhoneNumber(phoneNumber) ? 'Không đúng định dạng số điện thoại' : '';
+        receiveType = receiveType === '' ? 'Chưa chọn' : '';
+        paymentType = paymentType === '' ? 'Chưa chọn' : '';
+        addressId = addressId === '' ? 'Chưa chọn' : '';
+        shipId = shipId === '-1' ? 'Chưa chọn' : '';
+        const errors = { name, phoneNumber, receiveType, paymentType, addressId,shipId };
+        this.setState({ firstSubmit: true, errors })
 
     }
 
-
-
     render() {
-        let { loading, carts, shipInfos, storeAddress } = this.props.createOrderReducer;
+        let { loading, carts, shipInfos, storeAddress, createSuccess, orderInfo } = this.props.createOrderReducer;
         const userAddresses = this.props.userAddressReducer.addresses;
+        const errors = this.state.errors;
 
         const { addressId, newAddress, orderType, paymentType, receiveType, name, phoneNumber, shipId, shipDialog, firstSubmit,
             showModal, modalType, options } = this.state
@@ -201,8 +218,12 @@ class CreateOrderScreen extends Component {
             + address.district + ', ' + address.city) : 'Chọn địa chỉ nhận hàng';
         if (loading)
             return (<Text>123</Text>);
+        if (createSuccess !== undefined && orderInfo !== undefined) {
+            this.props.clearState();
+            this.props.navigation.replace('orderStackScreen', { screen: 'orderDetailScreen', params: { _id: orderInfo._id } })
+        }
         let total = 0;
-        const cartList = carts ? carts.map((cart,index) => {
+        const cartList = carts ? carts.map((cart, index) => {
             let { colorId, quantity } = cart;
             let { price, saleOff } = colorId.productId;
             total += price * quantity - saleOff * quantity;
@@ -223,25 +244,42 @@ class CreateOrderScreen extends Component {
                             mode="outlined"
                             label="Tên người đặt"
                             placeholder="Tên người đặt"
+                            onChangeText={(value) => { this.setState({ name: value }) }}
 
                         />
+                        <HelperText type="error" visible={true}>
+                            {errors.name}
+                        </HelperText>
                         <TextInput
                             style={styles.textInput}
                             value={phoneNumber}
                             mode="outlined"
                             label="Số điện thoại"
                             placeholder="Số điện thoại"
-
+                            onChangeText={(value) => { this.setState({ phoneNumber: value }) }}
                         />
+                        <HelperText type="error" visible={true}>
+                            {errors.phoneNumber}
+                        </HelperText>
                         <TouchableOpacity onPress={e => { e.preventDefault(); this.showModal('paymentType') }}>
                             <Type text={paymentType ? paymentType : 'Chọn phương thức thanh toán'} />
+                            <HelperText type="error" visible={true}>
+                                {errors.paymentType}
+                            </HelperText>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={e => { e.preventDefault(); this.showModal('receiveType') }}>
                             <Type text={receiveType ? receiveType : 'Chọn phương thức giao hàng'} />
+                            <HelperText type="error" visible={true}>
+                                {errors.receiveType}
+                            </HelperText>
                         </TouchableOpacity>
-                        {receiveType === OrderTypes.ONLINE_ORDER.RECEIVE_TYPE.SHIP ? <TouchableOpacity onPress={e => { e.preventDefault(); this.showModal('address') }}>
-                            <Type text={addressString} />
-                        </TouchableOpacity> : null}
+                        {receiveType === OrderTypes.ONLINE_ORDER.RECEIVE_TYPE.SHIP ?
+                            <TouchableOpacity onPress={e => { e.preventDefault(); this.showModal('address') }}>
+                                <Type text={addressString} />
+                                <HelperText type="error" visible={true}>
+                                    {errors.addressId}
+                                </HelperText>
+                            </TouchableOpacity> : null}
                         {receiveType === OrderTypes.ONLINE_ORDER.RECEIVE_TYPE.IN_STORE ? <TouchableOpacity>
                             <Type text={addressString} />
                         </TouchableOpacity> : null}
@@ -251,6 +289,9 @@ class CreateOrderScreen extends Component {
                                 fee={shipId !== '-1' ? (convertNumberToVND(shipInfos[shipId].shippingFee) + '₫') : ''}
                                 date={shipId !== '-1' ? ('Nhận ' + getStringDate(shipInfos[shipId].date * 1000)) : ''}
                             />
+                            <HelperText type="error" visible={true}>
+                                {errors.shipId}
+                            </HelperText>
                         </TouchableOpacity> : null}
                     </View>
 
@@ -263,7 +304,9 @@ class CreateOrderScreen extends Component {
                         <Text style={styles.total} >Tổng tiền: {convertNumberToVND(total)}₫</Text>
                     </View>
                     <View >
-                        <Button mode='contained' color='#228ce3' style={styles.button}>Đặt hàng</Button>
+                        {createSuccess === null ? <Button mode='contained' color='#228ce3' style={styles.button}>Đang tải...</Button> :
+                            <Button mode='contained' color='#228ce3' style={styles.button}
+                                onPress={() => { this.CreateOrder() }}>Đặt hàng</Button>}
                     </View>
                 </View>
             </View >
@@ -333,7 +376,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     fetchProductRequest: (cartIdList) => { dispatch(fetchProductRequest(cartIdList)) },
-    createOrderRequest: (Order) => { dispatch(createOrderRequest(Order)) },
+    createOrderRequest: (Order, path) => { dispatch(createOrderRequest(Order, path)) },
     fetchAddressesRequest: () => { dispatch(fetchAddressesRequest()) },
     clearState: () => { dispatch(clearState()) },
     ShippingFeeRequest: (addressId) => { dispatch(ShippingFeeRequest(addressId)) },

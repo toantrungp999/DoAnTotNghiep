@@ -1,6 +1,7 @@
 import { createStore, combineReducers } from 'redux';
 import { applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import {alertReducer} from './alerts'
 import {
     userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer
 } from './user';
@@ -19,6 +20,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 const rootReducer = combineReducers(
     {
+        alertReducer,
         userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer,
         citiesReducer, districtsReducer,
         productsReducer, productDetailReducer,productHomepagesReducer, productOptionsReducer,

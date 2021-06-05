@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import {StyleSheet, View, FlatList,Text,ScrollView} from 'react-native';
-import { SearchBar } from 'react-native-elements';
-import Product from './components/productItem/ProductItem';
 import { connect } from 'react-redux';
 import ProductSection from './components/productItem/ProductSection';
 import Drawer from 'react-native-drawer'
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import GestureRecognizer from 'react-native-swipe-gestures';
 import LeftMenu from '../../components/LeftMenu';
 import {fectchProductHomepagesRequest} from '../../../actions/productActions';
 import { fectchCategoryGroupsWithCategoryRequest } from '../../../actions/categoryGroupActions';
+import Loading from '../../components/Loading';
 
 
 class HomeScreen extends Component {
@@ -34,7 +33,7 @@ class HomeScreen extends Component {
     const { loading, message, productHomepages } = this.props.productHomepagesReducer;
     if (loading)
       return <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>LOADING...</Text>
+          <Loading/>
       </View>
     else {
       var { hots, news, bestSellers, colorOptions, sizeOptions } = productHomepages;

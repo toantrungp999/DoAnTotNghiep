@@ -26,6 +26,7 @@ import {
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import ProductOption from './components/productDetail/ProductOption';
 import More from './components/productDetail/More';
+import Loading from '../../components/Loading';
 import styles from './styles';
 
 const { width: viewportWidth } = Dimensions.get('window');
@@ -126,9 +127,8 @@ class DetailProductScreen extends Component {
     const { activeSlide } = this.state;
     const { userInfo } = this.props.userInfoReducer;
     if (loading)
-      return <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>LOADING...</Text>
-      </View>
+      return <Loading />
+
     else
       return (
         <ScrollView style={styles.container}>

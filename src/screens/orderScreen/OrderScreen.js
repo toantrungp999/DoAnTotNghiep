@@ -5,7 +5,7 @@ import { Searchbar } from 'react-native-paper';
 import OrderItem from './component/OrderItem';
 import LoadingMore from '../../components/LoadingMore';
 import SearchByStatus from './component/SearchByStatus';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Loading from '../../components/Loading';
 import {
     fetchOrdersRequest
 } from '../../../actions/orderActions';
@@ -46,18 +46,18 @@ class OrderScreen extends Component {
 
     changeStatus = (value) => {
         if (value !== this.state.status) {
-            this.state.status=value;
+            this.state.status = value;
             this.fetchOrders();
         }
     }
 
-    changeSearch = (value)=>{
-        if(value!== this.state.search){
-            if(value==='' &&  this.state.search.length>1){
-                this.state.search='',
-                this.fetchOrders();
-            }else{
-                this.setState({search:value})
+    changeSearch = (value) => {
+        if (value !== this.state.search) {
+            if (value === '' && this.state.search.length > 1) {
+                this.state.search = '',
+                    this.fetchOrders();
+            } else {
+                this.setState({ search: value })
             }
         }
     }
@@ -65,12 +65,10 @@ class OrderScreen extends Component {
     render() {
         let { loading, viewMoreloading, pageInfo, currentStatus } = this.props.orderReducer;
         if (loading)
-            return (
-                <Text>...loading</Text>
-            );
+            return <Loading />
         var orders = this.props.orderReducer.orders;
-        let orderList = orders && orders.length > 0 ? orders.map((order,index) => {
-            return <OrderItem order={order} navigation={this.props.navigation}  key={index} index={index}/>
+        let orderList = orders && orders.length > 0 ? orders.map((order, index) => {
+            return <OrderItem order={order} navigation={this.props.navigation} key={index} index={index} />
         }) : null;
         return (
             <ScrollView style={styles.container}
@@ -81,13 +79,13 @@ class OrderScreen extends Component {
                 }}
             >
                 <Searchbar
-                style={styles.search}
+                    style={styles.search}
                     inputStyle={styles.inputStyle}
                     placeholder="Tìm kiếm"
                     value={this.state.search}
-                    onChangeText={(value)=>{this.changeSearch(value)}}
-                    onSubmitEditing={()=>this.fetchOrders()}
-                    onIconPress={()=>this.fetchOrders()}
+                    onChangeText={(value) => { this.changeSearch(value) }}
+                    onSubmitEditing={() => this.fetchOrders()}
+                    onIconPress={() => this.fetchOrders()}
 
                 />
                 <SearchByStatus currentStatus={this.state.status} changeStatus={this.changeStatus} />
@@ -106,13 +104,13 @@ const styles = StyleSheet.create({
         width: '100%',
 
     },
-    search:{
-        paddingTop:0,
-        marginTop:0
+    search: {
+        paddingTop: 0,
+        marginTop: 0
     },
-    inputStyle:{
-        fontSize:14,
-     
+    inputStyle: {
+        fontSize: 14,
+
     }
 })
 

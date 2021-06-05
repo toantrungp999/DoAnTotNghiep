@@ -13,7 +13,7 @@ import * as OrderActions from '../../../constants/OrderActions';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CancelModal from './component/CancelModal';
 import OrderStatuses from '../../../constants/OrderStatuses';
-
+import Loading from '../../components/Loading';
 
 class OrderDetailScreen extends Component {
     state = {
@@ -75,7 +75,7 @@ class OrderDetailScreen extends Component {
         const { vnpUrl } = this.props.payReducer;
         console.log('a', vnpUrl);
         if (loading)
-            return (<Text>...Loading</Text>);
+            return <Loading />
         var { orderInfo, orderDetails } = this.props.orderDetailReducer.order;;
         const OrderDetailItems = orderDetails ? orderDetails.map((orderDetail, index) => {
             return (<OrderDetailItem orderDetail={orderDetail} end={index === orderDetails.length - 1} />)
