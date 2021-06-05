@@ -21,9 +21,9 @@ class ChangePasswordSreen extends Component {
             newPassword: '',
             rePassword: '',
             errors: {
-                password: 'Chưa nhập',
-                newPassword: 'Chưa nhập',
-                rePassword: 'Chưa nhập'
+                password: '',
+                newPassword: '',
+                rePassword: '',
             },
         };
     }

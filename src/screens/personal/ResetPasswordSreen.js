@@ -20,8 +20,8 @@ class ResetPasswordSreen extends Component {
             newPassword: '',
             rePassword: '',
             errors: {
-                newPassword: 'Chưa nhập',
-                rePassword: 'Chưa nhập'
+                newPassword: '',
+                rePassword: ''
             },
         };
     }

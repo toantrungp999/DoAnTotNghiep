@@ -22,8 +22,8 @@ class ChangePhoneNumberScreen extends Component {
             password: '',
             phoneNumber: '',
             errors: {
-                password: 'Chưa nhập',
-                phoneNumber: 'Chưa nhập'
+                password: '',
+                phoneNumber: ''
             },
         };
     }
