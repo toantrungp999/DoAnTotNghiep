@@ -106,20 +106,20 @@ class ProductScreen extends Component {
                 <Drawer
                     type="overlay"
                     content={<LeftMenu navigate={this.navigate} categoryGroupsReducer={this.props.categoryGroupsReducer} />}
-                    tapToClose={true}
+                    tapToClose={false}
                     openDrawerOffset={0.3} // 20% gap on the right side of drawer
                     panCloseMask={0.2}
-                    styles={[drawerStyles, styles.leftMenu]}
+                    styles={drawerStyles}
                     open={this.state.leftMenu}
                 >
                     <Drawer
                         type="overlay"
                         content={<RightMenu min={this.state.min} max={this.state.max} option={this.state.option}
                         path={this.props.route.params.path} changeFilter={this.changeFilter}/>}
-                        tapToClose={true}
+                        tapToClose={false}
                         openDrawerOffset={0.3} // 20% gap on the right side of drawer
                         panCloseMask={0.2}
-                        styles={[drawerStyles, styles.leftMenu]}
+                        styles={drawerStyles}
                         side={'right'}
                         open={this.state.rightMenu}
                     >
@@ -152,15 +152,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap'
     },
-    leftMenu: {
-        backgroundColor: '#111111',
-    }
+
 });
 
 
 const drawerStyles = {
     drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
-    main: { paddingLeft: 3 },
+    main: { paddingLeft: 0 },
 }
 
 const mapStateToProps = state => {

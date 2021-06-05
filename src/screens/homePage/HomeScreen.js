@@ -52,14 +52,14 @@ class HomeScreen extends Component {
           <Drawer
             type="overlay"
             content={<LeftMenu navigate={this.navigate} categoryGroupsReducer={this.props.categoryGroupsReducer} />}
-            tapToClose={true}
+            tapToClose={false}
             openDrawerOffset={0.3} // 30% gap on the right side of drawer
             panCloseMask={0.2}
-            styles={[drawerStyles, styles.leftMenu]}
+            styles={drawerStyles}
             open={this.state.open}
 
           >
-            <ScrollView style={styles.container}>
+            <ScrollView >
               <ProductSection products={news} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm mới' description='Xu hướng thời trang dành cho bạn' />
               <ProductSection products={hots} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm mổi bật' description='Xu hướng thời trang dành cho bạn' />
               <ProductSection products={hots} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm bán chạy' description='Xu hướng thời trang dành cho bạn' />
@@ -71,15 +71,10 @@ class HomeScreen extends Component {
   }
 }
 const drawerStyles = {
-  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
-  main: { paddingLeft: 30 },
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3   },
+  main: { paddingLeft: 0 },
 }
-const styles = StyleSheet.create({
-  
-  leftMenu: {
-    backgroundColor: '#111111',
-  }
-});
+
 
 
 const mapStateToProps = state => {
