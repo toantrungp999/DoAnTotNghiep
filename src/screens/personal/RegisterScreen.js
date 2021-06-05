@@ -318,9 +318,9 @@ class RegisterScreen extends Component {
               Sign Up
             </Button>}
           <View style={styles.bottom}>
-            <Text>Already have an account? </Text>
-            <TouchableOpacity onPress={() => this.props.navigation.replace('LoginScreen')}>
-              <Text style={styles.link}>Login</Text>
+            <Text>Bạn đã có tài khoản </Text>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('LoginScreen')}>
+              <Text style={styles.link}>Đăng nhập</Text>
             </TouchableOpacity>
           </View>
         </Background>

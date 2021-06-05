@@ -69,8 +69,8 @@ class OrderScreen extends Component {
                 <Text>...loading</Text>
             );
         var orders = this.props.orderReducer.orders;
-        let orderList = orders && orders.length > 0 ? orders.map(order => {
-            return <OrderItem order={order} navigation={this.props.navigation} />
+        let orderList = orders && orders.length > 0 ? orders.map((order,index) => {
+            return <OrderItem order={order} navigation={this.props.navigation}  key={index} index={index}/>
         }) : null;
         return (
             <ScrollView style={styles.container}

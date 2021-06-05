@@ -20,7 +20,7 @@ class OrderDetailItem extends Component {
                         <Text style={styles.type}>{orderDetail.color} - {orderDetail.size} </Text>
                         <Text style={styles.quantity}>x{orderDetail.quantity}</Text>
                     </View>
-                    <Text style={styles.price}>{convertNumberToVND(Number(orderDetail.price))}đ</Text>
+                    <Text style={styles.price}>{convertNumberToVND(Number(orderDetail.price))}₫</Text>
                 </View>
 
             </View >

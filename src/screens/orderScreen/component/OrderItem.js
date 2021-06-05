@@ -23,8 +23,8 @@ class OrderItem extends Component {
                     <OrderDetailItem orderDetail={order.orderDetails[0]} end={true}/>
                 </View>
                 <View style={styles.bottom}>
-                    {order.orderInfo.shippingFee !== 0 ? <Text style={styles.fee}>Phí vận chuyển: {convertNumberToVND(order.orderInfo.shippingFee)}đ</Text> : null}
-                    <Text style={styles.total}>Tổng: <Text style={styles.price}>{convertNumberToVND(order.orderInfo.totalPrice)}đ</Text></Text>
+                    {order.orderInfo.shippingFee !== 0 ? <Text style={styles.fee}>Phí vận chuyển: {convertNumberToVND(order.orderInfo.shippingFee)}₫</Text> : null}
+                    <Text style={styles.total}>Tổng: <Text style={styles.price}>{convertNumberToVND(order.orderInfo.totalPrice)}₫</Text></Text>
                 </View>
             </TouchableOpacity >
 

@@ -12,7 +12,7 @@ import CreateOrderItem from './component/CreateOrderItem';
 import TypeModal from './component/TypeModal';
 import Type from './component/Type';
 // import ShipType from './component/Type';
-import { convertNumberToVND, getStringDate } from '../../../extentions/ArrayEx';
+import { convertNumberToVND, getStringDate, isPhoneNumber } from '../../../extentions/ArrayEx';
 
 
 class CreateOrderScreen extends Component {
@@ -45,8 +45,7 @@ class CreateOrderScreen extends Component {
             this.props.fetchProductRequest({ cartIdList: selectedList });
             this.setState({
                 name: this.props.userInfoReducer.userInfo.name,
-                // phoneNumber: this.props.userInfoReducer.userInfo.phoneNumber
-                phoneNumber: '123'
+                phoneNumber: this.props.userInfoReducer.userInfo.phoneNumber ? this.props.userInfoReducer.userInfo.phoneNumber : ''
             })
         } else {
             this.props.navigation.navigate('cartsScreen');
@@ -77,12 +76,12 @@ class CreateOrderScreen extends Component {
                                 + address.district + ', ' + address.city
                         });
                     }) : '';
-                    if (this.state.addressId === '-99')
-                        options.push({
-                            value: '-99', label: newAddress.streetOrBuilding + ', ' + newAddress.ward + ', '
-                                + newAddress.district + ', ' + newAddress.city
-                        })
-                    options.push({ value: '-100', label: 'Địa chỉ mới' })
+                    // if (this.state.addressId === '-99')
+                    //     options.push({
+                    //         value: '-99', label: newAddress.streetOrBuilding + ', ' + newAddress.ward + ', '
+                    //             + newAddress.district + ', ' + newAddress.city
+                    //     })
+                    // options.push({ value: '-100', label: 'Địa chỉ mới' })
                 }
                 break;
             case 'shipId': {
@@ -130,15 +129,17 @@ class CreateOrderScreen extends Component {
                     addressId: value,
                 });
                 this.setState({ shipId: '-1' });
-                if (value !== '-100') {// '-100' is chosing new Address 
-                    if (value === '-99') {
-                        this.props.ShippingFeeRequest(this.state.newAddress);
-                    } else {
-                        const userAddresses = this.props.userAddressReducer.addresses;
-                        this.props.ShippingFeeRequest(userAddresses[Number(value)]);
-                    }
+                const userAddresses = this.props.userAddressReducer.addresses;
+                this.props.ShippingFeeRequest(userAddresses[Number(value)]);
+                // if (value !== '-100') {// '-100' is chosing new Address 
+                //     if (value === '-99') {
+                //         this.props.ShippingFeeRequest(this.state.newAddress);
+                //     } else {
+                //         const userAddresses = this.props.userAddressReducer.addresses;
+                //         this.props.ShippingFeeRequest(userAddresses[Number(value)]);
+                //     }
 
-                }
+                // }
                 break;
             case 'shipId': {
                 this.setState({
@@ -150,6 +151,34 @@ class CreateOrderScreen extends Component {
         this.hideModal();
     }
 
+
+    CreateOrder = () => {
+
+        const userAddresses = this.props.userAddressReducer.addresses;
+        const { shipInfos } = this.props.createOrderReducer;
+        const { storeAddress } = this.props.createOrderReducer;
+        const optionList = this.props.createOrderReducer.carts.map(cart => {
+            return { colorId: cart.colorId._id, sizeId: cart.sizeId._id, quantity: cart.quantity }
+        });
+        const { orderType, paymentType, receiveType, addressId, name, phoneNumber, shipId } = this.state;
+        const userInfo = { name, phoneNumber };
+        console.log(orderType);
+        if (orderType !== '' && paymentType !== '' && receiveType !== '' && isPhoneNumber(phoneNumber) && name &&name.length<=255) {
+            if (orderType === OrderTypes.ONLINE_ORDER.ORDER_TYPE) {
+                if (receiveType === OrderTypes.ONLINE_ORDER.RECEIVE_TYPE.SHIP && addressId !== '' && addressId !== '-100' && shipId !== '-1') {
+                    const address = addressId === '-99' ? this.state.newAddress : userAddresses[Number(addressId)];
+                    let data = { optionList, orderType, paymentType, receiveType, address, userInfo, shipInfo: shipInfos[Number(shipId)] }
+                    this.props.createOrderRequest(data, 'online');
+                } else if (receiveType === OrderTypes.ONLINE_ORDER.RECEIVE_TYPE.IN_STORE) {
+                    let data = { optionList, orderType, paymentType, receiveType, address: storeAddress, userInfo, shipInfo: null }
+                    this.props.createOrderRequest(data, 'online');
+                }
+
+            }
+        }
+        this.setState({ firstSubmit: true })
+
+    }
 
 
 
@@ -173,11 +202,11 @@ class CreateOrderScreen extends Component {
         if (loading)
             return (<Text>123</Text>);
         let total = 0;
-        const cartList = carts ? carts.map(cart => {
+        const cartList = carts ? carts.map((cart,index) => {
             let { colorId, quantity } = cart;
             let { price, saleOff } = colorId.productId;
             total += price * quantity - saleOff * quantity;
-            return <CreateOrderItem cart={cart} />
+            return <CreateOrderItem cart={cart} key={index} index={index} />
         }) : <View></View>;
         return (
             <View style={{ width: '100%', height: '100%', backgroundColor: '#ffffff' }}>
@@ -219,7 +248,7 @@ class CreateOrderScreen extends Component {
                         {shipId !== '-2' ? <TouchableOpacity onPress={e => { e.preventDefault(); this.showModal('shipId') }}>
                             <Type
                                 text={shipId !== '-1' ? shipInfos[shipId].name : 'Chọn đơn vị giao hàng'}
-                                fee={shipId !== '-1' ? (convertNumberToVND(shipInfos[shipId].shippingFee) + 'đ') : ''}
+                                fee={shipId !== '-1' ? (convertNumberToVND(shipInfos[shipId].shippingFee) + '₫') : ''}
                                 date={shipId !== '-1' ? ('Nhận ' + getStringDate(shipInfos[shipId].date * 1000)) : ''}
                             />
                         </TouchableOpacity> : null}
@@ -231,7 +260,7 @@ class CreateOrderScreen extends Component {
                         {shipId !== '-2' && shipId !== '-1' ?
                             < Text style={styles.fee} >Phí giao hàng: {convertNumberToVND(shipInfos[shipId].shippingFee)}₫</Text>
                             : <Text style={styles.fee} ></Text>}
-                        <Text style={styles.total} >Tổng tiền: {convertNumberToVND(total)}đ</Text>
+                        <Text style={styles.total} >Tổng tiền: {convertNumberToVND(total)}₫</Text>
                     </View>
                     <View >
                         <Button mode='contained' color='#228ce3' style={styles.button}>Đặt hàng</Button>
@@ -286,7 +315,7 @@ const styles = StyleSheet.create({
     },
 
     button: {
-        marginTop:'auto',
+        marginTop: 'auto',
         paddingLeft: 15,
         paddingRight: 15
     }

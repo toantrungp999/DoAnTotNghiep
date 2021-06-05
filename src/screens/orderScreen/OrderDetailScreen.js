@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text, StyleSheet } from 'react-native';
+import { Platform, ScrollView, View, Text, Linking, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
+import { WebView } from 'react-native-webview';
 import Progress from './component/Progress';
 import OrderDetailItem from './component/OrderDetailItem';
 import { convertNumberToVND, formatDate, getStringDate } from './../../../extentions/ArrayEx';
 import {
-    fetchOrderRequest, orderChangeTypeRequest
+    fetchOrderRequest, orderChangeTypeRequest, fetchPayRequest
 } from '../../../actions/orderActions';
 import * as OrderActions from '../../../constants/OrderActions';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,15 +15,27 @@ import CancelModal from './component/CancelModal';
 import OrderStatuses from '../../../constants/OrderStatuses';
 
 
-
 class OrderDetailScreen extends Component {
     state = {
         showCancel: false,
+        onPay: false
     }
 
     componentDidMount() {
         this.props.fetchOrderRequest(this.props.route.params._id, '');
+        if (Platform.OS === 'android') {
+            Linking.getInitialURL().then(url => {
+                this.navigate(url);
+            });
+        } else {
+            Linking.addEventListener('url', this.handleOpenURL);
+        }
 
+
+    }
+
+    handleOpenURL = (event) => { // D
+        console.log('asdasdasd');
     }
 
     showCancelModal = () => {
@@ -42,19 +55,36 @@ class OrderDetailScreen extends Component {
         this.props.fetchOrderRequest(this.props.route.params._id, '');
     }
 
+    onPay = () => {
+        this.state.onPay = true;
+        this.props.fetchPayRequest(this.props.route.params._id);
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.payReducer.vnpUrl && prevState.onPay) {
+            Linking.openURL(nextProps.payReducer.vnpUrl);
+            return { onPay: false }
+        }
+        else return null;
+    }
+
 
     render() {
         let { loading, changeTypeSuccess, message } = this.props.orderDetailReducer;
+        const payLoading = this.props.payReducer.loading;
+        const { vnpUrl } = this.props.payReducer;
+        console.log('a', vnpUrl);
         if (loading)
             return (<Text>...Loading</Text>);
         var { orderInfo, orderDetails } = this.props.orderDetailReducer.order;;
         const OrderDetailItems = orderDetails ? orderDetails.map((orderDetail, index) => {
             return (<OrderDetailItem orderDetail={orderDetail} end={index === orderDetails.length - 1} />)
         }) : null;
+
         return (
             <View style={styles.container}>
-                <CancelModal visible={this.state.showCancel} hideCancelModal={this.hideCancelModal} 
-                onConfirmCancel={this.onConfirmCancel}/>
+                <CancelModal visible={this.state.showCancel} hideCancelModal={this.hideCancelModal}
+                    onConfirmCancel={this.onConfirmCancel} />
                 <ScrollView style={styles.mainContainer}>
                     <View style={styles.progressContainer}>
                         <Progress orderInfo={orderInfo} />
@@ -78,9 +108,9 @@ class OrderDetailScreen extends Component {
                             {OrderDetailItems}
                         </View>
                         <View style={styles.bottom}>
-                            <Text style={styles.fee}>Tổng tiền hàng: {convertNumberToVND(orderInfo.totalPrice)}đ</Text>
-                            {orderInfo.shippingFee !== 0 ? <Text style={styles.fee}>Phí vận chuyển: {convertNumberToVND(orderInfo.shippingFee)}đ</Text> : null}
-                            <Text style={styles.total}>Tổng: <Text style={styles.price}>{convertNumberToVND(orderInfo.total)}đ</Text></Text>
+                            <Text style={styles.fee}>Tổng tiền hàng: {convertNumberToVND(orderInfo.totalPrice)}₫</Text>
+                            {orderInfo.shippingFee !== 0 ? <Text style={styles.fee}>Phí vận chuyển: {convertNumberToVND(orderInfo.shippingFee)}₫</Text> : null}
+                            <Text style={styles.total}>Tổng: <Text style={styles.price}>{convertNumberToVND(orderInfo.total)}₫</Text></Text>
                         </View>
                     </View>
 
@@ -98,8 +128,11 @@ class OrderDetailScreen extends Component {
                         <Button style={styles.button} mode="contained" color='#b80000'
                             onPress={() => { this.showCancelModal() }}>Hủy đơn hàng</Button> : null}
                     {orderInfo.status === OrderStatuses.PENDING_PAY ?
-                        < Button style={styles.button} mode="contained" color='#05c5ff' labelStyle={{ color: '#ffffff' }}>
-                            Thanh toán</Button> : null}
+                        payLoading ? < Button style={styles.button} mode="contained" color='#05c5ff' labelStyle={{ color: '#ffffff' }}>
+                            Thanh toán</Button>
+                            : < Button style={styles.button} mode="contained" color='#05c5ff' labelStyle={{ color: '#ffffff' }}
+                                onPress={() => { this.onPay() }}>
+                                Thanh toán</Button> : null}
                 </View>
             </View >
         );
@@ -214,13 +247,15 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     return {
-        orderDetailReducer: state.orderDetailReducer
+        orderDetailReducer: state.orderDetailReducer,
+        payReducer: state.payReducer
     }
 }
 
 const mapDispatchToProps = dispatch => ({
     fetchOrderRequest: (_id, all) => { dispatch(fetchOrderRequest(_id, all)) },
-    orderChangeTypeRequest: (path, _id, action) => { dispatch(orderChangeTypeRequest(path, _id, action)) }
+    orderChangeTypeRequest: (path, _id, action) => { dispatch(orderChangeTypeRequest(path, _id, action)) },
+    fetchPayRequest: (_id) => { dispatch(fetchPayRequest(_id)) },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OrderDetailScreen);

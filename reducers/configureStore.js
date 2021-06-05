@@ -11,7 +11,7 @@ import { brandReducer, brandsReducer } from './brands';
 import { commentsReducer } from './comments';
 import { ratesReducer } from './rates';
 import { cartsReducer } from './carts';
-import { createOrderReducer,orderReducer, orderDetailReducer } from './orders';
+import { createOrderReducer,orderReducer, orderDetailReducer,payReducer } from './orders';
 import { notificationsReducer } from './notifications';
 import { categoryGroupsReducer } from './categoryGroups';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -25,7 +25,7 @@ const rootReducer = combineReducers(
         brandReducer, brandsReducer,
         commentsReducer,ratesReducer,
         cartsReducer,notificationsReducer,
-        createOrderReducer,orderReducer,orderDetailReducer,
+        createOrderReducer,orderReducer,orderDetailReducer,payReducer,
         categoryGroupsReducer
     }
 );

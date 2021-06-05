@@ -35,7 +35,7 @@ class ChangePhoneNumberScreen extends Component {
         }
         else
             this.setState({
-                phoneNumber: userProfile.phoneNumber
+                phoneNumber: userProfile.phoneNumber?userProfile.phoneNumber:''
             });
     }
 

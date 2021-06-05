@@ -17,7 +17,7 @@ class CreateOrderItem extends Component {
                     <Text style={styles.name}>{name}</Text>
                     <Text style={styles.type}>{colorId.color} - {sizeId.size} </Text>
                     <View style={styles.quantityContainer}>
-                        <Text style={styles.price}>{convertNumberToVND(Number(price) - Number(saleOff))}đ</Text>
+                        <Text style={styles.price}>{convertNumberToVND(Number(price) - Number(saleOff))}₫</Text>
                         <Text style={styles.quantity}>x{quantity}</Text>
                     </View>
                 </View>

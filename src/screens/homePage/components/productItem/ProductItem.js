@@ -32,8 +32,8 @@ const Product = (props) => {
                     <View style={styles.bottom}>
                         <Text style={styles.name}>{name}</Text>
                         <View style={styles.priceSection}>
-                            {saleOff !== 0 && <Text style={styles.orginPrice}>{convertNumberToVND(price)}đ</Text>}
-                            <Text style={styles.price}>{convertNumberToVND(price - saleOff)}đ</Text>
+                            {saleOff !== 0 && <Text style={styles.orginPrice}>{convertNumberToVND(price)}₫</Text>}
+                            <Text style={styles.price}>{convertNumberToVND(price - saleOff)}₫</Text>
                         </View>
                         <View style={styles.rateSection}>
                             {rangeView}

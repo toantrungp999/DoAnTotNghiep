@@ -6,7 +6,7 @@ import { findIndexById } from '../extentions/ArrayEx';
 function userInfoReducer(state = {}, action) {
   switch (action.type) {
     case Types.INITITION:
-      return {userInfo: action.payload };
+      return { userInfo: action.payload };
     case Types.USER_SIGNIN_REQUEST:
       return { loading: true }
     case Types.USER_SIGNIN_SUCCESS:
@@ -14,6 +14,12 @@ function userInfoReducer(state = {}, action) {
     case Types.USER_SIGNIN_FAIL:
       let message = action.payload.message;
       return { loading: false, message };
+    case Types.USER_PROFILE_UPDATE_SUCCESS:
+      state.userInfo.name = action.payload.data.name;
+      state.userInfo.phoneNumber = action.payload.data.phoneNumber;
+      return { ...state };
+    case Types.USER_AVATAR_SUCCESS:
+      state.userInfo.image = action.payload.data;
     case Types.USER_LOGOUT:
       return {};
     case Types.USER_INFORM:

@@ -40,8 +40,8 @@ class RightMenu extends Component {
         const {path} = this.props;
         let optionButtons = null;
         if (path !== 'hot-product' && path !== 'new-product' && path !== 'best-seller') //don't use filer for 3 paths
-            optionButtons = OPTION.map(opt => {
-                return <Button style={styles.button}
+            optionButtons = OPTION.map((opt,index) => {
+                return <Button style={styles.button} key={index} index={index}
                     labelStyle={styles.buttonLable}
                     color={'#00a2ff'}
                     mode={opt.key === option ? 'contained' : 'outlined'}
@@ -57,9 +57,9 @@ class RightMenu extends Component {
                 <View style={styles.section}>
                     <Text style={styles.title}>Giá:</Text>
                     <View style={styles.priceSection}>
-                        <Text>{convertNumberToVND(min)}đ</Text>
+                        <Text>{convertNumberToVND(min)}₫</Text>
                         <Text> - </Text>
-                        <Text>{convertNumberToVND(max)}đ</Text>
+                        <Text>{convertNumberToVND(max)}₫</Text>
                     </View>
                     <MultiSlider style={styles.slider}
                         values={[min, max]}

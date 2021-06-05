@@ -84,3 +84,13 @@ export const fetchStoreAddressesRequest = () => {
         });
     };
 }
+
+export const fetchPayRequest = (id) => {
+    return (dispatch) => {
+        dispatch({ type: Types.PAY_URL_REQUEST });
+        callApiToken(dispatch, `orders/payment/vnpay_url/${id}`, 'GET', null).then(response => {
+            const type = response.status === 0 ? Types.PAY_URL_SUCCESS : Types.PAY_URL_FAIL;
+            dispatch({ type, payload: response });
+        });
+    };
+}

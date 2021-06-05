@@ -120,7 +120,7 @@ render() {
     let type = 'Màu: ' + colorId.color + ', kích cỡ: ' + size;
 
     let checked = selectedList.includes(cart._id);
-    return <CartItem onShowModel={this.onShowModel}
+    return <CartItem onShowModel={this.onShowModel} 
       _id={cart._id} key={cart._id} index={index} colorId={colorId._id} sizeId={sizeId._id}
       deleteCart={this.deleteCart} updateLoading={updateLoading} updateStatus={updateStatus} updateCart={this.props.updateCart}
       name={productId.name} productId={productId._id} image={colorId.image} type={type} quantity={quantity} quantityInStore={quantityInStore}

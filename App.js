@@ -11,17 +11,39 @@ import ProductScreen from './src/screens/productScreen/ProductScreen';
 
 
 const Stack = createStackNavigator();
+
+const config = {
+  screens: {
+    orderStackScreen: {
+      screens: {
+        orderDetailScreen: {
+          path: 'detail/:id',
+          parse: {
+            _id: (id) => `${id}`
+          }
+        }
+      }
+    }
+  }
+}
+
+const linking = {
+  prefixes: ['demo://app'],
+  config,
+}
+
 class App extends Component {
+
   render() {
     return (
       <Provider theme={theme}>
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           <Stack.Navigator>
-            <Stack.Screen name='homeTabScreen' options={{headerShown: false}} component={HomeTabScreen} />
+            <Stack.Screen name='homeTabScreen' options={{ headerShown: false }} component={HomeTabScreen} />
             <Stack.Screen name='createOrderScreen' component={CreateOrderScreen} />
-            <Stack.Screen name='orderStackScreen' options={{headerShown: false}} component={OrderStackScreen} />
-            <Stack.Screen name='detailProductScreen' component={DetailProductScreen}/>
-            <Stack.Screen name='productScreen' component={ProductScreen}/>
+            <Stack.Screen name='orderStackScreen' options={{ headerShown: false }} component={OrderStackScreen} />
+            <Stack.Screen name='detailProductScreen' component={DetailProductScreen}      options={{ title: 'Chi tiết sản phẩm' }}/>
+            <Stack.Screen name='productScreen' component={ProductScreen} options={({ route }) => ({ title: route.params.title })} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

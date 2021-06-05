@@ -137,4 +137,20 @@ function orderDetailReducer(state = { loading: true }, action) {
     }
 
 }
-export { createOrderReducer, orderReducer, orderDetailReducer }
+
+function payReducer(state = { loading: false }, action) {
+    switch (action.type) {
+        case Types.PAY_URL_REQUEST:
+            return { loading: true }
+        case Types.PAY_URL_SUCCESS:
+            return {
+                loading: false,
+                vnpUrl: action.payload.data.vnpUrl
+            };
+        case Types.PAY_URL_FAIL:
+            return { loading: false, message: action.payload.message };
+
+        default: return state;
+    }
+}
+export { createOrderReducer, orderReducer, orderDetailReducer,payReducer }

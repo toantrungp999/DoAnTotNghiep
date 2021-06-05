@@ -116,7 +116,7 @@ class LoginScreen extends Component {
   render() {
     const { message, loading } = this.props.userInfoReducer;
     return (
-      <ScrollView style={{ width: '100%' }}>
+      <View style={{ width: '100%',height:'100%' }}>
         <Background>
           <BackButton goBack={this.props.navigation.goBack} />
           <Logo />
@@ -173,7 +173,7 @@ class LoginScreen extends Component {
           <View style={styles.row}>
             <Text style={{ color: 'red' }}>{message ? message : ''}</Text>
           </View>
-          <LoginButton
+          {/* <LoginButton
             onLoginFinished={
               (error, result) => {
                 if (error) {
@@ -200,16 +200,16 @@ class LoginScreen extends Component {
                 email: { value: '', error: '' },
                 password: { value: '', error: '' }
               })
-            } />
+            } /> */}
           <View style={styles.row}>
-            <Text>Don’t have an account? </Text>
-            <TouchableOpacity onPress={() => this.props.navigation.replace('RegisterScreen')}>
-              <Text style={styles.link}>Sign up</Text>
+            <Text>Bạn chưa có tài khoản </Text>
+            <TouchableOpacity onPress={() => this.props.navigation.push('RegisterScreen')}>
+              <Text style={styles.link}>Đăng ký</Text>
             </TouchableOpacity>
           </View>
           <View style={{ height: 50 }}></View>
         </Background>
-      </ScrollView>
+      </View>
     );
   }
 }

@@ -8,20 +8,20 @@ class TypeModal extends Component {
         const { visible, type, options, hideModal, shipInfos } = this.props;
         let optionsList = null
         if (type !== 'shipId') {
-            optionsList = options ? options.map(option => {
-                return <TouchableOpacity style={styles.row}
+            optionsList = options ? options.map((option,index) => {
+                return <TouchableOpacity style={styles.row} key={index} index={index}
                     onPress={() => { this.props.changeType(type, option.value) }}
                 ><Text style={styles.fontRow}>{option.label}</Text></TouchableOpacity>
             }) : null
         } else {
             optionsList = shipInfos ? shipInfos.map((ship,index) => {
-                return <TouchableOpacity style={styles.rowShip}
+                return <TouchableOpacity style={styles.rowShip} key={index} index={index}
                     onPress={() => { this.props.changeType(type, index) }}
                 >
                     <View>
                         <Text style={styles.shipName}>{ship.name}</Text>
                         <View style={styles.shipBottom}>
-                            <Text style={styles.shipFee}>{convertNumberToVND(ship.shippingFee)}đ</Text>
+                            <Text style={styles.shipFee}>{convertNumberToVND(ship.shippingFee)}₫</Text>
                             <Text style={styles.shipDate}>Nhận: {getStringDate(ship.date * 1000)}</Text>
                         </View>
                     </View>

@@ -17,14 +17,14 @@ class LeftMenu extends Component {
     }
     render() {
         const { categoryGroups } = this.props.categoryGroupsReducer;
-        const menu = categoryGroups ? categoryGroups.map(group => {
+        const menu = categoryGroups ? categoryGroups.map((group,index) => {
             const categoryMenu = group.categorys ? group.categorys.map(category => {
-                return <List.Item style={styles.subItem}
+                return <List.Item style={styles.subItem} key={index} index={index}
                     title={category.name}
                     onPress={() => { this.navigate('category', category._id, category.name) }} />
             }) : null;
             return (
-                <List.Accordion style={styles.item}
+                <List.Accordion style={styles.item} key={index} index={index}
                     onLongPress={() => { this.navigate('category-group', group.categoryGroup._id, group.categoryGroup.name) }}
                     title={group.categoryGroup.name}>
                     {categoryMenu}

@@ -14,7 +14,7 @@ class Progress extends Component {
         const items = logs ? logs.map((log, index) => {
             var date = formatDate(log.date);
             var description = log.description;
-            return (<View style={styles.item}>
+            return (<View style={styles.item} key={index} index={index}>
                 <View style={styles.icon}></View>
                 <View>
                     <Text style={styles.date}>{date}</Text>
