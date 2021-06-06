@@ -9,7 +9,7 @@ import TextInput from '../../components/TextInput';
 import BackButton from '../../components/BackButton';
 import { theme } from '../../core/theme';
 import {
-    changePasswordRequest
+    resetPasswordRequest
 } from '../../../actions/userActions';
 
 class ResetPasswordSreen extends Component {
@@ -17,6 +17,7 @@ class ResetPasswordSreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            accessToken: '',
             newPassword: '',
             rePassword: '',
             errors: {
@@ -55,12 +56,16 @@ class ResetPasswordSreen extends Component {
     };
 
     componentDidUpdate(prevProps) {
-        if (this.props.userActionReducer !== prevProps.userActionReducer && this.props.userActionReducer.loading === false) {
-            const { changePasswordSuccess } = this.props.userActionReducer;
-            if (changePasswordSuccess === true)
-                Alert.alert(
-                    "Thông báo",
-                    "Cập nhật mật khẩu thành công");
+        if (this.props.userForgotPasswordReducer !== prevProps.userForgotPasswordReducer && this.props.userForgotPasswordReducer.statusReset === true) {
+            Alert.alert(
+                "Thông báo",
+                "Đặt lại mật khẩu thành công",
+                [
+                    {
+                        text: "Xác nhận",
+                        onPress: () => this.props.navigation.navigate('LoginScreen')
+                    },
+                ]);
         }
     }
 
@@ -74,18 +79,25 @@ class ResetPasswordSreen extends Component {
     onUpdatePassword = () => {
         if (!this.validateForm(this.errors))
             return;
-        const { newPassword } = this.state;
+        const { newPassword, accessToken } = this.state;
         if (newPassword) {
-            this.props.changePassword({ newPassword });
+            this.props.resetPassword(newPassword, accessToken);
             this.setState({ newPassword: '', rePassword: '' });
         }
     }
 
+    componentDidMount() {
+        const { accessToken } = this.props.userForgotPasswordReducer;
+        this.setState({ accessToken });
+    }
+
     render() {
-        const { loading, changePasswordMessage } = this.props.userActionReducer;
+        const { loading, message } = this.props.userForgotPasswordReducer;
+
         return (
-            <ScrollView style={{ width: '100%' }}>
+            <ScrollView style={{ width: '100%',height:'100%' }}>
                 <Background style={styles.containerMain}>
+                    <View style={{ marginTop: 30 }}></View>
                     <BackButton goBack={this.props.navigation.goBack} />
                     <Header>Đặt lại mật khẩu</Header>
                     <TextInput
@@ -105,7 +117,7 @@ class ResetPasswordSreen extends Component {
                         errorText={this.state.errors.rePassword}
                         secureTextEntry />
                     <View style={styles.row}>
-                        <Text style={{ color: 'red' }}>{changePasswordMessage ? changePasswordMessage : ''}</Text>
+                        <Text style={{ color: 'red' }}>{message || ''}</Text>
                     </View>
                     {
                         loading
@@ -120,7 +132,7 @@ class ResetPasswordSreen extends Component {
                                 mode="contained"
                                 onPress={this.onUpdatePassword}
                                 style={{ marginTop: 24 }}>
-                                Cập nhật
+                                Đặt lại mật khẩu
                         </Button>
                     }
                 </Background>
@@ -131,9 +143,10 @@ class ResetPasswordSreen extends Component {
 
 const styles = StyleSheet.create({
     containerMain: {
-        flex: 1,
+        height: '100%',
+        width: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     bottomView: {
         width: '100%',
@@ -176,14 +189,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
     return {
-        userActionReducer: state.userActionReducer,
+        userForgotPasswordReducer: state.userForgotPasswordReducer,
     }
 }
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        changePassword: (data) => {
-            dispatch(changePasswordRequest(data))
+        resetPassword: (password, accessToken) => {
+            dispatch(resetPasswordRequest(password, accessToken))
         }
     }
 }

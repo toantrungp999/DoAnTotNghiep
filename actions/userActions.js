@@ -29,9 +29,10 @@ export const signinRequest = (userInfo) => {
         const refreshToken = response.data.refreshToken;
         dispatch(actLoginSuccess(response.data.userData, accessToken, refreshToken));
       }
-      else
+      else {
         dispatch({ type: Types.USER_SIGNIN_FAIL, payload: response });
-      dispatch(showAlertWithTimeout('Đăng nhập thất bại', response.message, false));
+        //dispatch(showAlertWithTimeout('Đăng nhập thất bại', response.message, false));
+      }
     });
   };
 }
@@ -107,20 +108,24 @@ export const verifyOTPRequest = (code) => {
   };
 }
 
+export const timeoutRequest = () => {
+  return (dispatch) => {
+    dispatch({ type: Types.TIME_OUT_REQUEST });
+  };
+}
+
 //\\
-export const resetPasswordRequest = (code, password) => {
+export const resetPasswordRequest = (password, accessToken) => {
   return (dispatch) => {
     dispatch({ type: Types.USER_RESET_PASSSWORD_REQUEST });
-    callApi('auth/reset-password', 'POST', { code, password }).then(response => {
+    callApi('auth/mobile/reset-password', 'POST', { password }, accessToken).then(response => {
       if (response.status === 0) {
         dispatch({ type: Types.USER_RESET_PASSSWORD_SUCCESS });
       }
       else {
         const type = Types.USER_RESET_PASSSWORD_FAIL;
-
         dispatch({ type, payload: response });
       }
-      dispatch(useAlert('Đặt lại mật khẩu', response.message, response.status === 0));
     });
   };
 }

@@ -116,64 +116,65 @@ class LoginScreen extends Component {
   render() {
     const { message, loading } = this.props.userInfoReducer;
     return (
-      <View style={{ width: '100%',height:'100%' }}>
-        <Background>
-          <BackButton goBack={this.props.navigation.goBack} />
-          <Logo />
-          <Header>Welcome back.</Header>
-          <TextInput
-            label="Email"
-            returnKeyType="next"
-            value={this.state.email.value}
-            onChangeText={text => this.onChange('email', { value: text, error: '' })}
-            error={!!this.state.email.error}
-            errorText={this.state.email.error}
-            autoCapitalize="none"
-            autoCompleteType="email"
-            textContentType="emailAddress"
-            keyboardType="email-address"
-          />
-          <TextInput
-            label="Password"
-            returnKeyType="done"
-            value={this.state.password.value}
-            onChangeText={text => this.onChange('password', { value: text, error: '' })}
-            error={!!this.state.password.error}
-            errorText={this.state.password.error}
-            secureTextEntry
-          />
-          <View style={styles.forgotPassword}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.navigate('ForgotPasswordScreen')}
-            >
-              <Text style={styles.forgot}>Forgot your password?</Text>
-            </TouchableOpacity>
-          </View>
-          <Button mode="contained" onPress={() => this.onLoginPressed(loading)}>
-            {loading ? 'LOADING...' : 'Đăng nhập'}
-          </Button>
-          <View style={styles.row}>
-            <View style={styles.btnLoginSocial}>
-              <SocialIcon
-                button
-                title={loading ? 'LOADING...' : 'Đăng nhập'}
-                type="facebook"
-                onPress={() => this.onLoginFacebook(loading)}
-              />
+      <ScrollView>
+        <View style={{ width: '100%', height: '100%' }}>
+          <Background>
+            <BackButton goBack={this.props.navigation.goBack} />
+            <Logo />
+            <Header>Welcome back.</Header>
+            <TextInput
+              label="Email"
+              returnKeyType="next"
+              value={this.state.email.value}
+              onChangeText={text => this.onChange('email', { value: text, error: '' })}
+              error={!!this.state.email.error}
+              errorText={this.state.email.error}
+              autoCapitalize="none"
+              autoCompleteType="email"
+              textContentType="emailAddress"
+              keyboardType="email-address"
+            />
+            <TextInput
+              label="Password"
+              returnKeyType="done"
+              value={this.state.password.value}
+              onChangeText={text => this.onChange('password', { value: text, error: '' })}
+              error={!!this.state.password.error}
+              errorText={this.state.password.error}
+              secureTextEntry
+            />
+            <View style={styles.forgotPassword}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('ForgotPasswordScreen')}
+              >
+                <Text style={styles.forgot}>Forgot your password?</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.btnLoginSocial}>
-              <SocialIcon
-                title={loading ? 'LOADING...' : 'Đăng nhập'}
-                button
-                type="google-plus-official"
-                onPress={() => this.onSignInGoogle(loading)}
-              />
+            <Button mode="contained" onPress={() => this.onLoginPressed(loading)}>
+              {loading ? 'LOADING...' : 'Đăng nhập'}
+            </Button>
+            <View style={styles.row}>
+              <View style={styles.btnLoginSocial}>
+                <SocialIcon
+                  button
+                  title={loading ? 'LOADING...' : 'Đăng nhập'}
+                  type="facebook"
+                  onPress={() => this.onLoginFacebook(loading)}
+                />
+              </View>
+              <View style={styles.btnLoginSocial}>
+                <SocialIcon
+                  title={loading ? 'LOADING...' : 'Đăng nhập'}
+                  button
+                  type="google-plus-official"
+                  onPress={() => this.onSignInGoogle(loading)}
+                />
+              </View>
             </View>
-          </View>
-          <View style={styles.row}>
-            <Text style={{ color: 'red' }}>{message ? message : ''}</Text>
-          </View>
-          {/* <LoginButton
+            <View style={styles.row}>
+              <Text style={{ color: 'red' }}>{message ? message : ''}</Text>
+            </View>
+            {/* <LoginButton
             onLoginFinished={
               (error, result) => {
                 if (error) {
@@ -201,15 +202,16 @@ class LoginScreen extends Component {
                 password: { value: '', error: '' }
               })
             } /> */}
-          <View style={styles.row}>
-            <Text>Bạn chưa có tài khoản </Text>
-            <TouchableOpacity onPress={() => this.props.navigation.push('RegisterScreen')}>
-              <Text style={styles.link}>Đăng ký</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ height: 50 }}></View>
-        </Background>
-      </View>
+            <View style={styles.row}>
+              <Text>Bạn chưa có tài khoản </Text>
+              <TouchableOpacity onPress={() => this.props.navigation.push('RegisterScreen')}>
+                <Text style={styles.link}>Đăng ký</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{ height: 50 }}></View>
+          </Background>
+        </View>
+      </ScrollView>
     );
   }
 }

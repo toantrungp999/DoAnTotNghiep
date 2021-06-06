@@ -22,7 +22,6 @@ class ForgotPasswordScreen extends Component {
   }
 
   checkValidate = (name, value) => {
-    let errors = this.state.errors;
     switch (name) {
       case 'email':
         value.error = value.value.length > 0 ? isValidLength(value.value, 5, 255).error : 'Chưa nhập';
@@ -31,16 +30,8 @@ class ForgotPasswordScreen extends Component {
         break;
       default: break;
     }
-    this.setState({ errors });
+    return value;
   }
-
-  validateForm = errors => {
-    let valid = true;
-    if (!errors)
-      return true;
-    Object.values(errors).forEach(val => val.length > 0 && (valid = false));
-    return valid;
-  };
 
   componentDidUpdate(prevProps) {
     if (this.props.userForgotPasswordReducer !== prevProps.userForgotPasswordReducer) {
@@ -51,20 +42,21 @@ class ForgotPasswordScreen extends Component {
   }
 
   onChange = (name, value) => {
-    this.checkValidate(name, value);
+    value = this.checkValidate(name, value);
     this.setState({
       [name]: value
     });
   };
 
   sendResetPasswordOTP = () => {
-    if (!this.validateForm(this.errors))
+    if (this.state.email.error)
       return;
+      
     this.props.forgotPassword(this.state.email.value);
   }
 
   render() {
-    const { message } = this.props.userForgotPasswordReducer;
+    const { loading, message } = this.props.userForgotPasswordReducer;
     return (
       <Background>
         <BackButton goBack={this.props.navigation.goBack} />
@@ -84,13 +76,23 @@ class ForgotPasswordScreen extends Component {
           description="Vui lòng nhập email để nhận mã OTP qua điện thoại hoặc email."
         />
         <View><Text style={{ color: 'red' }}>{message}</Text></View>
-        <Button
-          mode="contained"
-          onPress={this.sendResetPasswordOTP}
-          style={{ marginTop: 16 }}
-        >
-          Giử mã OTP
-        </Button>
+
+        {
+          loading
+            ?
+            <Button
+              mode="contained"
+              style={{ marginTop: 16 }}>
+              LOADING...
+                        </Button>
+            :
+            <Button
+              mode="contained"
+              onPress={this.sendResetPasswordOTP}
+              style={{ marginTop: 16 }}>
+              Giử mã OTP
+                        </Button>
+        }
       </Background>
     )
   }

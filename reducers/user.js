@@ -33,13 +33,15 @@ function userForgotPasswordReducer(state = {}, action) {
     case Types.USER_FORGOTPASSWORD_REQUEST:
       return { loading: true }
     case Types.USER_FORGOTPASSWORD_SUCCESS:
-      return { loading: false, statusForgot: true, email: action.payload.data.email, msgSuccess: action.payload.message };
+      return { loading: false, statusForgot: true, email: action.payload.data.email, msgSuccess: action.payload.message, timeout: 300 };
     case Types.USER_FORGOTPASSWORD_FAIL:
       return { loading: false, statusForgot: false, message: action.payload.message };
     case Types.USER_VERIFY_OTP_REQUEST:
       state.loading = true;
       state.message = '';
       return { ...state };
+    case Types.TIME_OUT_REQUEST:
+      return { loading: false }
     case Types.USER_VERIFY_OTP_SUCCESS:
       return { loading: false, statusVerify: true, accessToken: action.payload.data.accessToken };
     case Types.USER_VERIFY_OTP_FAIL:
@@ -48,7 +50,9 @@ function userForgotPasswordReducer(state = {}, action) {
       state.statusVerify = false;
       return { ...state };
     case Types.USER_RESET_PASSSWORD_REQUEST:
-      return { loading: true }
+      state.loading = true;
+      state.message = '';
+      return { ...state };
     case Types.USER_RESET_PASSSWORD_SUCCESS:
       return { loading: false, statusReset: true };
     case Types.USER_RESET_PASSSWORD_FAIL:
