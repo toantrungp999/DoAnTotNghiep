@@ -16,6 +16,8 @@ export const initial = () => {
   return (dispatch) => {
     GetItemFromStorage('userInfo').then(userInfo => {
       dispatch({ type: Types.INITITION, payload: userInfo });
+      if (userInfo)
+        setTimeout(() => dispatch(fectchCartsRequest()), 300);
     })
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, ScrollView, View, FlatList, Text, Dimensions } from 'react-native';
+import { Picker } from '@react-native-community/picker';
 import ProductItem from './ProductItem';
 
 

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
+
 function GetItemFromStorage(name) {
     return AsyncStorage.getItem(name).then(data => {
         return data ? JSON.parse(data) : null;

@@ -1,30 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import {
     PersonalScreen
 } from '../screens';
 
 import CartsScreen from './cartScreen/CartsScreen';
+import MessengerScreen from './messengerScreen/MessengerScreen';
 import HomeScreen from './homePage/HomeScreen';
 import NotificationsScreen from './notification/NotificationsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { initial } from '../../actions/userActions';
 import { fectchNewNotificationsRequest } from '../../actions/notifacationActions';
-import {
-    fectchCartsRequest
-} from '../../actions/cartActions';
 
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
 class HomeTabScreen extends Component {
 
     intervalId = 0;
 
     componentDidMount() {
-        this.props.fectchCarts();
         this.props.initial();
         this.intervalId = setInterval(this.fectchNotifications, 5000);
     }
@@ -76,6 +71,9 @@ class HomeTabScreen extends Component {
                         else if (route.name === 'Cá nhân') {
                             iconName = focused ? 'person' : 'person-outline';
                         }
+                        else if (route.name === 'Nhắn tin') {
+                            iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
+                        }
                         return <Ionicons name={iconName} size={size} color={color} />;
                     },
                 })}
@@ -86,6 +84,7 @@ class HomeTabScreen extends Component {
             >
                 <Tab.Screen name="Trang chủ" component={HomeScreen} />
                 {userInfo ? <Tab.Screen name="Giỏ hàng" options={{ tabBarBadge: lengthCarts }} component={CartsScreen} /> : null}
+                {userInfo ? <Tab.Screen name="Nhắn tin" options={{ tabBarBadge: 1 }} component={MessengerScreen} /> : null}
                 {userInfo ? <Tab.Screen name="Thông báo" options={{ tabBarBadge: count }} component={NotificationsScreen} /> : null}
                 <Tab.Screen name={userInfo ? "Cá nhân" : "Đăng nhập"} component={PersonalScreen} />
             </Tab.Navigator>
@@ -107,8 +106,7 @@ const mapDispatchToProps = (dispatch, props) => {
         initial: () => {
             dispatch(initial())
         },
-        fectchNotifications: (pageSize) => dispatch(fectchNewNotificationsRequest(pageSize, 1)),
-        fectchCarts: () => { dispatch(fectchCartsRequest()) },
+        fectchNotifications: (pageSize) => dispatch(fectchNewNotificationsRequest(pageSize, 1))
     }
 }
 
