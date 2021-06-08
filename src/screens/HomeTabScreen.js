@@ -21,7 +21,8 @@ class HomeTabScreen extends Component {
 
     async componentDidMount() {
         const userInfo = await GetItemFromStorage('userInfo');
-        this.props.initial(userInfo);
+        const asscessToken = await GetItemFromStorage('x-access-token');
+        this.props.initial(userInfo, asscessToken);
         this.intervalId = setInterval(this.fectchNotifications, 5000);
     }
 
@@ -104,8 +105,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        initial: (userInfo) => {
-            dispatch(initial(userInfo))
+        initial: (userInfo, asscessToken) => {
+            dispatch(initial(userInfo, asscessToken))
         },
         fectchNotifications: (pageSize) => dispatch(fectchNewNotificationsRequest(pageSize, 1))
     }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import { time_ago } from '../../../../extentions/ArrayEx';
 
 class MessengerItem extends Component {
@@ -18,20 +18,22 @@ class MessengerItem extends Component {
         }
 
         return (
-            <View style={styles.messengerItem}>
-                <View style={{ width: '18%' }}>
-                    <Image source={image || require('../../../../assets/CSKH.jpg')} style={{ width: 60, height: 60, borderRadius: 30 }} />
-                </View>
-                <View style={!isMeSend && messenger.check === false ? styles.messengerContentNotSeen : styles.messengerContent}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Text style={styles.name}>{name}</Text>
-                        {isMessengerItemToAdmin ? <Text style={{ fontSize: 8, color: 'red' }}>"Tin nhắn hệ thống"</Text> : null}
+            <TouchableOpacity onPress={() => this.props.openDetailMessenger(this.props.index, messenger.user1._id === userId ? messenger.user2 : messenger.user1)}>
+                <View style={styles.messengerItem}>
+                    <View style={{ width: '18%' }}>
+                        <Image source={image || require('../../../../assets/CSKH.jpg')} style={{ width: 60, height: 60, borderRadius: 30 }} />
                     </View>
-                    <View style={styles.messengerValue}>
-                        <Text>{isMeSend ? 'Bạn: ' : ''}{messenger.messages[messenger.messages.length - 1].content.msg.length < 20 ? `${messenger.messages[messenger.messages.length - 1].content.msg}` : `${messenger.messages[messenger.messages.length - 1].content.msg.substring(0, 20)}...`} · {time_ago(messenger.date)}</Text>
+                    <View style={!isMeSend && messenger.check === false ? styles.messengerContentNotSeen : styles.messengerContent}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Text style={styles.name}>{name}</Text>
+                            {isMessengerItemToAdmin ? <Text style={{ fontSize: 8, color: 'red' }}>"Tin nhắn hệ thống"</Text> : null}
+                        </View>
+                        <View style={styles.messengerValue}>
+                            <Text>{isMeSend ? 'Bạn: ' : ''}{messenger.messages[messenger.messages.length - 1].content.msg.length < 20 ? `${messenger.messages[messenger.messages.length - 1].content.msg}` : `${messenger.messages[messenger.messages.length - 1].content.msg.substring(0, 20)}...`} · {time_ago(messenger.date)}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 }

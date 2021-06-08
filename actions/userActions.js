@@ -7,16 +7,19 @@ import {
   GoogleSignin,
 } from '@react-native-google-signin/google-signin';
 import { fectchCartsRequest } from "./cartActions";
-import { fectchMessengersRequest } from "./messengerActions";
+import { initialization, login, fectchMessengersRequest } from "./messengerActions";
 import { clearNotify, fectchNewNotificationsRequest } from "./notifacationActions";
 import { useAlert, showAlertWithTimeout } from './alertActions';
 
 //\\
-export const initial = (userInfo) => {
+export const initial = (userInfo, accessToken) => {
   return (dispatch) => {
     dispatch({ type: Types.INITITION, payload: userInfo });
+    dispatch(initialization());
     dispatch(fectchCartsRequest());
     dispatch(fectchMessengersRequest());
+    if (accessToken)
+      login(accessToken);
   }
 }
 
@@ -48,7 +51,9 @@ export const signinByApiRequest = (url, postData) => {
         dispatch(actLoginSuccess(response.data.userData, accessToken, refreshToken));
         dispatch(fectchMessengersRequest());
         dispatch(fectchCartsRequest());
+        dispatch(initialization());
         dispatch(fectchNewNotificationsRequest(5, 1));
+        login(accessToken);
       }
       else
         dispatch({ type: Types.USER_SIGNIN_FAIL, payload: response });
