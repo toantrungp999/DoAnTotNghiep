@@ -83,10 +83,10 @@ export const logoutFromSocket = () => {
 
 
 export const fectchMessengersRequest = () => {
+  console.log("có fetch")
   return (dispatch) => {
     dispatch({ type: Types.MESSENGERS_REQUEST });
     callApiToken(dispatch, 'messengers', 'GET', null).then(response => {
-      console.log(response);
       const type = response.status === 0 ? Types.MESSENGERS_SUCCESS : Types.MESSENGERS_FAIL;
       dispatch({ type, payload: response });
     });

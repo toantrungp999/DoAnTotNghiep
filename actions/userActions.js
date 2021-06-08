@@ -6,19 +6,17 @@ import { LoginManager } from 'react-native-fbsdk';
 import {
   GoogleSignin,
 } from '@react-native-google-signin/google-signin';
-import { GetItemFromStorage } from '../extentions/Storage';
 import { fectchCartsRequest } from "./cartActions";
+import { fectchMessengersRequest } from "./messengerActions";
 import { clearNotify, fectchNewNotificationsRequest } from "./notifacationActions";
 import { useAlert, showAlertWithTimeout } from './alertActions';
 
 //\\
-export const initial = () => {
+export const initial = (userInfo) => {
   return (dispatch) => {
-    GetItemFromStorage('userInfo').then(userInfo => {
-      dispatch({ type: Types.INITITION, payload: userInfo });
-      if (userInfo)
-        setTimeout(() => dispatch(fectchCartsRequest()), 300);
-    })
+    dispatch({ type: Types.INITITION, payload: userInfo });
+    dispatch(fectchCartsRequest());
+    dispatch(fectchMessengersRequest());
   }
 }
 
@@ -48,6 +46,7 @@ export const signinByApiRequest = (url, postData) => {
         const accessToken = response.data.accessToken;
         const refreshToken = response.data.refreshToken;
         dispatch(actLoginSuccess(response.data.userData, accessToken, refreshToken));
+        dispatch(fectchMessengersRequest());
         dispatch(fectchCartsRequest());
         dispatch(fectchNewNotificationsRequest(5, 1));
       }

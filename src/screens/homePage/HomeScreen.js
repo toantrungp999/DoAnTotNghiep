@@ -36,7 +36,7 @@ class HomeScreen extends Component {
           <Loading/>
       </View>
     else {
-      var { hots, news, bestSellers, colorOptions, sizeOptions } = productHomepages;
+      // var { hots, news, bestSellers, colorOptions, sizeOptions } = productHomepages;
       const config = {
         
       };
@@ -49,7 +49,7 @@ class HomeScreen extends Component {
             flex: 1
           }}
         >
-          <Drawer
+          {/* <Drawer
             type="overlay"
             content={<LeftMenu navigate={this.navigate} categoryGroupsReducer={this.props.categoryGroupsReducer} />}
             tapToClose={false}
@@ -64,7 +64,7 @@ class HomeScreen extends Component {
               <ProductSection products={hots} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm mổi bật' description='Xu hướng thời trang dành cho bạn' />
               <ProductSection products={hots} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm bán chạy' description='Xu hướng thời trang dành cho bạn' />
             </ScrollView>
-          </Drawer >
+          </Drawer > */}
         </GestureRecognizer>
       );
     }

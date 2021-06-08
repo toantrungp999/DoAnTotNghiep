@@ -16,6 +16,7 @@ import { createOrderReducer, orderReducer, orderDetailReducer, payReducer } from
 import { notificationsReducer } from './notifications';
 import { categoryGroupsReducer } from './categoryGroups';
 import { allUserReducer } from './users';
+import { messengersReducer } from './messengers';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 
@@ -30,7 +31,8 @@ const rootReducer = combineReducers(
         cartsReducer, notificationsReducer,
         createOrderReducer, orderReducer, orderDetailReducer, payReducer,
         categoryGroupsReducer,
-        allUserReducer
+        allUserReducer,
+        messengersReducer
     }
 );
 

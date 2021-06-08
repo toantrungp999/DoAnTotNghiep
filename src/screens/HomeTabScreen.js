@@ -12,15 +12,16 @@ import NotificationsScreen from './notification/NotificationsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { initial } from '../../actions/userActions';
 import { fectchNewNotificationsRequest } from '../../actions/notifacationActions';
-
+import { GetItemFromStorage } from '../../extentions/Storage';
 
 const Tab = createBottomTabNavigator();
 class HomeTabScreen extends Component {
 
     intervalId = 0;
 
-    componentDidMount() {
-        this.props.initial();
+    async componentDidMount() {
+        const userInfo = await GetItemFromStorage('userInfo');
+        this.props.initial(userInfo);
         this.intervalId = setInterval(this.fectchNotifications, 5000);
     }
 
@@ -103,8 +104,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        initial: () => {
-            dispatch(initial())
+        initial: (userInfo) => {
+            dispatch(initial(userInfo))
         },
         fectchNotifications: (pageSize) => dispatch(fectchNewNotificationsRequest(pageSize, 1))
     }

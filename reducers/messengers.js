@@ -1,4 +1,6 @@
+import { View, Image, Text } from "react-native";
 import * as Types from "../constants/MessengerActTypes";
+import * as CHAT_BOT_TYPES from "../constants/ChatBotTypes";
 import { findIndexById } from "../extentions/ArrayEx";
 
 function messengersReducer(state = {}, action) {
@@ -114,74 +116,70 @@ function formatContentMessage(type, content) {
     let listData = [];
     let msg = "";
 
-    // switch (type) {
-    //     case CHAT_BOT_TYPES.ASK_BRANDS:
-    //         msg = "Cửa hàng chúng tôi hiện đang kinh doanh các hãng sau:";
-    //         listData = content ? content.map((data, index) => {
-    //             return <Link className="message-link" index={index} to="#" key={data._id}>{data.name}</Link>
-    //         }) : null;
-    //         listData.push(<Link key={listData.length} to="#">...</Link>);
-    //         break;
-    //     case CHAT_BOT_TYPES.ASK_CATEGORIES:
-    //         msg = "Cửa hàng chúng tôi hiện đang kinh doanh các loại sản phẩm sau:";
-    //         listData = content ? content.map((data, index) => {
-    //             return <Link className="message-link" index={index} to="#" key={data._id}>{data.name}</Link>
-    //         }) : null;
-    //         listData.push(<Link key={listData.length} to="#">...</Link>);
-    //         break;
-    //     case CHAT_BOT_TYPES.ASK_BEST_VIEW:
-    //         msg = "Sản phảm có tên: ";
-    //         listData = <div><Link to={`/detail/${content._id}`}>
-    //             <div>{content.name} </div>
-    //             <img alt={type} className="img-message-content" src={content.images[0]} />
-    //         </Link>
-    //         có hơn {content.numberVisit} lượt đã truy cập.
-    //         </div>
-    //         break;
-    //     case CHAT_BOT_TYPES.ASK_BEST_RATE:
-    //         msg = "Sản phảm có tên: ";
-    //         listData = <div><Link to={`/detail/${content._id}`}>
-    //             <div>{content.name} </div>
-    //             <img alt={type} className="img-message-content" src={content.images[0]} />
-    //         </Link>
-    //         có hơn {content.numberRate} lượt đánh giá với số điểm trung bình là {content.avgRate}.
-    //         </div>
-    //         break;
-    //     case CHAT_BOT_TYPES.ASK_BEST_SELL:
-    //         msg = "Sản phảm có tên: ";
-    //         listData = <div><Link to={`/detail/${content._id}`}>
-    //             <div>{content.name}</div>
-    //             <img alt={type} className="img-message-content" src={content.images[0]} />
-    //         </Link>
-    //         có hơn {content.numberBuy} lượt mua hàng.
-    //         </div>
-    //         break;
-    //     case CHAT_BOT_TYPES.ASK_PRODUCT:
-    //         msg = "Sản phảm có tên: ";
-    //         let msgTmp = "";
-    //         if (content.quantityOptions) {
-    //             for (let i = 0; i < content.quantityOptions.length - 1; i++) {
-    //                 msgTmp += `màu ${content.quantityOptions[i].color} và size ${content.quantityOptions[i].size} có số lượng hiện có: ${content.quantityOptions[i].quantity}, `
-    //             }
-    //         }
-    //         if (content.quantityOptions.length - 1 >= 0)
-    //             msgTmp += `màu ${content.quantityOptions[content.quantityOptions.length - 1].color} và size ${content.quantityOptions[content.quantityOptions.length - 1].size} có số lượng hiện có: ${content.quantityOptions[content.quantityOptions.length - 1].quantity}`
-    //         listData = <div><Link to={`/detail/${content.product._id}`}>
-    //             <div>{content.product.name}</div>
-    //             <img alt={type} className="img-message-content" src={content.product.images[0]} />
-    //         </Link>
-    //             {msgTmp}
-    //             {content.infoMore}
-    //         </div>
-    //         break;
-    //     case CHAT_BOT_TYPES.ASK_LOW_DELIVERY:
-    //         break;
-    //     case CHAT_BOT_TYPES.ASK_HOW_TO_BUY:
-    //         msg = <div>Để đặt hàng quý khách cần <Link to={'/account/profile'}>(cập nhật đủ thông tin cá nhân nếu chưa cập nhật </Link>. Sau đó truy cập vào sản phẩm và nhấn mua hàng. Nếu muốn mua sản phẩm đã có sản phẩm trong <Link to="/cart">giỏ hàng vui lòng nhấn vào đây</Link> và nhấn mua hàng</div>
-    //         break;
-    //     default:
-    //         msg = content;
-    //         break;
-    //}
+    switch (type) {
+        case CHAT_BOT_TYPES.ASK_BRANDS:
+            msg = "Cửa hàng chúng tôi hiện đang kinh doanh các hãng sau:";
+            listData = content ? content.map((data, index) => {
+                return <Text style={{ fontWeight: 'bold' }} key={data._id}>{data.name} ,</Text>
+            }) : null;
+            listData.push(<Text key={listData.length}>...</Text>);
+            break;
+        case CHAT_BOT_TYPES.ASK_CATEGORIES:
+            msg = "Cửa hàng chúng tôi hiện đang kinh doanh các loại sản phẩm sau:";
+            listData = content ? content.map((data, index) => {
+                return <Text key={data._id}>{data.name} ,</Text>
+            }) : null;
+            listData.push(<Text key={listData.length}>...</Text>);
+            break;
+        case CHAT_BOT_TYPES.ASK_BEST_VIEW:
+            msg = "Sản phảm có tên: ";
+            listData =
+                <View style={{ flexDirection: 'row' }}>
+                    <Text>{content.name} </Text>
+                    <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+                    <Text>có hơn {content.numberVisit} lượt đã truy cập.</Text>
+                </View>
+            break;
+        case CHAT_BOT_TYPES.ASK_BEST_RATE:
+            msg = "Sản phảm có tên: ";
+            listData = <View>
+                <Text>{content.name} </Text>
+                <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+                <Text>có hơn {content.numberRate} lượt đánh giá với số điểm trung bình là {content.avgRate}.</Text>
+            </View>
+            break;
+        case CHAT_BOT_TYPES.ASK_BEST_SELL:
+            msg = "Sản phảm có tên: ";
+            listData = <View>
+                <Text>{content.name} </Text>
+                <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+                <Text>có hơn {content.numberBuy} lượt mua hàng.</Text>
+            </View>
+            break;
+        case CHAT_BOT_TYPES.ASK_PRODUCT:
+            msg = "Sản phảm có tên: ";
+            let msgTmp = "";
+            if (content.quantityOptions) {
+                for (let i = 0; i < content.quantityOptions.length - 1; i++) {
+                    msgTmp += `màu ${content.quantityOptions[i].color} và size ${content.quantityOptions[i].size} có số lượng hiện có: ${content.quantityOptions[i].quantity}, `
+                }
+            }
+            if (content.quantityOptions.length - 1 >= 0)
+                msgTmp += `màu ${content.quantityOptions[content.quantityOptions.length - 1].color} và size ${content.quantityOptions[content.quantityOptions.length - 1].size} có số lượng hiện có: ${content.quantityOptions[content.quantityOptions.length - 1].quantity}`
+            listData = <View>
+                <Text>{content.name} </Text>
+                <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+                <Text>{msgTmp}{content.infoMore}</Text>
+            </View>
+            break;
+        case CHAT_BOT_TYPES.ASK_LOW_DELIVERY:
+            break;
+        case CHAT_BOT_TYPES.ASK_HOW_TO_BUY:
+            msg = "Để đặt hàng quý khách cần (cập nhật đủ thông tin cá nhân nếu chưa cập nhật. Sau đó truy cập vào sản phẩm và nhấn mua hàng. Nếu muốn mua sản phẩm đã có sản phẩm trong và nhấn mua hàng";
+            break;
+        default:
+            msg = content;
+            break;
+    }
     return { msg, listData }
 }
