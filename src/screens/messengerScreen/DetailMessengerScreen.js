@@ -1,24 +1,61 @@
-import React, { Component } from 'react';
+import React, { Component, memo } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Text, Image, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MessageItem from './components/MessageItem';
 import { closeMessage, sendMessageToBot, sendMessageToUser, fectchMessagesRequest, updateMessengerCheck } from '../../../actions/messengerActions';
+import Feather from 'react-native-vector-icons/Feather';
+import { BOT_ID } from '../../../constants/MessengerData';
+
+const isCloseToTop = ({ contentOffset }) => {
+    return contentOffset.y <= 20;
+};
 
 class DetailMessengerScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { index: -1, content: '', lengthMessages: 0, currentPage: 1, pageSize: 7, firstFetch: false };
+        this.state = { index: -1, content: '', lengthMessages: 0, currentPage: 1, pageSize: 15, firstFetch: false };
     }
 
     componentDidMount() {
-        const { index } = this.props.messengersReducer;
+        const { index, messengers } = this.props.messengersReducer;
         this.setState({ index: index });
-        if (index > -1) {
+        if (index > -1 && messengers[index].fetchMessages === false) {
             const { messengers } = this.props.messengersReducer;
             this.props.fectchMessages(messengers[index]._id, this.state.pageSize, this.state.currentPage);
         }
+    }
+
+    viewMore = () => {
+        const { loading, index, messengers } = this.props.messengersReducer;
+        if (index <= -1)
+            return;
+        const { pagingInfo } = messengers[index];
+        if (pagingInfo && loading === false && pagingInfo.currentPage < pagingInfo.totalPage) {
+            this.setState({ currentPage: (this.state.currentPage + 1) });
+            this.props.fectchMessages(messengers[index]._id, this.state.pageSize, this.state.currentPage);
+        }
+    };
+
+    onChange = (name, value) => {
+        this.setState({
+            [name]: value
+        });
+    };
+
+
+    onSend = () => {
+        const userId = this.props.userInfoReducer.userInfo._id;
+        const { messengers, index, to } = this.props.messengersReducer;
+        const isCustomerCare = (!messengers[index].user1 || messengers[index].user1._id !== userId) && (!messengers[index].user2 || messengers[index].user2._id !== userId);
+
+        const content = this.state.content.trim();
+        if (content && to && (to._id === BOT_ID && !isCustomerCare))
+            this.props.sendMessageToBot(content);
+        else if (content)
+            this.props.sendMessageToUser(to ? to._id : null, content, isCustomerCare);
+        this.setState({ content: '' })
     }
 
 
@@ -59,12 +96,30 @@ class DetailMessengerScreen extends Component {
                     <Image style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 20 }} source={source} />
                     <Text style={styles.reciverName}>{!to ? "Chăm sóc khách hàng" : to.name}</Text>
                 </View>
-                <ScrollView style={{ width: '100%' }}>
+                <ScrollView style={{ width: '100%', backgroundColor: '#FFFFFF' }}
+                    onScroll={({ nativeEvent }) => {
+                        if (isCloseToTop(nativeEvent)) {
+                            this.viewMore();
+                        }
+                    }}
+                >
                     <View style={{ padding: 15 }}>
                         {messageItems}
                     </View>
 
                 </ScrollView>
+                <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'space-between', alignItems: 'center' }}>
+                    <TextInput
+                        value={this.state.content}
+                        placeholder="Nhập tin nhắn"
+                        multiline={true}
+                        style={styles.input}
+                        onChangeText={(text) => this.onChange('content', text)}
+                    />
+                    <View style={{ width: '11%' }}>
+                        <TouchableOpacity style={{ marginLeft: 10 }} onPress={this.onSend}><Feather name="send" size={24} color='black' /></TouchableOpacity>
+                    </View>
+                </View>
             </View>
 
         )
@@ -74,6 +129,7 @@ class DetailMessengerScreen extends Component {
 const styles = StyleSheet.create({
     containerMain: {
         flex: 1,
+        backgroundColor: '#FFFFFF'
     },
     header: {
         padding: 12,
@@ -104,6 +160,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row', width: '100%',
         marginTop: 4, justifyContent: 'center',
         marginBottom: 50
+    },
+    input: {
+        height: 40,
+        width: '89%',
+        alignSelf: 'stretch',
+        backgroundColor: '#F0F2F5',
+        paddingLeft: 15,
+        borderRadius: 40
+
     }
 })
 
@@ -123,4 +188,4 @@ const mapDispatchToProps = (dispatch, props) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailMessengerScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(memo(DetailMessengerScreen));

@@ -83,7 +83,6 @@ export const logoutFromSocket = () => {
 
 
 export const fectchMessengersRequest = () => {
-  console.log("có fetch")
   return (dispatch) => {
     dispatch({ type: Types.MESSENGERS_REQUEST });
     callApiToken(dispatch, 'messengers', 'GET', null).then(response => {

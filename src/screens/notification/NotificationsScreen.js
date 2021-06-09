@@ -62,7 +62,7 @@ class NotificationsScreen extends Component {
     }) : null;
     return (
       <ScrollView style={{ width: '100%' }} onScroll={({ nativeEvent }) => {
-        if (isCloseToBottom(nativeEvent)){
+        if (isCloseToBottom(nativeEvent)) {
           console.log('có nek');
           this.viewMore();
         }

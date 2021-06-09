@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, memo } from 'react';
 import { View, StyleSheet, Text, Image } from 'react-native';
 
 class MessageItem extends Component {
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default MessageItem;
+export default memo(MessageItem);

@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Image, Text } from "react-native";
 import * as Types from "../constants/MessengerActTypes";
 import * as CHAT_BOT_TYPES from "../constants/ChatBotTypes";
@@ -33,22 +34,21 @@ function messengersReducer(state = {}, action) {
                 state.messengers[index].check = false;
             }
             else {
-                index = 0;
                 state.messengers.unshift({ _id: messenger._id, user1: messenger.user1, user2: messenger.user2, messages: [messenger.message], check: messenger.check, date: messenger.date, fetchMessages: false });
             }
 
-            const userInfo = Cookie.getJSON('userInfo') || null;
-            if (!state.action && userInfo) {
-                let to = null;//this.props.userInfoReducer.userInfo._id ===
-                if (state.messengers[index].user1 && state.messengers[index].user1._id !== userInfo._id) {
-                    to = state.messengers[index].user1;
-                }
-                else if (state.messengers[index].user2 && state.messengers[index].user2._id !== userInfo._id)
-                    to = state.messengers[index].user2;
-                state.index = index;
-                state.action = Types.OPEN_DETAIL_MESSENGER;
-                state.to = to;
-            }
+            // const userInfo = Cookie.getJSON('userInfo') || null;
+            // if (!state.action && userInfo) {
+            //     let to = null;//this.props.userInfoReducer.userInfo._id ===
+            //     if (state.messengers[index].user1 && state.messengers[index].user1._id !== userInfo._id) {
+            //         to = state.messengers[index].user1;
+            //     }
+            //     else if (state.messengers[index].user2 && state.messengers[index].user2._id !== userInfo._id)
+            //         to = state.messengers[index].user2;
+            //     state.index = index;
+            //     state.action = Types.OPEN_DETAIL_MESSENGER;
+            //     state.to = to;
+            // }
             state.loading = false;
             return { ...state };
         case Types.SEND_MESSAGE_FAIL:
@@ -115,49 +115,45 @@ function formatContentMessage(type, content) {
 
     let listData = [];
     let msg = "";
-
     switch (type) {
         case CHAT_BOT_TYPES.ASK_BRANDS:
-            msg = "Cửa hàng chúng tôi hiện đang kinh doanh các hãng sau:";
+            msg = "Cửa hàng chúng tôi hiện đang kinh doanh các hãng sau: ";
             listData = content ? content.map((data, index) => {
                 return <Text style={{ fontWeight: 'bold' }} key={data._id}>{data.name} ,</Text>
             }) : null;
             listData.push(<Text key={listData.length}>...</Text>);
             break;
         case CHAT_BOT_TYPES.ASK_CATEGORIES:
-            msg = "Cửa hàng chúng tôi hiện đang kinh doanh các loại sản phẩm sau:";
+            msg = "Cửa hàng chúng tôi hiện đang kinh doanh các loại sản phẩm sau: ";
             listData = content ? content.map((data, index) => {
                 return <Text key={data._id}>{data.name} ,</Text>
             }) : null;
             listData.push(<Text key={listData.length}>...</Text>);
             break;
         case CHAT_BOT_TYPES.ASK_BEST_VIEW:
-            msg = "Sản phảm có tên: ";
+            msg = `Sản phảm có tên: ${content.product.name}`;
             listData =
-                <View style={{ flexDirection: 'row' }}>
-                    <Text>{content.name} </Text>
-                    <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+                <>
+                    <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.product.images[0] }} /></View>
                     <Text>có hơn {content.numberVisit} lượt đã truy cập.</Text>
-                </View>
+                </>
             break;
         case CHAT_BOT_TYPES.ASK_BEST_RATE:
-            msg = "Sản phảm có tên: ";
-            listData = <View>
-                <Text>{content.name} </Text>
-                <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+            msg = `Sản phảm có tên: ${content.product.name}`;
+            listData = <>
+                <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.product.images[0] }} /></View>
                 <Text>có hơn {content.numberRate} lượt đánh giá với số điểm trung bình là {content.avgRate}.</Text>
-            </View>
+            </>
             break;
         case CHAT_BOT_TYPES.ASK_BEST_SELL:
-            msg = "Sản phảm có tên: ";
-            listData = <View>
-                <Text>{content.name} </Text>
-                <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+            msg = `Sản phảm có tên: ${content.product.name}`;
+            listData = <>
+                <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.product.images[0] }} /></View>
                 <Text>có hơn {content.numberBuy} lượt mua hàng.</Text>
-            </View>
+            </>
             break;
         case CHAT_BOT_TYPES.ASK_PRODUCT:
-            msg = "Sản phảm có tên: ";
+            msg = `Sản phảm có tên: ${content.product.name}`;
             let msgTmp = "";
             if (content.quantityOptions) {
                 for (let i = 0; i < content.quantityOptions.length - 1; i++) {
@@ -166,11 +162,10 @@ function formatContentMessage(type, content) {
             }
             if (content.quantityOptions.length - 1 >= 0)
                 msgTmp += `màu ${content.quantityOptions[content.quantityOptions.length - 1].color} và size ${content.quantityOptions[content.quantityOptions.length - 1].size} có số lượng hiện có: ${content.quantityOptions[content.quantityOptions.length - 1].quantity}`
-            listData = <View>
-                <Text>{content.name} </Text>
-                <Image style={{ width: 150, height: 150, margin: 5 }} source={{ uri: content.images[0] }} />
+            listData = <>
+                <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.product.images[0] }} /></View>
                 <Text>{msgTmp}{content.infoMore}</Text>
-            </View>
+            </>
             break;
         case CHAT_BOT_TYPES.ASK_LOW_DELIVERY:
             break;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, memo } from 'react';
 import { connect } from 'react-redux';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
@@ -56,7 +56,6 @@ class HomeTabScreen extends Component {
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
-
                         if (route.name === 'Trang chủ') {
                             iconName = focused
                                 ? 'home-outline'
@@ -81,7 +80,7 @@ class HomeTabScreen extends Component {
                 })}
                 tabBarOptions={{
                     activeTintColor: 'tomato',
-                    inactiveTintColor: 'gray',
+                    inactiveTintColor: 'gray'
                 }}
             >
                 <Tab.Screen name="Trang chủ" component={HomeScreen} />
@@ -112,4 +111,4 @@ const mapDispatchToProps = (dispatch, props) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeTabScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(memo(HomeTabScreen));
