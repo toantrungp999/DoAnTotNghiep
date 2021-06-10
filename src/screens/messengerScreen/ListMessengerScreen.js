@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, StyleSheet, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MessengerItem from './components/MessengerItem';
@@ -22,7 +22,6 @@ class ListMessengerScreen extends Component {
     };
 
     createNewMessage = () => {
-        this.props.createNewMessage();
         this.props.navigation.push('CreateMessengerScreen');
     }
 
@@ -48,7 +47,7 @@ class ListMessengerScreen extends Component {
             <View style={styles.messengerScren}>
                 <View style={styles.header}>
                     <Text style={styles.title}>Tin nhắn</Text>
-                    <MaterialIcons style={styles.createMessengerIcon} name='create' size={28} color='black' />
+                    <TouchableOpacity onPress={this.createNewMessage}><MaterialIcons style={styles.createMessengerIcon} name='create' size={28} color='black' /></TouchableOpacity>
                 </View>
                 <SearchBar
                     round

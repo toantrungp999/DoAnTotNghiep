@@ -4,6 +4,7 @@ import { callApiToken } from '../utils/apiCaller';
 import io from 'socket.io-client';
 
 const socket = io(SERVER_URL);
+let userId;
 
 export const initialization = () => {
   return (dispatch) => {
@@ -16,7 +17,8 @@ export const initialization = () => {
   }
 }
 
-export const login = (accessToken) => {
+export const login = (accessToken, _userId) => {
+  userId = _userId;
   socket.emit("login", accessToken);
 }
 
@@ -50,7 +52,7 @@ export const updateMessengerSuccess = (response) => {
 
 export const reciverMessage = (response) => {
   return (dispatch) => {
-    dispatch({ type: Types.SEND_MESSAGE_SUCCESS, payload: response.result });
+    dispatch({ type: Types.SEND_MESSAGE_SUCCESS, payload: { result: response.result, userId } });
   }
 }
 

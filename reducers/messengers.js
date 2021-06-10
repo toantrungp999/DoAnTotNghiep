@@ -24,7 +24,9 @@ function messengersReducer(state = {}, action) {
             state.message = "";
             return { ...state }
         case Types.SEND_MESSAGE_SUCCESS:
-            const { messenger } = action.payload;
+            const { messenger } = action.payload.result;
+            const { userId } = action.payload;
+
             messenger.message.content = formatContentMessage(messenger.message.type, messenger.message.content);
             index = findIndexById(state.messengers, messenger._id);
 
@@ -34,21 +36,20 @@ function messengersReducer(state = {}, action) {
                 state.messengers[index].check = false;
             }
             else {
+                index = 0;
                 state.messengers.unshift({ _id: messenger._id, user1: messenger.user1, user2: messenger.user2, messages: [messenger.message], check: messenger.check, date: messenger.date, fetchMessages: false });
             }
-
-            // const userInfo = Cookie.getJSON('userInfo') || null;
-            // if (!state.action && userInfo) {
-            //     let to = null;//this.props.userInfoReducer.userInfo._id ===
-            //     if (state.messengers[index].user1 && state.messengers[index].user1._id !== userInfo._id) {
-            //         to = state.messengers[index].user1;
-            //     }
-            //     else if (state.messengers[index].user2 && state.messengers[index].user2._id !== userInfo._id)
-            //         to = state.messengers[index].user2;
-            //     state.index = index;
-            //     state.action = Types.OPEN_DETAIL_MESSENGER;
-            //     state.to = to;
-            // }
+            console.log('user1',state.messengers[index].user1)
+            console.log('user2',state.messengers[index].user2)
+            let to = null;
+            if (state.messengers[index].user1 && state.messengers[index].user1._id !== userId) {
+                to = state.messengers[index].user1;
+            }
+            else if (state.messengers[index].user2 && state.messengers[index].user2._id !== userId)
+                to = state.messengers[index].user2;
+            state.index = index;
+            state.action = Types.OPEN_DETAIL_MESSENGER;
+            state.to = to;
             state.loading = false;
             return { ...state };
         case Types.SEND_MESSAGE_FAIL:

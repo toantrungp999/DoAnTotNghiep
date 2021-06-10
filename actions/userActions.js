@@ -19,7 +19,7 @@ export const initial = (userInfo, accessToken) => {
     dispatch(fectchCartsRequest());
     dispatch(fectchMessengersRequest());
     if (accessToken)
-      login(accessToken);
+      login(accessToken, userInfo._id);
   }
 }
 
@@ -53,7 +53,7 @@ export const signinByApiRequest = (url, postData) => {
         dispatch(fectchCartsRequest());
         dispatch(initialization());
         dispatch(fectchNewNotificationsRequest(5, 1));
-        login(accessToken);
+        login(accessToken, response.data.userData._id);
       }
       else
         dispatch({ type: Types.USER_SIGNIN_FAIL, payload: response });
