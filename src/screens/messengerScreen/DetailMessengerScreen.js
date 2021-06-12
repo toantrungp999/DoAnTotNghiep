@@ -15,7 +15,7 @@ class DetailMessengerScreen extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { index: -1, content: '', lengthMessages: 0, currentPage: 1, pageSize: 15, firstFetch: false };
+        this.state = { index: -1, content: '', lengthMessages: 0, currentPage: 1, pageSize: 10, firstFetch: false };
     }
 
     componentDidMount() {
@@ -25,6 +25,9 @@ class DetailMessengerScreen extends Component {
             const { messengers } = this.props.messengersReducer;
             this.props.fectchMessages(messengers[index]._id, this.state.pageSize, this.state.currentPage);
         }
+
+        this.setState({ previousLength: messengers[index].messages.length });
+        this.scrollToElement(messengers[index].messages.length);
     }
 
     viewMore = () => {
@@ -33,8 +36,8 @@ class DetailMessengerScreen extends Component {
             return;
         const { pagingInfo } = messengers[index];
         if (pagingInfo && loading === false && pagingInfo.currentPage < pagingInfo.totalPage) {
+            this.props.fectchMessages(messengers[index]._id, this.state.pageSize, this.state.currentPage + 1);
             this.setState({ currentPage: (this.state.currentPage + 1) });
-            this.props.fectchMessages(messengers[index]._id, this.state.pageSize, this.state.currentPage);
         }
     };
 
@@ -55,7 +58,23 @@ class DetailMessengerScreen extends Component {
             this.props.sendMessageToBot(content);
         else if (content)
             this.props.sendMessageToUser(to ? to._id : null, content, isCustomerCare);
-        this.setState({ content: '' })
+        this.setState({ content: '' });
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.messengersReducer !== this.props.messengersReducer && this.props.messengersReducer.loading === false) {
+            const { index, messengers } = this.props.messengersReducer;
+            if (messengers[index].messages.length !== this.state.previousLength) {
+                if (messengers[index].messages.length - this.state.previousLength === 1)
+                    this.scrollToElement(messengers[index].messages.length);
+                this.setState({ previousLength: messengers[index].messages.length });
+            }
+        }
+    }
+
+
+    scrollToElement = (count) => {
+        this.myScroll.scrollTo({ x: 0, y: 100 * count, animated: true });
     }
 
 
@@ -78,6 +97,7 @@ class DetailMessengerScreen extends Component {
             for (let i = 0; i < total; i++) {
                 let isReciver = false;
                 if (currentUser !== messages[i].sender) {
+
                     isReciver = true;
                     if ((i + 1) === total || ((i + 1) < total && currentUser === messages[i + 1].sender))
                         showImage = true;
@@ -96,17 +116,18 @@ class DetailMessengerScreen extends Component {
                     <Image style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 20 }} source={source} />
                     <Text style={styles.reciverName}>{!to ? "Chăm sóc khách hàng" : to.name}</Text>
                 </View>
-                <ScrollView style={{ width: '100%', backgroundColor: '#FFFFFF' }}
+                <ScrollView
                     onScroll={({ nativeEvent }) => {
                         if (isCloseToTop(nativeEvent)) {
                             this.viewMore();
                         }
                     }}
+                    ref={(ref) => this.myScroll = ref}
                 >
-                    <View style={{ padding: 15 }}>
+                    <View style={styles.messageContent}>
+                        {this.props.messengersReducer.loading ? <View style={{ width: '100%', height: 200 }}></View> : null}
                         {messageItems}
                     </View>
-
                 </ScrollView>
                 <View style={{ flexDirection: 'row', padding: 10, justifyContent: 'space-between', alignItems: 'center' }}>
                     <TextInput
@@ -130,6 +151,9 @@ const styles = StyleSheet.create({
     containerMain: {
         flex: 1,
         backgroundColor: '#FFFFFF'
+    },
+    messageContent: {
+        padding: 15
     },
     header: {
         padding: 12,
