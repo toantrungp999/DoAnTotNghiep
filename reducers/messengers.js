@@ -113,6 +113,8 @@ function formatContentMessage(type, content) {
 
     let listData = [];
     let msg = "";
+    console.log("type", type);
+    console.log('content', content);
     switch (type) {
         case CHAT_BOT_TYPES.ASK_BRANDS:
             msg = "Cửa hàng chúng tôi hiện đang kinh doanh các hãng sau: ";
@@ -124,30 +126,30 @@ function formatContentMessage(type, content) {
         case CHAT_BOT_TYPES.ASK_CATEGORIES:
             msg = "Cửa hàng chúng tôi hiện đang kinh doanh các loại sản phẩm sau: ";
             listData = content ? content.map((data, index) => {
-                return <Text key={data._id}>{data.name} ,</Text>
+                return <Text key={data._id}>{data.name}, </Text>
             }) : null;
             listData.push(<Text key={listData.length}>...</Text>);
             break;
         case CHAT_BOT_TYPES.ASK_BEST_VIEW:
-            msg = `Sản phảm có tên: ${content?.product?.name || type}`;
+            msg = `Sản phảm có tên: ${content.name}`;
             listData =
                 <>
-                    {content?.product && content.product ? <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.product.images[0] }} /></View> : null}
-                    <Text>có hơn {content.numberVisit} lượt đã truy cập.</Text>
+                    <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.images[0] }} /></View>
+                    <Text> có hơn {content.numberVisit} lượt đã truy cập.</Text>
                 </>
             break;
         case CHAT_BOT_TYPES.ASK_BEST_RATE:
-            msg = `Sản phảm có tên: ${content?.product?.name || type}`;
+            msg = `Sản phảm có tên: ${content.name}`;
             listData = <>
-                {content?.product && content.product ? <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.product.images[0] }} /></View> : null}
-                <Text>có hơn {content.numberRate} lượt đánh giá với số điểm trung bình là {content.avgRate}.</Text>
+                <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.images[0] }} /></View>
+                <Text> có hơn {content.numberRate} lượt đánh giá với số điểm trung bình là {content.avgRate}.</Text>
             </>
             break;
         case CHAT_BOT_TYPES.ASK_BEST_SELL:
-            msg = `Sản phảm có tên: ${content?.product?.name || type}`;
+            msg = `Sản phảm có tên: ${content.name}`;
             listData = <>
-                {content?.product && content.product ? <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.product.images[0] }} /></View> : null}
-                <Text>có hơn {content.numberBuy} lượt mua hàng.</Text>
+                <View style={{ flexDirection: 'row', width: '100%', alignContent: 'center', justifyContent: 'center' }}><Image style={{ width: 100, height: 100, margin: 15 }} source={{ uri: content.images[0] }} /></View>
+                <Text> có hơn {content.numberBuy} lượt mua hàng.</Text>
             </>
             break;
         case CHAT_BOT_TYPES.ASK_PRODUCT:

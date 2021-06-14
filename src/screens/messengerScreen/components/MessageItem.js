@@ -11,10 +11,16 @@ class MessageItem extends Component {
                     this.props.isReciver ?
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             {this.props.showImage ? <Image style={{ width: 36, height: 36, borderRadius: 18 }} source={this.props.source} /> : <View style={{ width: 36, height: 36 }}></View>}
-                            <Text style={styles.messageReciver}>{this.props.message.content.msg}{this.props.message.content.listData}</Text>
+                            <View style={styles.messageReciver}>
+                                <Text>{this.props.message.content.msg}</Text>
+                                <View>{this.props.message.content.listData}</View>
+                            </View>
                         </View> :
                         <View style={{ flexDirection: 'row-reverse', width: '100%' }}>
-                            <Text style={styles.messageSend}>{this.props.message.content.msg}{this.props.message.content.listData}</Text>
+                            <View style={styles.messageSend}>
+                                <Text style={{color:'#ffffff'}}>{this.props.message.content.msg}</Text>
+                                <View>{this.props.message.content.listData}</View>
+                            </View>
                         </View>
                 }
             </View>
