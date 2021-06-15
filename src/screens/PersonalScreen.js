@@ -23,7 +23,8 @@ class PersonalScreen extends Component {
             <Stack.Navigator
                 screenOptions={{
                     headerShown: false,
-                }}>
+                }}
+                >
                 {!userInfo && <Stack.Screen name="LoginScreen" component={LoginScreen} />}
                 {!userInfo && <Stack.Screen name="RegisterScreen" component={RegisterScreen} />}
                 {!userInfo && <Stack.Screen name="ForgotPasswordScreen" component={ForgotPasswordScreen} />}

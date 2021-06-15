@@ -12,10 +12,22 @@ const Stack = createStackNavigator();
 class OrderStackScreen extends Component {
   render() {
     return (
-          <Stack.Navigator>
-            <Stack.Screen name='orderScreen' options={{headerShown: true, title:'Đơn hàng'}} component={OrderScreen} />
-            <Stack.Screen name='orderDetailScreen' options={{headerShown: true, title:'Chi tiết đơn hàng'}} component={OrderDetailScreen} />
-          </Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#47b6ff'
+          },
+          headerTitleAlign: 'center',
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontSize: 17,
+            color: '#fff'
+          },
+        }}
+      >
+        <Stack.Screen name='orderScreen' options={{ headerShown: true, title: 'Đơn hàng' }} component={OrderScreen} />
+        <Stack.Screen name='orderDetailScreen' options={{ headerShown: true, title: 'Chi tiết đơn hàng' }} component={OrderDetailScreen} />
+      </Stack.Navigator>
     );
   }
 };

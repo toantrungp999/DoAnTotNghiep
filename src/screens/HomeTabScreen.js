@@ -58,8 +58,8 @@ class HomeTabScreen extends Component {
                         let iconName;
                         if (route.name === 'Trang chủ') {
                             iconName = focused
-                                ? 'home-outline'
-                                : 'home';
+                                ? 'home'
+                                : 'home-outline';
                         } else if (route.name === 'Đăng nhập') {
                             iconName = focused ? 'log-in' : 'log-in-outline';
                         }

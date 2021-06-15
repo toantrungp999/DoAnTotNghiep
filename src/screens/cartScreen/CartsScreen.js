@@ -133,7 +133,7 @@ render() {
     <View style={styles.containerMain}>
       <ScrollView style={this.state.isVisible ? { backgroundColor: '#999999', width: '100%' } : { width: '100%', backgroundColor: 'white' }}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => { this.props.navigation.goBack() }}><Ionicons style={{ marginTop: 4 }} name="arrow-back-sharp" size={25} /></TouchableOpacity>
+          {/* <TouchableOpacity onPress={() => { this.props.navigation.goBack() }}><Ionicons style={{ marginTop: 4 }} name="arrow-back-sharp" size={25} /></TouchableOpacity> */}
           <Text style={styles.textHeader}>Giỏ hàng</Text>
         </View>
         <View style={{ padding: 10 }}>

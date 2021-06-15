@@ -26,7 +26,7 @@ const Product = (props) => {
         }
     return (
         <View style={[styles.card, (index % 2 === 1 && null)]}>
-            <TouchableOpacity onPress={()=>{props.navigation.push('detailProductScreen',{_id})}}>
+            <TouchableOpacity onPress={()=>{props.navigation.push('detailProductScreen',{_id,title:name})}}>
                 <Image style={styles.image} source={{ uri: images[0] }} />
                 <View style={styles.cardHeader}>
                     <View style={styles.bottom}>

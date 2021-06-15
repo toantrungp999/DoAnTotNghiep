@@ -15,7 +15,11 @@ import { hideAlert } from './actions/alertActions';
 
 
 const Stack = createStackNavigator();
-
+const a = {
+  headerStyle: {
+    backgroundColor: '#f4511e'
+  }
+}
 
 class App extends Component {
 
@@ -35,11 +39,23 @@ class App extends Component {
     return (
       <Provider theme={theme}>
         <NavigationContainer >
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#47b6ff'
+              },
+              headerTitleAlign:'center',
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontSize:17,
+                color: '#fff'
+              },
+            }}
+            >
             <Stack.Screen name='homeTabScreen' options={{ headerShown: false }} component={HomeTabScreen} />
             <Stack.Screen name='createOrderScreen' component={CreateOrderScreen} options={{ title: 'Đặt hàng' }} />
             <Stack.Screen name='orderStackScreen' options={{ headerShown: false }} component={OrderStackScreen} />
-            <Stack.Screen name='detailProductScreen' component={DetailProductScreen} options={{ title: 'Chi tiết sản phẩm' }} />
+            <Stack.Screen name='detailProductScreen' component={DetailProductScreen} options={({ route }) => ({ title: route.params.title })} />
             <Stack.Screen name='productScreen' component={ProductScreen} options={({ route }) => ({ title: route.params.title })} />
           </Stack.Navigator>
         </NavigationContainer>
@@ -47,6 +63,9 @@ class App extends Component {
     );
   }
 };
+
+
+
 
 const mapStateToProps = state => {
   return {
@@ -56,7 +75,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-      hideAlert: () => dispatch(hideAlert()),
+    hideAlert: () => dispatch(hideAlert()),
   }
 }
 
