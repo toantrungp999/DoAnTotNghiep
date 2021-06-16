@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, FlatList, Text, ScrollView, Dimensions } from 'react-native';
-import ProductItem from '../homePage/components/productItem/ProductItem';
+import ProductItem from '../homePage/components/ProductItem';
 import LoadingMore from '../../components/LoadingMore';
 import LeftMenu from '../../components/LeftMenu';
 import RightMenu from './components/menu/RightMenu';
@@ -30,6 +30,17 @@ class ProductScreen extends Component {
         const page = 1;
         const { path, key } = this.props.route.params;
         this.props.fectchProducts(path, key, min, max, option, page);
+    }
+
+    componentDidUpdate(prevProps) {
+        if(this.props.productsReducer.searchInfo !== prevProps.productsReducer.searchInfo){
+            const searchInfo = this.props.productsReducer.searchInfo;
+            if(searchInfo && searchInfo!==''){
+                this.props.navigation.setOptions({title:searchInfo.categoryGroupName?
+                    searchInfo.categoryGroupName.name
+                    :searchInfo.categoryName.name})
+            }
+        }
     }
 
     isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {

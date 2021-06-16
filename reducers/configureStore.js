@@ -6,7 +6,7 @@ import {
     userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer
 } from './user';
 import { citiesReducer, districtsReducer } from './location';
-import { productsReducer, productDetailReducer, productHomepagesReducer } from './products';
+import { productsReducer, productDetailReducer, productHomepagesReducer,recommendedProductsReducer } from './products';
 import { productOptionsReducer } from './productOptions';
 import { brandReducer, brandsReducer } from './brands';
 import { commentsReducer } from './comments';
@@ -25,7 +25,7 @@ const rootReducer = combineReducers(
         alertReducer,
         userInfoReducer, userRegisterReducer, userForgotPasswordReducer, userProfileReducer, userActionReducer, userAddressReducer,
         citiesReducer, districtsReducer,
-        productsReducer, productDetailReducer, productHomepagesReducer, productOptionsReducer,
+        productsReducer, productDetailReducer, productHomepagesReducer, productOptionsReducer,recommendedProductsReducer,
         brandReducer, brandsReducer,
         commentsReducer, ratesReducer,
         cartsReducer, notificationsReducer,

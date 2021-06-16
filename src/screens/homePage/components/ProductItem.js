@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image, View, Text, TouchableOpacity, Platform, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { convertNumberToVND } from '../../../../../extentions/ArrayEx'
+import { convertNumberToVND } from '../../../../extentions/ArrayEx'
 
 let filledIconName = 'ios-star';
 let emptyIconName = 'ios-star-outline';
@@ -32,12 +32,12 @@ const Product = (props) => {
                     <View style={styles.bottom}>
                         <Text style={styles.name}>{name}</Text>
                         <View style={styles.priceSection}>
-                            {saleOff !== 0 && <Text style={styles.orginPrice}>{convertNumberToVND(price)}₫</Text>}
+                            {saleOff !== 0 &&<Text style={styles.orginPrice}>{convertNumberToVND(price)}₫</Text>}
                             <Text style={styles.price}>{convertNumberToVND(price - saleOff)}₫</Text>
                         </View>
                         <View style={styles.rateSection}>
                             {rangeView}
-                            {numberRate && numberRate !== 0 && <Text style={styles.numberRate}>({numberRate})</Text>}
+                            {(numberRate && (numberRate !== 0)) ? <Text style={styles.numberRate}>({numberRate})</Text>:null}
                         </View>
                     </View>
                 </View>
@@ -51,14 +51,15 @@ const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     card: {
-        width: '47.75%',
-        marginLeft: '1.5%',
+        width: windowWidth*47.75/100,
+        marginLeft: windowWidth*1.5/100,
         marginBottom: windowWidth * 1.5 / 100,
         backgroundColor: '#ffffff'
     },
     image: {
-        width: '100%',
-        height: 150
+        width: windowWidth*47.75/100,
+        height: 1.2*windowWidth*47.75/100,
+        resizeMode:'cover'
     },
     bottom: {
         paddingLeft: 8,
@@ -72,7 +73,8 @@ const styles = StyleSheet.create({
         paddingTop: 5,
     },
     name: {
-        fontSize: 12,
+        fontSize: 13,
+        fontWeight:'bold',
         color: '#111111',
     },
     price: {
@@ -83,7 +85,10 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: '#444444',
         textDecorationLine: 'line-through',
-        textDecorationStyle: 'solid'
+        textDecorationStyle: 'solid',
+        alignSelf:'center',
+        marginRight:4
+        
     },
     rateSection: {
         display: 'flex',

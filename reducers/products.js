@@ -41,6 +41,26 @@ function productHomepagesReducer(state = { loading: true }, action) {
     }
 }
 
+function recommendedProductsReducer(state = { loading: true }, action) {
+    switch (action.type) {
+        case Types.RECOMMENDED_PRODUCT_REQUEST:
+            return { loading: true };
+        case Types.RECOMMENDED_PRODUCT_SUCCESS:
+            return {
+                loading: false,
+                recommendedProducts: action.payload.data.recommendedProducts,
+                sizeOptions: action.payload.data.sizeOptions,
+                colorOptions: action.payload.data.colorOptions
+            };
+        case Types.RECOMMENDED_PRODUCT_FAIL:
+            return {
+                loading: false,
+                message: action.payload.message
+            }
+        default: return state;
+    }
+}
+
 function productDetailReducer(state = { loading: true }, action) {
     switch (action.type) {
         case Types.PRODUCT_DETAIL_REQUEST:
@@ -59,4 +79,4 @@ function productDetailReducer(state = { loading: true }, action) {
 }
 
 
-export { productsReducer, productDetailReducer, productHomepagesReducer }
+export { productsReducer, productDetailReducer, productHomepagesReducer,recommendedProductsReducer }

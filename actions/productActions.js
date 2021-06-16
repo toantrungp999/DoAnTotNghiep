@@ -11,6 +11,16 @@ export const fectchProductHomepagesRequest = () => {
   };
 }
 
+export const fectchRecommendedProductsRequest = (userId,productId) => {
+  return (dispatch) => {
+    dispatch({ type: Types.RECOMMENDED_PRODUCT_REQUEST });
+    callApi(`products/recommended/userId=${userId}&productId=${productId}`, 'GET', null).then(response => {
+      const type = response.status === 0 ? Types.RECOMMENDED_PRODUCT_SUCCESS : Types.RECOMMENDED_PRODUCT_FAIL;
+      dispatch({ type, payload: response });
+    });
+  };
+}
+
 export const fectchProductsRequest = (path, key, min, max, option, page, status = 'all') => {
   return (dispatch) => {
     dispatch({ type: Number(page)>1?Types.PRODUCTS_VIEW_MORE_REQUEST:Types.PRODUCTS_REQUEST });

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { TouchableHighlight, ScrollView, Dimensions, View, Image, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import {
-  fectchProductRequest
+  fectchProductRequest, fectchRecommendedProductsRequest
 } from '../../../actions/productActions';
 import {
   fectchBrandRequest
@@ -25,6 +25,7 @@ import {
 } from '../../../actions/cartActions';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import ProductOption from './components/productDetail/ProductOption';
+import RecommendedSection from '../homePage/components/RecommendedSection';
 import More from './components/productDetail/More';
 import Loading from '../../components/Loading';
 import styles from './styles';
@@ -73,6 +74,7 @@ class DetailProductScreen extends Component {
       this.props.fectchQuantityOptions(_id);
       this.props.fectchComments(_id, this.state.lengthCmt);
       this.props.fectchRates(_id, this.state.lengthRate);
+      this.props.fectchRecommendedProducts(this.props.userInfoReducer.userInfo ? this.props.userInfoReducer.userInfo._id : undefined, _id);
     }
   }
 
@@ -102,6 +104,17 @@ class DetailProductScreen extends Component {
           );
       }
     }
+    if (this.props.userInfoReducer !== prevProps.userInfoReducer) {
+      const { _id } = this.props.route.params;
+      if (_id)
+        this.props.fectchRecommendedProducts(this.props.userInfoReducer.userInfo ? this.props.userInfoReducer.userInfo._id : undefined, _id);
+    }
+    if (this.props.productDetailReducer.product !== prevProps.productDetailReducer.product) {
+      console.log(this.props.productDetailReducer.product);
+      if (this.props.productDetailReducer.product) {
+        this.props.navigation.setOptions({ title: this.props.productDetailReducer.product.name })
+      }
+    }
   }
 
   onAddToCart = (data) => {
@@ -123,7 +136,8 @@ class DetailProductScreen extends Component {
   );
 
   render() {
-    const { product, loading } = this.props.productDetailReducer;
+    const { product, loading } = this.props.productDetailReducer
+    const { recommendedProducts } = this.props.recommendedProductsReducer;
     const { activeSlide } = this.state;
     const { userInfo } = this.props.userInfoReducer;
     if (loading)
@@ -182,6 +196,8 @@ class DetailProductScreen extends Component {
               userInfo={userInfo}
             />
           </View>
+          {recommendedProducts &&
+            <RecommendedSection products={recommendedProducts} navigation={this.props.navigation} title='Gợi ý' />}
 
         </ScrollView>
       );
@@ -197,6 +213,7 @@ const mapStateToProps = state => {
     commentsReducer: state.commentsReducer,
     ratesReducer: state.ratesReducer,
     cartsReducer: state.cartsReducer,
+    recommendedProductsReducer: state.recommendedProductsReducer
   }
 }
 
@@ -233,7 +250,10 @@ const mapDispatchToProps = dispatch => ({
   deleteRate: (data) => { dispatch(deleteRateRequest(data)) },
   deleteRateReply: (data) => { dispatch(deleteRateReplyRequest(data)) },
 
-  createCart: (data) => { dispatch(createCartRequest(data)) }
+  createCart: (data) => { dispatch(createCartRequest(data)) },
+  fectchRecommendedProducts: (userId, productId) => {
+    dispatch(fectchRecommendedProductsRequest(userId, productId));
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailProductScreen);

@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, FlatList,Text,ScrollView} from 'react-native';
+import { StyleSheet, View, FlatList, Text, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import ProductSection from './components/productItem/ProductSection';
+import Poster from './components/Poster';
+import ProductSection from './components/ProductSection';
+import RecommendedSection from './components/RecommendedSection';
 import Drawer from 'react-native-drawer'
 import GestureRecognizer from 'react-native-swipe-gestures';
 import LeftMenu from '../../components/LeftMenu';
-import {fectchProductHomepagesRequest} from '../../../actions/productActions';
+import { fectchProductHomepagesRequest,fectchRecommendedProductsRequest } from '../../../actions/productActions';
 import { fectchCategoryGroupsWithCategoryRequest } from '../../../actions/categoryGroupActions';
 import Loading from '../../components/Loading';
 
@@ -16,6 +18,13 @@ class HomeScreen extends Component {
   componentDidMount() {
     this.props.fectchProducts();
     this.props.fectchCategoryGroupsWithCategory();
+    this.props.fectchRecommendedProducts(this.props.userInfoReducer.userInfo?this.props.userInfoReducer.userInfo._id:undefined,undefined);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.userInfoReducer !== prevProps.userInfoReducer) {
+      this.props.fectchRecommendedProducts(this.props.userInfoReducer.userInfo?this.props.userInfoReducer.userInfo._id:undefined,undefined);
+    }
   }
 
   onSwipeLeft = (state) => {
@@ -27,18 +36,26 @@ class HomeScreen extends Component {
   }
 
   navigate = (path, key, title) => {
-    this.props.navigation.push('productScreen', { path, key, title });
+    if(path==='detail'){
+      this.props.navigation.push('detailProductScreen', { _id:key, title });
+    }else{
+      this.props.navigation.push('productScreen', { path, key, title });
+    }
+
   }
+
   render() {
     const { loading, message, productHomepages } = this.props.productHomepagesReducer;
+    const {recommendedProducts} = this.props.recommendedProductsReducer;
+
     if (loading)
       return <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <Loading/>
+        <Loading />
       </View>
     else {
       var { hots, news, bestSellers, colorOptions, sizeOptions } = productHomepages;
       const config = {
-        
+
       };
       return (
         <GestureRecognizer
@@ -60,9 +77,15 @@ class HomeScreen extends Component {
 
           >
             <ScrollView >
-              <ProductSection products={news} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm mới' description='Xu hướng thời trang dành cho bạn' />
-              <ProductSection products={hots} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm mổi bật' description='Xu hướng thời trang dành cho bạn' />
-              <ProductSection products={bestSellers} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm bán chạy' description='Xu hướng thời trang dành cho bạn' />
+              <Poster navigate={this.navigate}/>
+              {recommendedProducts&&
+              <RecommendedSection products={recommendedProducts} navigation={this.props.navigation} title='Gợi ý'/>}
+              <ProductSection products={news} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm mới' description='Xu hướng thời trang dành cho bạn'
+                navigate={this.navigate} path='new-product' />
+              <ProductSection products={hots} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm mổi bật' description='Xu hướng thời trang dành cho bạn'
+                navigate={this.navigate} path='hot-product' />
+              <ProductSection products={bestSellers} navigation={this.props.navigation} sizeOptions={sizeOptions} colorOptions={colorOptions} title='Sản phẩm bán chạy' description='Xu hướng thời trang dành cho bạn'
+                navigate={this.navigate} path='best-seller' />
             </ScrollView>
           </Drawer >
         </GestureRecognizer>
@@ -71,7 +94,7 @@ class HomeScreen extends Component {
   }
 }
 const drawerStyles = {
-  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3   },
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3 },
   main: { paddingLeft: 0 },
 }
 
@@ -79,9 +102,10 @@ const drawerStyles = {
 
 const mapStateToProps = state => {
   return {
+    userInfoReducer: state.userInfoReducer,
     productHomepagesReducer: state.productHomepagesReducer,
-    categoryGroupsReducer: state.categoryGroupsReducer
-
+    categoryGroupsReducer: state.categoryGroupsReducer,
+    recommendedProductsReducer:state.recommendedProductsReducer
   }
 }
 
@@ -93,6 +117,9 @@ const mapDispatchToProps = (dispatch) => {
     fectchCategoryGroupsWithCategory: () => {
       dispatch(fectchCategoryGroupsWithCategoryRequest('true'));
     },
+    fectchRecommendedProducts: (userId,productId) => {
+      dispatch(fectchRecommendedProductsRequest(userId,productId));
+    }
   }
 }
 
