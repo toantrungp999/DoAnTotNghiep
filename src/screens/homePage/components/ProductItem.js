@@ -41,6 +41,7 @@ const Product = (props) => {
                         </View>
                     </View>
                 </View>
+                {saleOff!==0?<Text style={styles.sale}>-{Math.ceil(100 - (price - saleOff) / price * 100)}%</Text>:null}
             </TouchableOpacity>
 
         </View >
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: windowWidth*47.75/100,
-        height: 1.2*windowWidth*47.75/100,
+        height: 1.1*windowWidth*47.75/100,
         resizeMode:'cover'
     },
     bottom: {
@@ -100,6 +101,18 @@ const styles = StyleSheet.create({
     numberRate: {
         fontSize: 12,
         color: '#777777',
+    },
+    sale:{
+        position:'absolute',
+        top:6,
+        right:6,
+        backgroundColor:'rgba(224, 37, 0, 0.61)',
+        color:'#ffffff',
+        width:45,
+        height:45,
+        borderRadius:30,
+        textAlignVertical:'center',
+        textAlign:'center'
     }
 
 });

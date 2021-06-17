@@ -130,7 +130,8 @@ class DetailProductScreen extends Component {
   renderImage = ({ item }) => (
     <TouchableHighlight>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{ uri: item }} />
+        <Image style={styles.image} source={{ uri: item.image }} />
+        {item.color?<Text style={styles.textColor}>{item.color}</Text>:null}
       </View>
     </TouchableHighlight>
   );
@@ -143,64 +144,75 @@ class DetailProductScreen extends Component {
     if (loading)
       return <Loading />
 
-    else
+    else {
+      const { colorOptions } = this.props.productOptionsReducer;
+      const productImages = product.images?product.images.map(image=>{
+        return {image:image,color:null};
+      }):[];
+      const colorImages = colorOptions?colorOptions.map(colorOption=>{
+        return {image:colorOption.image,color:colorOption.color};
+      }):[];
+      const images = productImages.concat(colorImages);
+      
+     
       return (
-        <ScrollView style={styles.container}>
-          <View style={styles.carouselContainer}>
-            <View style={styles.carousel}>
-              <Carousel
-                ref={c => {
-                  this.slider1Ref = c;
-                }}
-                data={product.images}
-                renderItem={this.renderImage}
-                sliderWidth={viewportWidth}
-                itemWidth={viewportWidth}
-                inactiveSlideScale={1}
-                inactiveSlideOpacity={1}
-                firstItem={0}
-                loop={false}
-                autoplay={false}
-                autoplayDelay={500}
-                autoplayInterval={3000}
-                onSnapToItem={index => this.setState({ activeSlide: index })}
-              />
-              <Pagination
-                dotsLength={product.images.length}
-                activeDotIndex={activeSlide}
-                containerStyle={styles.paginationContainer}
-                dotColor="rgba(255, 255, 255, 0.92)"
-                dotStyle={styles.paginationDot}
-                inactiveDotColor="white"
-                inactiveDotOpacity={0.4}
-                inactiveDotScale={0.6}
-                carouselRef={this.slider1Ref}
-                tappableDots={!!this.slider1Ref}
+          <ScrollView style={styles.container}>
+            <View style={styles.carouselContainer}>
+              <View style={styles.carousel}>
+                <Carousel
+                  ref={c => {
+                    this.slider1Ref = c;
+                  }}
+                  data={images}
+                  renderItem={this.renderImage}
+                  sliderWidth={viewportWidth}
+                  itemWidth={viewportWidth}
+                  inactiveSlideScale={1}
+                  inactiveSlideOpacity={1}
+                  firstItem={0}
+                  loop={false}
+                  autoplay={false}
+                  autoplayDelay={500}
+                  autoplayInterval={3000}
+                  onSnapToItem={index => this.setState({ activeSlide: index })}
+                />
+                <Pagination
+                  dotsLength={images.length}
+                  activeDotIndex={activeSlide}
+                  containerStyle={styles.paginationContainer}
+                  dotColor="#C4C4C4"
+                  dotStyle={styles.paginationDot}
+                  inactiveDotColor="#A3A3A3"
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.5}
+                  carouselRef={this.slider1Ref}
+                  tappableDots={!!this.slider1Ref}
+                />
+              </View>
+            </View>
+            <View style={styles.infoRecipeContainer}>
+              <Text style={styles.infoRecipeName}>{product.name}</Text>
+              <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} onAddToCart={this.onAddToCart} />
+              <More
+                product={product} fectchBrand={this.props.fectchBrand} brandReducer={this.props.brandReducer}
+                viewMoreRates={this.viewMoreRates} lengthRate={this.state.lengthRate} totalRate={this.props.ratesReducer.total}
+                onCreateRate={this.onCreateRate} onCreateRateReply={this.props.createRateReply} onUpdateRate={this.props.updateRate}
+                onUpdateRateReply={this.props.updateRateReply} onDeleteRate={this.props.deleteRate} onDeleteRateReply={this.props.deleteRateReply}
+                ratesReducer={this.props.ratesReducer}
+                viewMoreComments={this.viewMoreComments} lengthCmt={this.state.lengthCmt} totalCmt={this.props.commentsReducer.total}
+                onCreateComment={this.onCreateComment} onCreateReply={this.props.createReply}
+                onUpdateComment={this.props.updateComment} onDeleteComment={this.props.deleteComment}
+                onUpdateCommentReply={this.props.updateReply} onDeleteCommentReply={this.props.deleteReply}
+                commentsReducer={this.props.commentsReducer}
+                userInfo={userInfo}
               />
             </View>
-          </View>
-          <View style={styles.infoRecipeContainer}>
-            <Text style={styles.infoRecipeName}>{product.name}</Text>
-            <ProductOption productOptionsReducer={this.props.productOptionsReducer} price={product.price} saleOff={product.saleOff} onAddToCart={this.onAddToCart} />
-            <More
-              product={product} fectchBrand={this.props.fectchBrand} brandReducer={this.props.brandReducer}
-              viewMoreRates={this.viewMoreRates} lengthRate={this.state.lengthRate} totalRate={this.props.ratesReducer.total}
-              onCreateRate={this.onCreateRate} onCreateRateReply={this.props.createRateReply} onUpdateRate={this.props.updateRate}
-              onUpdateRateReply={this.props.updateRateReply} onDeleteRate={this.props.deleteRate} onDeleteRateReply={this.props.deleteRateReply}
-              ratesReducer={this.props.ratesReducer}
-              viewMoreComments={this.viewMoreComments} lengthCmt={this.state.lengthCmt} totalCmt={this.props.commentsReducer.total}
-              onCreateComment={this.onCreateComment} onCreateReply={this.props.createReply}
-              onUpdateComment={this.props.updateComment} onDeleteComment={this.props.deleteComment}
-              onUpdateCommentReply={this.props.updateReply} onDeleteCommentReply={this.props.deleteReply}
-              commentsReducer={this.props.commentsReducer}
-              userInfo={userInfo}
-            />
-          </View>
-          {recommendedProducts &&
-            <RecommendedSection products={recommendedProducts} navigation={this.props.navigation} title='Gợi ý' />}
+            {recommendedProducts &&
+              <RecommendedSection products={recommendedProducts} navigation={this.props.navigation} title='Gợi ý' />}
 
-        </ScrollView>
-      );
+          </ScrollView>
+        );
+    }
   }
 }
 

@@ -53,7 +53,8 @@ export default class More extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%'
+    width: '100%',
+    marginTop:20
   },
   row: {
     flexDirection: 'row', width: '100%',

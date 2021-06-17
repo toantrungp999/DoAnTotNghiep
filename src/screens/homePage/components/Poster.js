@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { StyleSheet, Image, View, Text, TouchableOpacity, Platform, Dimensions } from 'react-native';
-import { color } from 'react-native-reanimated';
 import Swiper from 'react-native-swiper';
 
 class Poster extends Component {

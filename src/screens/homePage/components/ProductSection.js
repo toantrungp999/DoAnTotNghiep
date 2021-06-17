@@ -18,7 +18,7 @@ class ProductSection extends Component {
                 >
                     <View style={styles.titleSection}>
                         <Text style={styles.title}>{title}</Text>
-                        <MaterialIcons style={styles.rightIcon} name='chevron-right' size={20} color='#90bfd1'/>
+                        <MaterialIcons style={styles.rightIcon} name='chevron-right' size={20} color='#4274E0'/>
                     </View>
                 </TouchableOpacity>
                 <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>

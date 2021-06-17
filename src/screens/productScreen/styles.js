@@ -14,29 +14,45 @@ const styles = StyleSheet.create({
   carousel: {},
 
   image: {
-    ...StyleSheet.absoluteFillObject,
-    width: '100%',
-    aspectRatio: 1, // <-- this
-    resizeMode: 'contain'
+    width:'100%',
+    height: '100%',
+    resizeMode: 'cover'
   },
   imageContainer: {
-    flex: 1,
     justifyContent: 'center',
-    width: viewportWidth,
-    height: 250
+    width: 0.96*viewportWidth,
+    height: 1.2*viewportWidth,
+    marginLeft:0.02*viewportWidth,
+    marginTop:0.02*viewportWidth,
+
+  },
+  textColor:{
+    position:'absolute',
+    top:5,
+    left:5,
+    paddingTop:5,
+    paddingBottom:7,
+    paddingLeft:10,
+    paddingRight:10,
+    fontSize:18,
+    color:'#ffffff',
+    backgroundColor:'rgba(0, 0, 0, 0.6)',
+    borderRadius:5
   },
   paginationContainer: {
     flex: 1,
     position: 'absolute',
     alignSelf: 'center',
     paddingVertical: 8,
-    marginTop: 200
+    marginTop: 1.1*viewportWidth,
   },
   paginationDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 0
+    width: 12,
+    height: 12,
+    borderRadius: 30,
+    marginHorizontal: 0,
+    borderColor:'#ffffff',
+    borderWidth:2
   },
   infoRecipeContainer: {
     flex: 1,

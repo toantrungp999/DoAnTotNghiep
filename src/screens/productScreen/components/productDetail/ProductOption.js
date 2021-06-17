@@ -185,10 +185,10 @@ const styles = StyleSheet.create({
         color: 'red',
     },
     salePrice: {
-        color: '#ccc',
-        fontSize: 18,
+        color: '#444',
+        fontSize: 16,
         textDecorationLine: 'line-through',
-        color: 'black',
+        textAlignVertical:'bottom'
     },
     chooseBtn: {
         borderColor: '#000000',
@@ -198,7 +198,8 @@ const styles = StyleSheet.create({
     btn: {
         borderColor: '#909090',
         borderStyle: 'dashed',
-        borderWidth: 1,
+        borderWidth: 0.3,
+        borderStyle:'solid',
         marginRight: 5,
     },
     chooseBtnText: {

@@ -24,7 +24,7 @@ class RightMenu extends Component {
     }
 
     componentDidMount() {
-        this.setState({ min: this.props.min, max: this.props.max })
+        this.setState({ min: this.props.min, max: this.props.max,option:this.props.option })
     }
     navigate = (path, key, title) => {
         this.props.navigation.push('productScreen', { path, key, title });
