@@ -11,7 +11,7 @@ class MiddlePanel extends Component {
                 <TouchableOpacity style={styles.panel}
                 onPress={() => { this.props.navigate('black-color', 'a', 'Everything Black') }}
                 >
-                    <Image style={styles.image} source={{ uri: 'https://www.toptrendsguide.com/wp-content/uploads/2021/01/Black-Outfits-Men.jpg' }} />
+                    <Image style={styles.image} source={{ uri: 'https://res.cloudinary.com/websitebandienthoai/image/upload/v1624033994/Poster/MiddlePanel_1_spzsxt.webp' }} />
                     <View style={styles.textContainer1}>
                         <Text style={styles.text1_1}>Everything black</Text>
                         <Text style={styles.text1_2}>Thể hiện phong cách</Text>
@@ -22,7 +22,7 @@ class MiddlePanel extends Component {
                 <TouchableOpacity style={styles.panel}
                 onPress={() => { this.props.navigate('sale-off', 'a', 'Siêu sale chào hè') }}
                 >
-                    <Image style={styles.image} source={{ uri: 'https://media1.popsugar-assets.com/files/thumbor/YsFnwoNQSgUqQV42v8n8wD8XeFQ/fit-in/728xorig/filters:format_auto-!!-:strip_icc-!!-/2017/06/16/029/n/1922564/8453b1fe59446cdeb890c0.89120563_edit_img_cover_file_41665530_1466465700/i/Easy-Summer-Outfit-Ideas.jpg' }} />
+                    <Image style={styles.image} source={{ uri: 'https://res.cloudinary.com/websitebandienthoai/image/upload/v1624033994/Poster/MiddlePanel_2_p4i4ca.webp' }} />
                     <View style={styles.textContainer2}>
                         <Text style={styles.text2_1}>Mùa hè sôi động</Text>
                         <Text style={styles.text2_2}>Giảm đến 50%</Text>

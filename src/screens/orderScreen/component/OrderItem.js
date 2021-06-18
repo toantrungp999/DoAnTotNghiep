@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TouchableOpacity,StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { convertNumberToVND, formatDate } from './../../../../extentions/ArrayEx';
 import OrderDetailItem from './OrderDetailItem';
 
@@ -10,21 +10,30 @@ class OrderItem extends Component {
 
     render() {
         const { order } = this.props;
+        let totalQuantity = 0;
+        order.orderDetails && order.orderDetails.map(detail => {
+            totalQuantity += detail.quantity;
+        })
 
         return (
-            <TouchableOpacity style={styles.container} 
-            onPress={()=>{this.props.navigation.push('orderDetailScreen',{_id:order.orderInfo._id})}}>
+            <TouchableOpacity style={styles.container}
+                onPress={() => { this.props.navigation.push('orderDetailScreen', { _id: order.orderInfo._id }) }}>
                 <View style={styles.infoContainer}>
                     <Text style={styles.id}>{order.orderInfo.orderId}</Text>
                     <Text style={styles.date}>{formatDate(order.orderInfo.date)}</Text>
                     <Text style={styles.status}>{order.orderInfo.status}</Text>
                 </View>
                 <View>
-                    <OrderDetailItem orderDetail={order.orderDetails[0]} end={true}/>
+                    <OrderDetailItem orderDetail={order.orderDetails[0]} end={true} />
                 </View>
+
                 <View style={styles.bottom}>
-                    {order.orderInfo.shippingFee !== 0 ? <Text style={styles.fee}>Phí vận chuyển: {convertNumberToVND(order.orderInfo.shippingFee)}₫</Text> : null}
-                    <Text style={styles.total}>Tổng: <Text style={styles.price}>{convertNumberToVND(order.orderInfo.totalPrice)}₫</Text></Text>
+                    <Text style={styles.totalQuantity}>Tổng {totalQuantity} sản phẩm</Text>
+                    <View style={styles.priceSection}>
+                        {order.orderInfo.shippingFee !== 0 ? <Text style={styles.fee}>Phí vận chuyển: {convertNumberToVND(order.orderInfo.shippingFee)}₫</Text> : null}
+                        <Text style={styles.total}>Tổng: <Text style={styles.price}>{convertNumberToVND(order.orderInfo.totalPrice)}₫</Text></Text>
+                    </View>
+
                 </View>
             </TouchableOpacity >
 
@@ -44,7 +53,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         paddingTop: 15,
-        paddingBottom:13
+        paddingBottom: 13
     },
     id: {
         marginRight: 8,
@@ -64,23 +73,34 @@ const styles = StyleSheet.create({
         color: '#eb4934',
         marginLeft: 'auto',
         fontSize: 13
-    }, 
-    bottom:{
+    },
+
+    bottom: {
         paddingTop: 10,
-        paddingBottom:12
+        paddingBottom: 12,
+        display:'flex',
+        flexDirection:'row'
     },
-    fee:{
-        color:'#777777',
-        marginLeft:'auto',
-        fontSize:14,
-        marginBottom:8
+    totalQuantity: {
+        color: '#777777',
+        textAlign: 'center',
+
     },
-    total:{
-        fontSize:15,
-        marginLeft:'auto'
+    priceSection:{
+        flexGrow:1
     },
-    price:{
-        color:'#FF2100',
+    fee: {
+        color: '#777777',
+        marginLeft: 'auto',
+        fontSize: 14,
+        marginBottom: 8
+    },
+    total: {
+        fontSize: 15,
+        marginLeft: 'auto'
+    },
+    price: {
+        color: '#FF2100',
     }
 })
 

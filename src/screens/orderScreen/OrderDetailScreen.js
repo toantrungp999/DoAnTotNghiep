@@ -13,6 +13,7 @@ import * as OrderActions from '../../../constants/OrderActions';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CancelModal from './component/CancelModal';
 import OrderStatuses from '../../../constants/OrderStatuses';
+import OrderTypes from '../../../constants/OrderTypes';
 import Loading from '../../components/Loading';
 
 class OrderDetailScreen extends Component {
@@ -23,20 +24,10 @@ class OrderDetailScreen extends Component {
 
     componentDidMount() {
         this.props.fetchOrderRequest(this.props.route.params._id, '');
-        if (Platform.OS === 'android') {
-            Linking.getInitialURL().then(url => {
-                this.navigate(url);
-            });
-        } else {
-            Linking.addEventListener('url', this.handleOpenURL);
-        }
-
 
     }
 
-    handleOpenURL = (event) => { // D
-        console.log('asdasdasd');
-    }
+ 
 
     showCancelModal = () => {
         this.setState({ showCancel: true });
@@ -72,8 +63,6 @@ class OrderDetailScreen extends Component {
     render() {
         let { loading, changeTypeSuccess, message } = this.props.orderDetailReducer;
         const payLoading = this.props.payReducer.loading;
-        const { vnpUrl } = this.props.payReducer;
-        console.log('a', vnpUrl);
         if (loading)
             return <Loading />
         var { orderInfo, orderDetails } = this.props.orderDetailReducer.order;;
@@ -114,15 +103,28 @@ class OrderDetailScreen extends Component {
                         </View>
                     </View>
 
-                    {orderInfo.shipBrand !== '' ? <View style={styles.shipContainer}>
+                    {orderInfo.shipBrand !== '' ?
+                     <View style={styles.shipContainer}>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <MaterialCommunityIcons name="truck-delivery-outline" color='#82b1ff' size={25} />
                             <Text style={styles.infoTitle}>Đơn vị vận chuyển</Text>
                         </View>
                         <Text style={styles.info}>{orderInfo.shipBrand}</Text>
+                        <Text style={styles.info}>Mã vận đơn: {orderInfo.shipOrderId}</Text>
                         <Text style={styles.info}>Ngày nhận dự kiến: {getStringDate(orderInfo.expectedReceiveDate)}</Text>
                     </View> : null}
+                    {orderInfo.paymentType === OrderTypes.ONLINE_ORDER.PAYMENT_TYPE.VNPAY&&orderInfo.status!==OrderStatuses.PENDING_PAY
+                    &&orderInfo.paymentId ? 
+                    <View style={styles.shipContainer}>
+                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                            <MaterialCommunityIcons name="truck-delivery-outline" color='#82b1ff' size={25} />
+                            <Text style={styles.infoTitle}>Thanh toán</Text>
+                        </View>
+                        <Text style={styles.info}>{orderInfo.paymentType}</Text>
+                        <Text style={styles.info}>Mã giao dịch: {orderInfo.paymentId}</Text>
+                    </View> : null}
                 </ScrollView>
+                {orderInfo.status === OrderStatuses.PENDING_APPROVE || orderInfo.status === OrderStatuses.PENDING_PAY ?
                 <View style={styles.buttonContainer}>
                     {orderInfo.status === OrderStatuses.PENDING_APPROVE || orderInfo.status === OrderStatuses.PENDING_PAY ?
                         <Button style={styles.button} mode="contained" color='#b80000'
@@ -133,7 +135,7 @@ class OrderDetailScreen extends Component {
                             : < Button style={styles.button} mode="contained" color='#05c5ff' labelStyle={{ color: '#ffffff' }}
                                 onPress={() => { this.onPay() }}>
                                 Thanh toán</Button> : null}
-                </View>
+                </View>:null}
             </View >
         );
     }
@@ -144,7 +146,12 @@ class OrderDetailScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         height: '100%',
-        paddingBottom: 55
+        display:'flex',
+        flexDirection:'column',
+
+    },
+    mainContainer:{
+        flexGrow:1,
     },
     progressContainer: {
         paddingLeft: 10,
@@ -177,6 +184,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         paddingLeft: 10,
         paddingRight: 10,
+  
     },
     infoContainer: {
         display: 'flex',
@@ -230,10 +238,7 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     buttonContainer: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        height:55,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-around',

@@ -11,7 +11,7 @@ import { fetchAddressesRequest } from '../../../actions/userActions';
 import CreateOrderItem from './component/CreateOrderItem';
 import TypeModal from './component/TypeModal';
 import Type from './component/Type';
-// import ShipType from './component/Type';
+import Loading from '../../components/Loading';
 import { convertNumberToVND, getStringDate, isPhoneNumber } from '../../../extentions/ArrayEx';
 
 
@@ -217,7 +217,7 @@ class CreateOrderScreen extends Component {
         const addressString = address ? (address.streetOrBuilding + ', ' + address.ward + ', '
             + address.district + ', ' + address.city) : 'Chọn địa chỉ nhận hàng';
         if (loading)
-            return (<Text>123</Text>);
+            return (<Loading>123</Loading>);
         if (createSuccess !== undefined && orderInfo !== undefined) {
             this.props.clearState();
             this.props.navigation.replace('orderStackScreen', { screen: 'orderDetailScreen', params: { _id: orderInfo._id } })

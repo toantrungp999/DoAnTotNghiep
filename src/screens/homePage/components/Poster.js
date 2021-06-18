@@ -6,28 +6,28 @@ class Poster extends Component {
     state = {
         nodes: [
             {
-                id: 1, src: "http://slyder.vn/wp-content/uploads/2020/11/inbound2289293748899296511-1024x682.jpg",
+                id: 1, src: "https://res.cloudinary.com/websitebandienthoai/image/upload/v1624033353/Poster/Poster_1_iolupj.jpg",
                 path: 'category-group',
                 key: '6031db48fa94700f38064e24',
                 title: 'Áo thun thời trang',
                 description: 'Nổi bật - Năng động - Thời trang'
             },
             {
-                id: 2, src: "https://res.cloudinary.com/trunk-club/image/upload/f_auto,q_auto/Blog/20039_SummerTrendsFT_Blog_Header.jpg",
+                id: 2, src: "https://res.cloudinary.com/websitebandienthoai/image/upload/v1624033611/Poster/Poster_2_l9dqi6.jpg",
                 path: 'sale-off',
                 key: 'a',
                 title: 'Siêu Sale chào hè',
                 description: 'Giảm giá cực sâu - Vui hè cực ngầu'
             },
             {
-                id: 3, src: "https://www.elleman.vn/wp-content/uploads/2019/02/18/phu-kien-thoi-trang-nam-elle-man-mainline-menswear-feature.jpg",
+                id: 3, src: "https://res.cloudinary.com/websitebandienthoai/image/upload/v1624033612/Poster/Poster_3_xlemzr.jpg",
                 path: 'category-group',
                 key: '60727e10f39072137c3b085c',
                 title: 'Phụ kiện đẳng cấp',
                 description: 'Nâng tầm thời trang'
             },
             {
-                id: 4, src: "https://res.cloudinary.com/trunk-club/image/upload/f_auto,q_auto/Blog/Mens-denim-guide-body-types.jpg",
+                id: 4, src: "https://res.cloudinary.com/websitebandienthoai/image/upload/v1624033612/Poster/Poster_4_ybaoyd.webp",
                 path: 'detail',
                 key:'60727d1df39072137c3b0857',
                 title: 'Xu thế thời trang',

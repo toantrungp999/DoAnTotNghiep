@@ -73,7 +73,7 @@ export const orderChangeTypeRequest = (path,_id, data) => {
 export const ShippingFeeRequest = (address) => {
     return (dispatch) => {
         dispatch({ type: Types.SHIPPING_FEE_REQUEST });
-        callApiToken(dispatch, `orders/shippingfee/city=${address.city}&district=${address.district}&ward=${address.ward}&streetOrBuilding=${address.streetOrBuilding}`, 'GET', null).then(response => {
+        callApiToken(dispatch, `orders/shippingfee`, 'POST', address).then(response => {
             const type = response.status === 0 ? Types.SHIPPING_FEE_SUCCESS : Types.SHIPPING_FEE_FAIL;
             dispatch({ type, payload: response });
         });
