@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, Alert, Dimensions } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { convertNumberToVND } from '../../../../../extentions/ArrayEx';
@@ -123,7 +123,7 @@ class CartItem extends Component {
 
     render() {
         return (
-            <View style={{ padding: 10, borderBottomColor: 'black', borderTopWidth: .4 }}>
+            <View style={styles.container}>
                 {this.state.isVisible ? <ModelChangeCart onCloseModal={this.onCloseModal} isVisible={this.state.isVisible}
                     price={this.props.price} saleOff={this.props.saleOff} cartId={this.state._id} quantity={this.state.quantity}
                     colorId={this.props.colorId}
@@ -131,82 +131,101 @@ class CartItem extends Component {
                     image={this.props.image}
                     quantityInStore={this.props.quantityInStore}
                 /> : null}
-                <View style={styles.row}>
-                    <View style={styles.col_12}>
+                <View style={[styles.mainContainer, this.props.index === 0 && styles.first]}>
+                    <View style={styles.check}>
                         <RadioButton
                             status={this.props.checked ? 'checked' : 'unchecked'}
                             onPress={() => this.onCheck()}
                         />
                     </View>
-                    <View style={styles.col_25}>
+                    <View style={styles.imageConatiner}>
                         <Image style={this.props.isVisible ? styles.imageLowColor : styles.image} source={{ 'uri': this.props.image }} />
                     </View>
-                    <View style={styles.col_63}>
-                        <View style={styles.row}>
-                            <Text style={styles.title}>{this.props.name}</Text>
-                        </View>
-                        <View style={styles.row}>
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.title}>{this.props.name}</Text>
+                        <View style={styles.typeSection}>
                             <TouchableOpacity onPress={this.onOpenModal}><View style={this.props.isVisible ? styles.categoryLowColor : styles.category}><Text>{this.props.type}  <AntDesign name="caretdown" size={14} /></Text></View></TouchableOpacity>
                         </View>
-                        <View style={styles.row}>
-                            <Text style={styles.price}>{convertNumberToVND(this.state.quantity * (this.props.price - this.props.saleOff))} ₫</Text>
-                            <Text style={styles.salePrice}>{convertNumberToVND(this.state.quantity * this.props.price)} ₫</Text>
+                        <View style={styles.priceSection}>
+                            {this.props.saleOff !== 0 ? <Text style={styles.salePrice}>{convertNumberToVND(this.props.price)} ₫</Text> : null}
+                            <Text style={styles.price}>{convertNumberToVND(this.props.price - this.props.saleOff)} ₫</Text>
+                        </View>
+                        <View style={styles.rowItemCenter}>
+                            <TouchableOpacity onPress={this.onDown}><Text style={styles.btnSubAdd}>-</Text></TouchableOpacity>
+                            <Text style={styles.quantity}>{this.state.quantity}</Text>
+                            <TouchableOpacity onPress={this.onUp}><Text style={styles.btnSubAdd}>+</Text></TouchableOpacity>
+                            <View style={styles.deleteContainer}>
+                                <TouchableOpacity onPress={this.prepareToDelete}><Ionicons style={styles.delete} name="trash" size={20} /></TouchableOpacity>
+                            </View>
+                        </View>
+                        <View style={styles.rowItemCenter}>
+                            <Text style={styles.quantityInStore}>Kho: {this.props.quantityInStore}</Text>
+                            {this.props.quantity>this.props.quantityInStore&&<Text style={styles.quantityMessage}>(Không đủ số lượng)</Text>}
                         </View>
                     </View>
                 </View>
-                <View style={styles.rowItemCenter}>
-                    <TouchableOpacity onPress={this.onDown}><Text style={styles.btnSubAdd}>-</Text></TouchableOpacity>
-                    <Text style={styles.quantity}>{this.state.quantity}</Text>
-                    <TouchableOpacity onPress={this.onUp}><Text style={styles.btnSubAdd}>+</Text></TouchableOpacity>
-                </View>
-                <View style={{ alignItems: 'flex-end' }}>
-                    <TouchableOpacity onPress={this.prepareToDelete}><Ionicons style={styles.delete} name="trash" size={20} /></TouchableOpacity>
-                </View>
+
+
             </View>
         )
     }
 }
 
+const windowWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
-    containerMain: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+    container: {
+        width: windowWidth
+    },
+    mainContainer: {
+        width: 0.94 * windowWidth,
+        flexDirection: 'row',
+        marginLeft: 0.03 * windowWidth,
+        borderBottomWidth: 0.3,
+        borderColor: '#ebebeb',
+        paddingTop: 15,
+        paddingBottom: 15
+    },
+    first: {
+        borderTopWidth: 0.3,
+        borderColor: '#ebebeb',
+
     },
     textHeader: {
         fontSize: 24,
         marginLeft: 10
     },
-    row: {
-        flexDirection: 'row', width: '100%',
-        marginTop: 4
-    },
     rowItemCenter: {
-        flexDirection: 'row', width: '100%', justifyContent: 'center',
-        marginTop: 10
+        flexDirection: 'row',
+        marginTop: 10,
+        flex: 1
     },
-    col_12: {
-        flexDirection: 'row', width: '12%', alignItems: 'center'
+    check: {
+        width: 30, alignItems: 'center',
+        marginTop: 0.1 * windowWidth,
+        transform: [{ translateY: -15 }]
     },
-    col_25: {
-        flexDirection: 'row', width: '25%', textAlignVertical: 'center'
-    },
-    col_63: {
-        width: '62%', textAlignVertical: 'center',
-        marginLeft: 15
+    imageConatiner: {
+        width: 0.2 * windowWidth,
+        height: 0.2 * windowWidth
     },
     image: {
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         flex: 1,
         aspectRatio: 1,
     },
     imageLowColor: {
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         flex: 1,
         aspectRatio: 1,
         backgroundColor: '#999999'
     },
-
+    infoContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        marginLeft: 5,
+        flex: 1
+    },
     btnSubAdd: {
         fontSize: 18,
         width: 36,
@@ -222,29 +241,49 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     title: {
-        fontSize: 18, textAlign: "center", fontWeight: 'bold',
+        fontSize: 16,
+        textAlign: "left",
+        fontWeight: 'bold',
 
+    },
+    typeSection: {
+        alignSelf: 'flex-start'
     },
     category: { padding: 10, backgroundColor: '#F1F2F6', borderRadius: 5 },
     categoryLowColor: { padding: 10, backgroundColor: '#999999', borderRadius: 5 },
     textPrice: {
         fontSize: 18,
     },
+    priceSection: {
+        flexDirection: 'row',
+        marginTop: 5
+    },
     price: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#0000CD',
         marginRight: 10,
-        fontWeight: 'bold',
+     
         color: 'red',
     },
     salePrice: {
-        color: '#ccc',
-        fontSize: 18,
+        color: '#444444',
+        fontSize: 14,
         textDecorationLine: 'line-through',
-        color: 'black',
+        marginRight: 4
+    },
+    deleteContainer: {
+        flex: 1,
+        alignItems: 'flex-end'
     },
     delete: {
         color: 'red'
+    },
+    quantityInStore:{
+        color:'#444444',
+        marginRight:5
+    },
+    quantityMessage:{
+        color:'#eb0000'
     }
 })
 

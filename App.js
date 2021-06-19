@@ -26,8 +26,8 @@ class App extends Component {
   render() {
     if (this.props.alertReducer.alert !== null)
       Alert.alert(
-        this.props.alertReducer.alert.message,
-        this.props.alertReducer.alert.description,
+        this.props.alertReducer.alert.description?this.props.alertReducer.alert.message:'Thông báo',
+        this.props.alertReducer.alert.description?this.props.alertReducer.alert.description:this.props.alertReducer.alert.message,
         [
           {
             text: "OK",
