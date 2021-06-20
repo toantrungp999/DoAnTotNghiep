@@ -121,7 +121,7 @@ class LoginScreen extends Component {
           <Background>
             <BackButton goBack={this.props.navigation.goBack} />
             <Logo />
-            <Header>Welcome back.</Header>
+            <Header>Chào mùng trở lại.</Header>
             <TextInput
               label="Email"
               returnKeyType="next"
@@ -135,7 +135,7 @@ class LoginScreen extends Component {
               keyboardType="email-address"
             />
             <TextInput
-              label="Password"
+              label="Mật khẩu"
               returnKeyType="done"
               value={this.state.password.value}
               onChangeText={text => this.onChange('password', { value: text, error: '' })}
@@ -147,7 +147,7 @@ class LoginScreen extends Component {
               <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('ForgotPasswordScreen')}
               >
-                <Text style={styles.forgot}>Forgot your password?</Text>
+                <Text style={styles.forgot}>Quên mật khẩu?</Text>
               </TouchableOpacity>
             </View>
             <Button mode="contained" onPress={() => this.onLoginPressed(loading)}>
