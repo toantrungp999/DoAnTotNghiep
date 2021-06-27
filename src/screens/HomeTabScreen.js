@@ -6,7 +6,7 @@ import {
 } from '../screens';
 
 import CartsScreen from './cartScreen/CartsScreen';
-import MessengerScreen from './messengerScreen/MessengerScreen';
+import ListMessengerScreen from './messengerScreen/ListMessengerScreen';
 import HomeScreen from './homePage/HomeScreen';
 import NotificationsScreen from './notification/NotificationsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -45,9 +45,23 @@ class HomeTabScreen extends Component {
         }
 
         let { carts } = this.props.cartsReducer;
+        const { messengers } = this.props.messengersReducer;
+
         let lengthCarts = 0;
-        if (carts)
-            lengthCarts = carts.length;
+        let notSeen = 0;
+        if (userInfo) {
+            if (messengers) {
+                for (let i = messengers.length - 1; i >= 0; i--) {
+                    let currentUserSend = messengers[i].user1._id === userInfo._id ? 'user1' : 'user2';
+                    let isMeSend = currentUserSend === messengers[i].messages[messengers[i].messages.length - 1].sender;
+                    if (!isMeSend && messengers[i].check === false)
+                        notSeen++;
+                }
+            }
+
+            if (carts)
+                lengthCarts = carts.length;
+        }
 
 
         return (
@@ -84,9 +98,9 @@ class HomeTabScreen extends Component {
                 }}
             >
                 <Tab.Screen name="Trang chủ" component={HomeScreen} />
-                {userInfo ? <Tab.Screen name="Giỏ hàng" options={{ tabBarBadge: lengthCarts }} component={CartsScreen} /> : null}
-                {userInfo ? <Tab.Screen name="Nhắn tin" options={{ tabBarBadge: 1 }} component={MessengerScreen} /> : null}
-                {userInfo ? <Tab.Screen name="Thông báo" options={{ tabBarBadge: count }} component={NotificationsScreen} /> : null}
+                {userInfo ? <Tab.Screen name="Giỏ hàng" options={lengthCarts > 0 ? { tabBarBadge: lengthCarts } : null} component={CartsScreen} /> : null}
+                {userInfo ? <Tab.Screen name="Nhắn tin" options={notSeen > 0 ? { tabBarBadge: notSeen }: null} component={ListMessengerScreen} /> : null}
+                {userInfo ? <Tab.Screen name="Thông báo" options={count > 0 ? { tabBarBadge: count }: null} component={NotificationsScreen} /> : null}
                 <Tab.Screen name={userInfo ? "Cá nhân" : "Đăng nhập"} component={PersonalScreen} />
             </Tab.Navigator>
         );
@@ -98,7 +112,8 @@ const mapStateToProps = state => {
     return {
         userInfoReducer: state.userInfoReducer,
         notificationsReducer: state.notificationsReducer,
-        cartsReducer: state.cartsReducer
+        cartsReducer: state.cartsReducer,
+        messengersReducer: state.messengersReducer
     }
 }
 

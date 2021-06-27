@@ -22,12 +22,12 @@ class ListMessengerScreen extends Component {
     };
 
     createNewMessage = () => {
-        this.props.navigation.push('CreateMessengerScreen');
+        this.props.navigation.push('createMessengerScreen');
     }
 
     openDetailMessenger = (index, to) => {
         this.props.openDetailMessenger(index, to);
-        this.props.navigation.push('DetailMessengerScreen');
+        this.props.navigation.push('detailMessengerScreen');
     }
 
     render() {

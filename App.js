@@ -10,7 +10,8 @@ import HomeTabScreen from './src/screens/HomeTabScreen';
 import OrderStackScreen from './src/screens/orderScreen/OrderStackScreen';
 import DetailProductScreen from './src/screens/productScreen/DetailProductScreen';
 import ProductScreen from './src/screens/productScreen/ProductScreen';
-import alertReducer from './reducers/alerts';
+import CreateMessengerScreen from './src/screens/messengerScreen/CreateMessengerScreen';
+import DetailMessengerScreen from './src/screens/messengerScreen/DetailMessengerScreen';
 import { hideAlert } from './actions/alertActions';
 
 
@@ -56,6 +57,8 @@ class App extends Component {
             <Stack.Screen name='createOrderScreen' component={CreateOrderScreen} options={{ title: 'Đặt hàng' }} />
             <Stack.Screen name='orderStackScreen' options={{ headerShown: false }} component={OrderStackScreen} />
             <Stack.Screen name='detailProductScreen' component={DetailProductScreen} options={({ route }) => ({ title: route.params.title })} />
+            <Stack.Screen name='detailMessengerScreen' options={{ headerShown: false }} component={DetailMessengerScreen} />
+            <Stack.Screen name='createMessengerScreen' options={{ headerShown: false }} component={CreateMessengerScreen} />
             <Stack.Screen name='productScreen' component={ProductScreen} options={({ route }) => ({ title: route.params.title })} />
           </Stack.Navigator>
         </NavigationContainer>

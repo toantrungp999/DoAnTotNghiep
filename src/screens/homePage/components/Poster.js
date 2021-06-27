@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { StyleSheet, Image, View, Text, TouchableOpacity, Platform, Dimensions } from 'react-native';
+import React, { Component, memo } from 'react';
+import { StyleSheet, Image, View, Text, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 
 class Poster extends Component {
@@ -29,7 +29,7 @@ class Poster extends Component {
             {
                 id: 4, src: "https://res.cloudinary.com/websitebandienthoai/image/upload/v1624033612/Poster/Poster_4_ybaoyd.webp",
                 path: 'detail',
-                key:'60727d1df39072137c3b0857',
+                key: '60727d1df39072137c3b0857',
                 title: 'Xu thế thời trang',
                 description: 'Mới nhất - Đẹp nhất - Rẻ nhất'
             },]
@@ -40,7 +40,8 @@ class Poster extends Component {
         const posters = nodes.map((node, index) => {
             return (
                 <TouchableOpacity
-                    onPress={()=>{this.props.navigate(node.path,node.key,node.title)}}
+                    key={index}
+                    onPress={() => { this.props.navigate(node.path, node.key, node.title) }}
                 >
                     <View style={styles.node} index={index}>
                         <Image style={styles.image} source={{ uri: node.src }} />
@@ -52,6 +53,7 @@ class Poster extends Component {
                 </TouchableOpacity>
             )
         });
+
         return (
             <Swiper height={200} autoplay={true} autoplayTimeout={4}>
                 {posters}
@@ -60,8 +62,6 @@ class Poster extends Component {
     }
 
 };
-
-const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     node: {
@@ -112,4 +112,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Poster;
+export default memo(Poster);

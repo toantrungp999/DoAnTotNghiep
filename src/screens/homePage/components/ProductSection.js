@@ -6,7 +6,7 @@ import ProductItem from './ProductItem';
 
 class ProductSection extends Component {
     render() {
-        const { products, title, description, colorOptions, sizeOptions, navigation, path } = this.props;
+        const { products, title, navigation, path } = this.props;
         let _products = products.slice(0, 8);
         let productElements = _products ? _products.map((product, index) => {
             return <ProductItem key={product._id} index={index} product={product} navigation={navigation} />
@@ -30,7 +30,6 @@ class ProductSection extends Component {
 }
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
     container: {

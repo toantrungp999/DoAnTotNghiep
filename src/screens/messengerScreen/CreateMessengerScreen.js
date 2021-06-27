@@ -48,18 +48,18 @@ class CreateMessengerScreen extends Component {
             console.log(to);
             if (!to) {
                 if (index > -1 && this.state.to === "customerCare") {
-                    this.props.navigation.replace('DetailMessengerScreen');
+                    this.props.navigation.replace('detailMessengerScreen');
                     this.setState({ hadNavi: true });
                 }
                 return;
             }
             if (to._id === BOT_ID && index > -1 && this.state.to === "bot") {
-                this.props.navigation.replace('DetailMessengerScreen');
+                this.props.navigation.replace('detailMessengerScreen');
                 this.setState({ hadNavi: true });
                 return;
             }
             else if (to._id === this.state.to && index > -1) {
-                this.props.navigation.replace('DetailMessengerScreen');
+                this.props.navigation.replace('detailMessengerScreen');
                 this.setState({ hadNavi: true });
                 return;
             }
@@ -134,9 +134,9 @@ class CreateMessengerScreen extends Component {
                         alignItems: 'center',
                         padding: 10
                     }}>
-                        <Text style={{ fontSize: 21, marginLeft: 15 }}>Tới:</Text>
-                        {this.state.to ? <Image style={{ width: 40, height: 40, borderRadius: 20, marginLeft: 20 }} source={this.state.image ? { uri: this.state.image } : require('../../../assets/CSKH.jpg')}></Image> : null}
-                        <Text style={{ fontSize: 18, marginLeft: 15 }}>{this.state.name}</Text>
+                        <Text style={{ fontSize: 18, marginLeft: 0 }}>Tới:</Text>
+                        {this.state.to ? <Image style={{ width: 32, height: 32, borderRadius: 16, marginLeft: 15 }} source={this.state.image ? { uri: this.state.image } : require('../../../assets/CSKH.jpg')}></Image> : null}
+                        <Text style={{ fontSize: 18, marginLeft: 10 }}>{this.state.name}</Text>
                     </View>
                 </View>
                 <ScrollView style={{ width: '100%', minHeight: '40%', padding: 10 }}>

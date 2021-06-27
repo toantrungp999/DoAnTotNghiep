@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 import CreateMessengerScreen from './CreateMessengerScreen';
 import DetailMessengerScreen from './DetailMessengerScreen';
@@ -23,14 +22,5 @@ class MessengerScreen extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(MessengerScreen);
+export default MessengerScreen;
 
