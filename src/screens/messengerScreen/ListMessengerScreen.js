@@ -51,7 +51,7 @@ class ListMessengerScreen extends Component {
           messenger.messages[messenger.messages.length - 1].sender;
         // if (!isMeSend && messenger.check === false)
         //     notSeen++;
-        const searchValue = removeVietnameseTones(this.state.searchValue.toLowerCase().trim())
+        const searchValue = removeVietnameseTones(this.state.searchValue.toLowerCase().trim());
         return (
           <MessengerItem
             searchValue={searchValue}
