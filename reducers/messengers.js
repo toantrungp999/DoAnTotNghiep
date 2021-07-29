@@ -79,9 +79,10 @@ function messengersReducer(state = {}, action) {
           let d = new Date(b.date);
           return d - c;
         });
-        state.index = findIndexById(state.messengers, messenger._id);
+        index = findIndexById(state.messengers, messenger._id);
       }
 
+      state.index = index;
       state.action = Types.OPEN_DETAIL_MESSENGER;
       state.to = to;
       state.loading = false;
